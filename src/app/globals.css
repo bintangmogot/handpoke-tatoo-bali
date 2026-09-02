@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  /* Dark Industrial Theme */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #141414;
+  --accent: #ea580c;
+  --accent-hover: #c2410c;
+  --text-primary: #fafafa;
+  --text-secondary: #a3a3a3;
+  --surface: #1c1c1c;
+  --border-color: #262626;
+
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--bg-primary);
+  --color-secondary: var(--bg-secondary);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-surface: var(--surface);
+  --color-border: var(--border-color);
+  
+  --font-sans: var(--font-inter), sans-serif;
+  --font-heading: var(--font-space-grotesk), sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Utilities for Micro-animations & Aesthetics */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .glass-panel {
+    background: rgba(20, 20, 20, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+  }
+}
+@import 'flag-icons/css/flag-icons.min.css';

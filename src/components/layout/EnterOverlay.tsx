@@ -10,7 +10,7 @@ export default function EnterOverlay() {
 
   useEffect(() => {
     // Initialize audio element
-    audioRef.current = new Audio("/assets/Music/bg-music.mp4"); // Will adjust path after moving assets
+    audioRef.current = new Audio("/assets/Music/bg-music.wav"); 
     audioRef.current.loop = true;
     audioRef.current.volume = 0.3; // 30% volume
 

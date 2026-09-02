@@ -37,13 +37,13 @@ export default function TestimonialCard({
       </div>
 
       {/* Content Area */}
-      <div className="flex flex-col flex-grow p-6 sm:p-8 bg-surface/50">
+      <div className="flex flex-col flex-grow p-6 sm:p-8 bg-surface/30">
         {/* Stars */}
         <div className="flex items-center justify-center gap-1 mb-6">
           {[...Array(5)].map((_, i) => (
             <svg
               key={i}
-              className={`w-5 h-5 ${
+              className={`w-4 h-4 ${
                 i < rating ? "text-accent" : "text-border"
               }`}
               fill="currentColor"
@@ -55,21 +55,21 @@ export default function TestimonialCard({
         </div>
 
         {/* Review Text */}
-        <p className="text-secondary italic text-center text-sm md:text-base leading-relaxed flex-grow mb-8 font-light">
+        <p className="text-secondary italic text-center text-sm md:text-base leading-relaxed flex-grow mb-8 font-heading">
           "{review}"
         </p>
 
         {/* User Info */}
-        <div className="flex flex-col items-center gap-2 mt-auto pt-6 border-t border-border/50">
-          <h4 className="font-heading font-bold text-primary tracking-wide">
+        <div className="flex flex-col items-center gap-2 mt-auto pt-6 border-t border-border">
+          <h4 className="font-heading font-bold text-primary tracking-wide text-lg">
             {name}
           </h4>
           <div className="flex items-center gap-2">
             <span
-              className={`fi fi-${countryCode.toLowerCase()} rounded-sm shadow-sm`}
-              style={{ fontSize: "14px" }}
+              className={`fi fi-${countryCode.toLowerCase()} rounded-sm shadow-sm opacity-80`}
+              style={{ fontSize: "12px" }}
             ></span>
-            <span className="text-secondary text-sm tracking-wide">
+            <span className="text-secondary font-sans text-xs tracking-widest uppercase">
               {country}
             </span>
           </div>

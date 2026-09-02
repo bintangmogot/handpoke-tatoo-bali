@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import TestimonialCard from "@/components/ui/TestimonialCard";
+import Marquee from "@/components/ui/Marquee";
 
 export default function Home() {
   return (
@@ -31,7 +32,7 @@ export default function Home() {
             Authentic <span className="text-accent italic">Handpoke</span> <br/> & Tribal Tattoo
           </h1>
           <p className="text-secondary font-sans text-lg md:text-xl max-w-2xl mb-12 font-light leading-relaxed">
-            Traditional Kalimantan & Mentawai roots. A sanctuary for meaningful ink, far from the commercial rush.
+            Discover the inspiration, craftsmanship, and creative journey behind every handcrafted tattoo.
           </p>
           <div className="flex flex-col sm:flex-row gap-6">
             <Link 
@@ -46,13 +47,15 @@ export default function Home() {
 
       {/* 2. THE MANTRA (Typography Break) */}
       <section className="py-24 md:py-32 bg-primary">
-        <div className="container mx-auto px-4 md:px-8 text-center max-w-4xl">
+        <div className="container mx-auto px-4 md:px-8 text-center max-w-5xl">
           <h2 className="font-heading text-3xl md:text-5xl lg:text-6xl text-primary leading-tight font-medium">
-            "Ink is permanent. <br className="hidden md:block" /> 
-            <span className="text-accent italic">So is our dedication to the ritual.</span>"
+            "We believe a tattoo is more than ink. <br className="hidden md:block" /> 
+            <span className="text-accent italic">It is an ancestral rhythm, permanently etched.</span>"
           </h2>
         </div>
       </section>
+
+      <Marquee />
 
       {/* 3. ARTIST SPOTLIGHT (Asymmetric Layout) */}
       <section className="py-24 bg-secondary relative border-y border-border">
@@ -88,10 +91,10 @@ export default function Home() {
               </h2>
               <div className="space-y-6 text-secondary font-sans leading-relaxed font-light mb-10 text-base md:text-lg">
                 <p>
-                  Started in 2010 out of a deep passion for art and culture, I have spent over a decade mastering the ancient technique of handpoke tattooing. 
+                  My journey began in 2010 out of a deep passion for art and culture. By 2015, I had fully immersed myself in mastering the ancient technique of handpoke tattooing. 
                 </p>
                 <p>
-                  Dotlinetattu was created with a rebellious spirit against the modern commercialization of tattoo studios. We want to restore the "Real Bali"—a place where art, connection, and spirituality hold more value than quick profits. No machines, no rush. Just you, the artist, and the rhythm of the needle.
+                  Dotlinetattu was born in 2019 as a physical sanctuary in Bali. It was created with a rebellious spirit against the modern commercialization of tattoo studios. We want to restore the "Real Bali"—a place where art, connection, and spirituality hold more value than quick profits.
                 </p>
               </div>
               
@@ -117,7 +120,51 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. THE PROCESS (New Section) */}
+      {/* 4. SIGNATURE WORKS (Replaces standard Gallery teaser with narrative) */}
+      <section className="py-24 bg-surface border-b border-border">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <div>
+              <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">Our Craft</h3>
+              <h2 className="font-heading text-4xl md:text-5xl text-primary uppercase tracking-wide">
+                Signature Works
+              </h2>
+            </div>
+            <Link 
+              href="/gallery" 
+              className="inline-flex items-center gap-3 text-primary hover:text-accent font-sans font-semibold tracking-widest uppercase text-xs transition-colors pb-1 border-b border-border hover:border-accent"
+            >
+              View Full Gallery
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="flex flex-col group cursor-pointer">
+              <div className="relative aspect-[4/5] border border-border overflow-hidden mb-6">
+                <Image src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg" alt="Flowing Balance" fill className="object-cover group-hover:scale-105 transition-transform duration-1000 grayscale hover:grayscale-0" />
+              </div>
+              <h4 className="font-heading text-2xl text-primary mb-2">Flowing Balance</h4>
+              <p className="text-secondary font-sans font-light text-sm">Traditional Handpoke &bull; Custom Design</p>
+            </div>
+            <div className="flex flex-col group cursor-pointer md:mt-12">
+              <div className="relative aspect-[4/5] border border-border overflow-hidden mb-6">
+                <Image src="/assets/Gallery/dotlinetattu_handpoke_tattoo_bali-klrlhsspxtuwbozl-2c4Ad1N23eO5zoWg (1).jpg" alt="Rooted Resilience" fill className="object-cover group-hover:scale-105 transition-transform duration-1000 grayscale hover:grayscale-0" />
+              </div>
+              <h4 className="font-heading text-2xl text-primary mb-2">Rooted Resilience</h4>
+              <p className="text-secondary font-sans font-light text-sm">Tribal Mentawai &bull; Chest Piece</p>
+            </div>
+            <div className="flex flex-col group cursor-pointer">
+              <div className="relative aspect-[4/5] border border-border overflow-hidden mb-6">
+                <Image src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp" alt="Sacred Geometry" fill className="object-cover group-hover:scale-105 transition-transform duration-1000 grayscale hover:grayscale-0" />
+              </div>
+              <h4 className="font-heading text-2xl text-primary mb-2">Sacred Geometry</h4>
+              <p className="text-secondary font-sans font-light text-sm">Machine Fine Line &bull; Flash Art</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. THE RITUAL (Process) */}
       <section className="py-24 md:py-32 bg-primary">
         <div className="container mx-auto px-4 md:px-8">
           <div className="text-center mb-20">
@@ -128,13 +175,12 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-            {/* Connecting line for desktop */}
             <div className="hidden md:block absolute top-1/2 left-0 w-full h-[1px] bg-border -translate-y-1/2 z-0"></div>
 
             {[
               { num: "01", title: "Consultation", desc: "We discuss your vision, sizing, and placement via WhatsApp to ensure a perfect fit." },
-              { num: "02", title: "The Design", desc: "Custom pieces are sketched. Flash tattoos are selected from our exclusive tribal book." },
-              { num: "03", title: "The Poke", desc: "A meditative, machine-free experience using traditional techniques and modern hygiene." }
+              { num: "02", title: "The Design", desc: "Custom pieces are meticulously sketched. Flash tattoos are selected from our exclusive tribal book." },
+              { num: "03", title: "The Poke", desc: "A meditative, machine-free experience using traditional techniques and modern hygiene standards." }
             ].map((step, idx) => (
               <div key={idx} className="relative z-10 flex flex-col items-center text-center bg-primary p-6">
                 <div className="w-16 h-16 rounded-full border border-accent bg-surface flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(184,92,56,0.2)]">
@@ -148,45 +194,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. FEATURED WORKS GALLERY */}
-      <section className="py-24 bg-surface border-y border-border">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-            <div>
-              <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">Our Portfolio</h3>
-              <h2 className="font-heading text-4xl md:text-5xl text-primary uppercase tracking-wide">
-                Recent Works
-              </h2>
-            </div>
-            <Link 
-              href="/gallery" 
-              className="inline-flex items-center gap-3 text-primary hover:text-accent font-sans font-semibold tracking-widest uppercase text-xs transition-colors pb-1 border-b border-border hover:border-accent"
-            >
-              View Full Gallery
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="col-span-2 row-span-2 relative aspect-square border border-border overflow-hidden group">
-              <Image src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg" alt="Work 1" fill className="object-cover group-hover:scale-105 transition-transform duration-700 grayscale hover:grayscale-0" />
-            </div>
-            <div className="relative aspect-square border border-border overflow-hidden group">
-              <Image src="/assets/Gallery/dotlinetattu_handpoke_tattoo_bali-klrlhsspxtuwbozl-2c4Ad1N23eO5zoWg (1).jpg" alt="Work 2" fill className="object-cover group-hover:scale-105 transition-transform duration-700 grayscale hover:grayscale-0" />
-            </div>
-            <div className="relative aspect-square border border-border overflow-hidden group">
-              <Image src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp" alt="Work 3" fill className="object-cover group-hover:scale-105 transition-transform duration-700 grayscale hover:grayscale-0" />
-            </div>
-            <div className="relative aspect-square border border-border overflow-hidden group">
-              <Image src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-21-yaHHOuqmCsS0hG1g.webp" alt="Work 4" fill className="object-cover group-hover:scale-105 transition-transform duration-700 grayscale hover:grayscale-0" />
-            </div>
-            <div className="relative aspect-square border border-border overflow-hidden group">
-              <Image src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-pjqgb34z4ih1vbty-1-1GiQoHQnBSTZ2GRi.jpg" alt="Work 5" fill className="object-cover group-hover:scale-105 transition-transform duration-700 grayscale hover:grayscale-0" />
-            </div>
-          </div>
+      {/* 6. THE STUDIO VIBE (New Aesthetic Banner) */}
+      <section className="relative py-32 bg-secondary border-y border-border overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image 
+            src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-5-es5GVh83VOalxXP9.webp" 
+            alt="Studio Vibe" 
+            fill
+            className="object-cover opacity-20 grayscale"
+          />
+        </div>
+        <div className="relative z-10 container mx-auto px-4 text-center">
+          <h2 className="font-heading text-3xl md:text-5xl text-primary uppercase tracking-wide mb-8">
+            An Intimate Sanctuary
+          </h2>
+          <p className="text-secondary font-sans font-light text-lg max-w-2xl mx-auto leading-relaxed mb-10">
+            Located in the heart of Bali, our studio is designed for a meditative tattoo experience. We avoid large crowds, ensuring the artist concentrates fully on your piece.
+          </p>
+          <Link 
+            href="/faq" 
+            className="inline-flex items-center gap-3 text-accent hover:text-accent-hover font-sans font-semibold tracking-widest uppercase text-xs transition-colors group pb-1 border-b border-accent"
+          >
+            Read Our Studio Policies
+          </Link>
         </div>
       </section>
 
-      {/* 6. SERVICES PREVIEW */}
+      {/* 7. SERVICES PREVIEW */}
       <section className="py-24 md:py-32 bg-primary">
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -196,7 +230,7 @@ export default function Home() {
               <h4 className="font-heading text-3xl text-primary mb-4 uppercase tracking-wide">Flash Tattoos</h4>
               <div className="w-12 h-[1px] bg-accent mb-6"></div>
               <p className="text-secondary font-sans font-light leading-relaxed mb-10 flex-grow">
-                Choose from our pre-designed authentic tribal flashes. Fixed price based on size. Direct booking and immediate deposit confirmation.
+                Choose from Jerry's exclusive book of pre-designed authentic tribal flashes. Fixed price based on size. Direct booking and immediate deposit confirmation.
               </p>
               <Link href="/booking" className="px-8 py-3 border border-accent text-accent hover:bg-accent hover:text-white transition-all font-sans tracking-widest uppercase text-xs font-semibold rounded-sm">
                 Book Flash
@@ -219,7 +253,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. TESTIMONIALS */}
+      {/* 8. TESTIMONIALS */}
       <section className="py-24 bg-secondary border-t border-border">
         <div className="container mx-auto px-4 md:px-8">
           <div className="text-center mb-16">

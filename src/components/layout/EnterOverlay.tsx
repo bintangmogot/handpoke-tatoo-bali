@@ -10,8 +10,12 @@ export default function EnterOverlay() {
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
+    // Force scroll to top on mount
+    window.scrollTo(0, 0);
+
     // Disable scrolling when overlay is visible initially
     document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
 
     // Initialize audio element once
     audioRef.current = new Audio("/assets/Music/bg-music.wav"); 
@@ -21,6 +25,7 @@ export default function EnterOverlay() {
     return () => {
       // Re-enable scrolling on cleanup if component is completely destroyed
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
       if (audioRef.current) {
         audioRef.current.pause();
       }
@@ -41,6 +46,7 @@ export default function EnterOverlay() {
     setTimeout(() => {
       setIsVisible(false);
       document.body.style.overflow = ""; // Re-enable scroll
+      document.documentElement.style.overflow = "";
     }, 1000); 
   };
 

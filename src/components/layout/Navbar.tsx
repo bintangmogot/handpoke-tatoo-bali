@@ -21,7 +21,7 @@ export default function Navbar() {
     { name: "Services", href: "/services" },
     { name: "Gallery", href: "/gallery" },
     { name: "FAQ", href: "/faq" },
-    { name: "Blog", href: "/blog" },
+    { name: "Journal", href: "/blog" },
   ];
 
   return (
@@ -81,24 +81,15 @@ export default function Navbar() {
 
       {/* Mobile Nav Overlay */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 glass-panel border-t border-border mt-2 mx-4 rounded-lg flex flex-col p-4 gap-4 animate-in fade-in slide-in-from-top-4">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="text-primary hover:text-accent p-2 font-medium tracking-widest uppercase"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              {link.name}
-            </Link>
-          ))}
-          <Link
-            href="/booking"
-            className="bg-accent text-white text-center py-3 rounded-sm font-bold tracking-widest uppercase mt-2"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Book Now
-          </Link>
+        <div className={`md:hidden bg-surface border-t border-border transition-all duration-300 overflow-hidden ${isMobileMenuOpen ? 'max-h-64' : 'max-h-0'}`}>
+          <div className="flex flex-col px-4 py-4 space-y-4">
+            <Link href="/about" className="text-secondary hover:text-accent transition-colors font-sans text-xs tracking-widest uppercase py-2">About</Link>
+            <Link href="/services" className="text-secondary hover:text-accent transition-colors font-sans text-xs tracking-widest uppercase py-2">Services</Link>
+            <Link href="/gallery" className="text-secondary hover:text-accent transition-colors font-sans text-xs tracking-widest uppercase py-2">Gallery</Link>
+            <Link href="/blog" className="text-secondary hover:text-accent transition-colors font-sans text-xs tracking-widest uppercase py-2">Journal</Link>
+            <Link href="/faq" className="text-secondary hover:text-accent transition-colors font-sans text-xs tracking-widest uppercase py-2">FAQ</Link>
+            <Link href="/booking" className="text-accent font-bold font-sans text-xs tracking-widest uppercase py-2">Book Now</Link>
+          </div>
         </div>
       )}
     </header>

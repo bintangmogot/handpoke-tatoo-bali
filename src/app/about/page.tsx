@@ -1,0 +1,1 @@
+export default function About() { return <div className="pt-32 pb-24 container mx-auto px-4"><h1 className="text-4xl font-heading text-primary uppercase">About Jerry</h1></div>; }

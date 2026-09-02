@@ -1,0 +1,1 @@
+export default function FAQ() { return <div className="pt-32 pb-24 container mx-auto px-4"><h1 className="text-4xl font-heading text-primary uppercase">Frequently Asked Questions</h1></div>; }

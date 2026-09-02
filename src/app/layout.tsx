@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
-import { Montserrat, Cormorant_Garamond } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
 import EnterOverlay from "@/components/layout/EnterOverlay";
 
-const montserrat = Montserrat({
+const sans = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
 });
 
-const cormorant = Cormorant_Garamond({
+const serif = Playfair_Display({
   variable: "--font-heading",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -32,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${montserrat.variable} ${cormorant.variable} h-full antialiased dark`}
+      className={`${sans.variable} ${serif.variable} h-full antialiased dark scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-primary text-primary">
         <EnterOverlay />

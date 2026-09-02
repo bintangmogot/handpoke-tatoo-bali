@@ -22,7 +22,7 @@ export default function About() {
               src="/assets/Gallery/handpoke-tattoo-artist-bali-dotlinetattu-3-BAzWVxZMHkNtGS4w.avif" 
               alt="Jerry Tattooing" 
               fill
-              className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+              className="object-cover transition-all duration-700"
             />
           </div>
           <div className="space-y-6 text-secondary font-light leading-relaxed">

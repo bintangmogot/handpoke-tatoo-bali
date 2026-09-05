@@ -88,13 +88,13 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
         <div className="flex border-b border-border">
           <button
             onClick={() => { setType("flash"); setStep("warning"); }}
-            className={\`flex-1 py-4 text-sm font-sans tracking-widest uppercase font-semibold transition-colors \${type === "flash" ? "bg-accent text-white" : "text-secondary hover:text-primary"}\`}
+            className={`flex-1 py-4 text-sm font-sans tracking-widest uppercase font-semibold transition-colors ${type === "flash" ? "bg-accent text-white" : "text-secondary hover:text-primary"}`}
           >
             Flash Tattoo
           </button>
           <button
             onClick={() => { setType("custom"); setStep("form"); }}
-            className={\`flex-1 py-4 text-sm font-sans tracking-widest uppercase font-semibold transition-colors \${type === "custom" ? "bg-accent text-white" : "text-secondary hover:text-primary"}\`}
+            className={`flex-1 py-4 text-sm font-sans tracking-widest uppercase font-semibold transition-colors ${type === "custom" ? "bg-accent text-white" : "text-secondary hover:text-primary"}`}
           >
             Custom Tattoo
           </button>
@@ -217,7 +217,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                   {/* Mock Days */}
                   {Array.from({length: 31}).map((_, i) => {
                     const day = i + 1;
-                    const dateStr = \`2026-10-\${day.toString().padStart(2, '0')}\`;
+                    const dateStr = `2026-10-${day.toString().padStart(2, '0')}`;
                     
                     // A day is fully booked if there are 3 bookings on this date 
                     // (Assuming 3 slots max per day for this example)
@@ -230,11 +230,11 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                         key={day}
                         disabled={isBooked}
                         onClick={() => setSelectedDate(dateStr)}
-                        className={\`
+                        className={`
                           aspect-square flex items-center justify-center font-sans text-sm transition-all rounded-sm
-                          \${isBooked ? 'text-secondary/20 cursor-not-allowed bg-surface/50' : 'text-primary hover:bg-accent hover:text-white bg-surface cursor-pointer'}
-                          \${isSelected ? 'bg-accent text-white border-none' : 'border border-transparent'}
-                        \`}
+                          ${isBooked ? 'text-secondary/20 cursor-not-allowed bg-surface/50' : 'text-primary hover:bg-accent hover:text-white bg-surface cursor-pointer'}
+                          ${isSelected ? 'bg-accent text-white border-none' : 'border border-transparent'}
+                        `}
                       >
                         {day}
                       </button>
@@ -257,11 +257,11 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                           key={time}
                           disabled={isTimeBooked}
                           onClick={() => setSelectedTime(time)}
-                          className={\`
+                          className={`
                             py-3 border text-sm font-sans transition-all rounded-sm
-                            \${isTimeBooked ? 'border-border bg-surface text-secondary/30 cursor-not-allowed' : 
+                            ${isTimeBooked ? 'border-border bg-surface text-secondary/30 cursor-not-allowed' : 
                               selectedTime === time ? 'border-accent bg-accent/10 text-accent' : 'border-border bg-primary text-secondary hover:border-accent hover:text-primary'}
-                          \`}
+                          `}
                         >
                           {displayTime} {isTimeBooked && "(Booked)"}
                         </button>
@@ -286,7 +286,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
               <button 
                 onClick={() => setStep("checkout")}
                 disabled={!selectedDate || !selectedTime}
-                className={\`px-8 py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all \${(!selectedDate || !selectedTime) ? 'bg-surface text-secondary/50 cursor-not-allowed' : 'bg-accent hover:bg-accent-hover text-white'}\`}
+                className={`px-8 py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all ${(!selectedDate || !selectedTime) ? 'bg-surface text-secondary/50 cursor-not-allowed' : 'bg-accent hover:bg-accent-hover text-white'}`}
               >
                 Proceed to Deposit
               </button>
@@ -331,7 +331,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
               <button 
                 onClick={handleCheckout}
                 disabled={isLoading}
-                className={\`w-full py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all shadow-[0_0_20px_rgba(234,88,12,0.3)] \${isLoading ? 'bg-surface text-secondary cursor-not-allowed' : 'bg-accent hover:bg-accent-hover text-white'}\`}
+                className={`w-full py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all shadow-[0_0_20px_rgba(234,88,12,0.3)] ${isLoading ? 'bg-surface text-secondary cursor-not-allowed' : 'bg-accent hover:bg-accent-hover text-white'}`}
               >
                 {isLoading ? "Processing..." : "Pay via Xendit (Mock)"}
               </button>
@@ -365,7 +365,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 Please chat with Jerry on WhatsApp to confirm your design details and say hi!
               </p>
               <a 
-                href={\`https://wa.me/6282339760624?text=\${encodeURIComponent("Hello Jerry! I just booked a " + type + " slot on " + selectedDate + " at " + selectedTime + ". My name is " + formData.name + ".")}\`}
+                href={`https://wa.me/6282339760624?text=${encodeURIComponent("Hello Jerry! I just booked a " + type + " slot on " + selectedDate + " at " + selectedTime + ". My name is " + formData.name + ".")}`}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-3 w-full py-4 bg-[#25D366] hover:bg-[#20b858] text-white font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all"

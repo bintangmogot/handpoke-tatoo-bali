@@ -30,10 +30,10 @@ export default function Home() {
               Est. 2019 &bull; Bali, Indonesia
             </p>
             <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl text-primary uppercase tracking-wide mb-8 leading-[1.1] glow-text">
-              Authentic <span className="text-accent italic lowercase">Handpoke</span> <br/> & Tribal Tattoo
+              Traditional <span className="text-accent italic lowercase">Handpoke</span> <br/> & Hand Tapping
             </h1>
             <p className="text-secondary font-sans text-lg md:text-xl max-w-2xl mb-10 font-light leading-relaxed">
-              Discover the inspiration, craftsmanship, and creative journey behind every handcrafted tattoo.
+              Experience the ancient mark. We preserve authentic handpoke and hand tapping tattoo techniques in Bali.
             </p>
             <div className="flex flex-col sm:flex-row gap-6">
               <Link 
@@ -175,37 +175,37 @@ export default function Home() {
             {/* Custom Flow */}
             <div className="border border-border bg-surface p-8 md:p-10 rounded-sm">
               <h3 className="font-heading text-2xl text-primary mb-2 border-b border-border pb-4">
-                Flow 1: Custom Tattoo
+                Flow 1: Custom Tattoo (Per Session)
               </h3>
-              <p className="text-secondary font-sans text-sm mb-8 font-light italic">For unique, personalized designs tailored to your story.</p>
+              <p className="text-secondary font-sans text-sm mb-8 font-light italic">For unique designs. We work per session, not per project.</p>
               
               <ul className="space-y-6">
                 <li className="flex gap-4">
                   <span className="text-accent font-heading font-bold text-xl">1.</span>
                   <div>
-                    <h4 className="text-primary font-sans font-medium mb-1">WhatsApp Consultation</h4>
-                    <p className="text-secondary text-sm font-light">Chat with Jerry. Share your ideas, preferred size, and placement.</p>
+                    <h4 className="text-primary font-sans font-medium mb-1">Fill Form & 10% Deposit</h4>
+                    <p className="text-secondary text-sm font-light">Submit your placement and reference images. Pay a 10% deposit upfront to secure your consultation.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
                   <span className="text-accent font-heading font-bold text-xl">2.</span>
                   <div>
-                    <h4 className="text-primary font-sans font-medium mb-1">Quote & Deposit</h4>
-                    <p className="text-secondary text-sm font-light">We agree on a price. Pay a 50% deposit securely via our website to lock your schedule.</p>
+                    <h4 className="text-primary font-sans font-medium mb-1">Consultation (3-4 Days Prior)</h4>
+                    <p className="text-secondary text-sm font-light">We discuss your design thoroughly. Once the design is locked in, pay the second 10% deposit to secure your tattoo date.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
                   <span className="text-accent font-heading font-bold text-xl">3.</span>
                   <div>
-                    <h4 className="text-primary font-sans font-medium mb-1">Design & Ink</h4>
-                    <p className="text-secondary text-sm font-light">Come to the studio, finalize the sketch, and get inked. Pay the remaining 50%.</p>
+                    <h4 className="text-primary font-sans font-medium mb-1">Get Inked (Pay 80%)</h4>
+                    <p className="text-secondary text-sm font-light">Come to the studio for your session. Pay the remaining 80% after the tattoo is finished.</p>
                   </div>
                 </li>
               </ul>
               
               <div className="mt-10">
                 <Link href="/services" className="px-6 py-3 border border-accent text-accent hover:bg-accent hover:text-white transition-all font-sans tracking-widest uppercase text-xs font-semibold rounded-sm block text-center">
-                  Consult Custom
+                  Start Custom Tattoo
                 </Link>
               </div>
             </div>
@@ -215,35 +215,40 @@ export default function Home() {
               <h3 className="font-heading text-2xl text-primary mb-2 border-b border-border pb-4">
                 Flow 2: Flash Tattoo
               </h3>
-              <p className="text-secondary font-sans text-sm mb-8 font-light italic">For authentic, pre-designed tribal flashes. No consultation needed.</p>
+              <p className="text-secondary font-sans text-sm mb-4 font-light italic">Available sizes: 5cm - 25cm (IDR 1M - 2.5M). 50% Deposit required.</p>
+              <div className="bg-red-900/20 border border-red-500/30 p-3 mb-8 rounded-sm">
+                <p className="text-red-400 text-xs font-sans">
+                  <strong>Note:</strong> Hand tapping is raw and traditional. It is not suitable for overly complex or modern intricate shapes. If your chosen flash is 20-30cm, we may require a consultation first.
+                </p>
+              </div>
               
               <ul className="space-y-6">
                 <li className="flex gap-4">
                   <span className="text-accent font-heading font-bold text-xl">1.</span>
                   <div>
-                    <h4 className="text-primary font-sans font-medium mb-1">Pick Your Flash</h4>
-                    <p className="text-secondary text-sm font-light">Browse our collection of available flash designs and choose your favorite.</p>
+                    <h4 className="text-primary font-sans font-medium mb-1">Pick Your Flash & Size</h4>
+                    <p className="text-secondary text-sm font-light">Choose from our traditional designs (5cm - 25cm).</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
                   <span className="text-accent font-heading font-bold text-xl">2.</span>
                   <div>
-                    <h4 className="text-primary font-sans font-medium mb-1">Select Schedule & Pay</h4>
-                    <p className="text-secondary text-sm font-light">Pick an available time slot on our calendar and pay the 50% deposit directly.</p>
+                    <h4 className="text-primary font-sans font-medium mb-1">Select Schedule & 50% Deposit</h4>
+                    <p className="text-secondary text-sm font-light">Pick an available time slot and pay a 50% deposit via our system.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
                   <span className="text-accent font-heading font-bold text-xl">3.</span>
                   <div>
-                    <h4 className="text-primary font-sans font-medium mb-1">Get Inked</h4>
-                    <p className="text-secondary text-sm font-light">Show up at the studio, get your flash tattoo, and pay the remaining 50%.</p>
+                    <h4 className="text-primary font-sans font-medium mb-1">Get Inked (Pay 50%)</h4>
+                    <p className="text-secondary text-sm font-light">Show up, get tattooed, and pay the remaining 50% at the studio.</p>
                   </div>
                 </li>
               </ul>
 
               <div className="mt-10">
                 <Link href="/booking" className="px-6 py-3 bg-accent hover:bg-accent-hover text-white transition-all font-sans tracking-widest uppercase text-xs font-semibold rounded-sm block text-center">
-                  Book Flash
+                  Book Flash Tattoo
                 </Link>
               </div>
             </div>
@@ -302,7 +307,7 @@ export default function Home() {
           <div className="text-center mb-16">
             <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">Real Experiences</h3>
             <h2 className="font-heading text-4xl md:text-5xl text-primary uppercase tracking-wide mb-6">
-              Trusted by Globetrotters
+              Verified Google Reviews
             </h2>
             <div className="w-16 h-[1px] bg-accent mx-auto"></div>
           </div>
@@ -310,26 +315,26 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <TestimonialCard 
               name="Lasse Ritto"
-              country="Denmark"
-              countryCode="DK"
+              country="Google Review"
+              countryCode="US" // Kept for prop type but we can modify the component later to hide it
               review="Outstanding work and genuine passion for the art. The hygiene standards are impeccable and the artists truly care about delivering exactly what you want."
-              imageUrl="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-2-fS9DIWrZZIctrOTQ.webp"
+              imageUrl="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp"
               rating={5}
             />
             <TestimonialCard 
               name="Suzanne Klavins"
-              country="Australia"
+              country="Google Review"
               countryCode="AU"
               review="A very professional and friendly team. The artwork turned out even better than I expected. The communication and aftercare guidance were detailed, so I felt safe."
-              imageUrl="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-5-es5GVh83VOalxXP9.webp"
+              imageUrl="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg"
               rating={5}
             />
             <TestimonialCard 
               name="Jessica Knobloch"
-              country="Germany"
+              country="Google Review"
               countryCode="DE"
               review="My husband and I got a joint tattoo at the end of our trip, which has now become our tradition. The great reviews convinced us — and they were right."
-              imageUrl="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-21-yaHHOuqmCsS0hG1g.webp"
+              imageUrl="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-20-6B7LEVxri2IpWP3F.webp"
               rating={5}
             />
           </div>

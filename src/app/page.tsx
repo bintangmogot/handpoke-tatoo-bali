@@ -183,22 +183,22 @@ export default function Home() {
                 <li className="flex gap-4">
                   <span className="text-accent font-heading font-bold text-xl">1.</span>
                   <div>
-                    <h4 className="text-primary font-sans font-medium mb-1">Fill Form & 10% Deposit</h4>
-                    <p className="text-secondary text-sm font-light">Submit your placement and reference images. Pay a 10% deposit upfront to secure your consultation.</p>
+                    <h4 className="text-primary font-sans font-medium mb-1">Fill Form & 10% Initial Deposit</h4>
+                    <p className="text-secondary text-sm font-light">Submit your placement and reference images. Pay a 10% deposit upfront to secure your offline consultation slot.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
                   <span className="text-accent font-heading font-bold text-xl">2.</span>
                   <div>
-                    <h4 className="text-primary font-sans font-medium mb-1">Consultation (3-4 Days Prior)</h4>
-                    <p className="text-secondary text-sm font-light">We discuss your design thoroughly. Once the design is locked in, pay the second 10% deposit to secure your tattoo date.</p>
+                    <h4 className="text-primary font-sans font-medium mb-1">Studio Consultation (3-4 Days Prior)</h4>
+                    <p className="text-secondary text-sm font-light">Visit the studio to discuss your design thoroughly. Once locked in, pay the second 10% deposit to secure your tattoo date.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
                   <span className="text-accent font-heading font-bold text-xl">3.</span>
                   <div>
                     <h4 className="text-primary font-sans font-medium mb-1">Get Inked (Pay 80%)</h4>
-                    <p className="text-secondary text-sm font-light">Come to the studio for your session. Pay the remaining 80% after the tattoo is finished.</p>
+                    <p className="text-secondary text-sm font-light">Come back for your session. Pay the remaining 80% after the tattoo is finished.</p>
                   </div>
                 </li>
               </ul>
@@ -226,22 +226,22 @@ export default function Home() {
                 <li className="flex gap-4">
                   <span className="text-accent font-heading font-bold text-xl">1.</span>
                   <div>
-                    <h4 className="text-primary font-sans font-medium mb-1">Pick Your Flash & Size</h4>
-                    <p className="text-secondary text-sm font-light">Choose from our traditional designs (5cm - 25cm).</p>
+                    <h4 className="text-primary font-sans font-medium mb-1">Acknowledge Rules & Pick Flash</h4>
+                    <p className="text-secondary text-sm font-light">Accept the hand tapping limitations pop-up, then choose your design (5cm - 25cm).</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
                   <span className="text-accent font-heading font-bold text-xl">2.</span>
                   <div>
-                    <h4 className="text-primary font-sans font-medium mb-1">Select Schedule & 50% Deposit</h4>
-                    <p className="text-secondary text-sm font-light">Pick an available time slot and pay a 50% deposit via our system.</p>
+                    <h4 className="text-primary font-sans font-medium mb-1">Fill Form, Pick Schedule & Pay 50%</h4>
+                    <p className="text-secondary text-sm font-light">Fill out your details, pick an available time on the calendar, and pay the 50% deposit.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
                   <span className="text-accent font-heading font-bold text-xl">3.</span>
                   <div>
-                    <h4 className="text-primary font-sans font-medium mb-1">Get Inked (Pay 50%)</h4>
-                    <p className="text-secondary text-sm font-light">Show up, get tattooed, and pay the remaining 50% at the studio.</p>
+                    <h4 className="text-primary font-sans font-medium mb-1">Chat & Get Inked</h4>
+                    <p className="text-secondary text-sm font-light">Connect via WhatsApp from the Thank You page. Show up at the studio and pay the remaining 50%.</p>
                   </div>
                 </li>
               </ul>

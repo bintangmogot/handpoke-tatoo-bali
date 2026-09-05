@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { getBookedSlots, createBooking } from "@/app/actions/bookingActions";
 
 type FlowType = "flash" | "custom";
 type Step = "warning" | "form" | "calendar" | "checkout" | "success";
@@ -13,6 +14,17 @@ interface BookingEngineProps {
 export default function BookingEngine({ initialType }: BookingEngineProps) {
   const [type, setType] = useState<FlowType>(initialType);
   const [step, setStep] = useState<Step>(initialType === "flash" ? "warning" : "form");
+  const [isLoading, setIsLoading] = useState(false);
+  const [bookedSlots, setBookedSlots] = useState<any[]>([]);
+  const [bookingId, setBookingId] = useState<string>("");
+
+  useEffect(() => {
+    async function fetchSlots() {
+      const slots = await getBookedSlots();
+      setBookedSlots(slots);
+    }
+    fetchSlots();
+  }, []);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -24,7 +36,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
     reference: null as File | null,
   });
 
-  // Calendar State (Mock)
+  // Calendar State
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
 
@@ -44,6 +56,29 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
   };
 
   const priceInfo = calculatePrice();
+
+  const handleCheckout = async () => {
+    setIsLoading(true);
+    try {
+      const result = await createBooking({
+        name: formData.name,
+        email: formData.email,
+        whatsapp: formData.whatsapp,
+        date: selectedDate,
+        time: selectedTime,
+        type: type,
+        totalPrice: priceInfo.total,
+        deposit: priceInfo.deposit
+      });
+      setBookingId(result.id);
+      setStep("success");
+    } catch (err) {
+      alert("Failed to create booking. Please check database permissions (RLS).");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="bg-surface/50 border border-border rounded-lg overflow-hidden relative">
@@ -182,13 +217,19 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                   {/* Mock Days */}
                   {Array.from({length: 31}).map((_, i) => {
                     const day = i + 1;
-                    const isBooked = day % 4 === 0; // Mock some booked days
-                    const isSelected = selectedDate === \`2026-10-\${day}\`;
+                    const dateStr = \`2026-10-\${day.toString().padStart(2, '0')}\`;
+                    
+                    // A day is fully booked if there are 3 bookings on this date 
+                    // (Assuming 3 slots max per day for this example)
+                    const slotsForDay = bookedSlots.filter(s => s.booking_date === dateStr);
+                    const isBooked = slotsForDay.length >= 3;
+                    
+                    const isSelected = selectedDate === dateStr;
                     return (
                       <button
                         key={day}
                         disabled={isBooked}
-                        onClick={() => setSelectedDate(\`2026-10-\${day}\`)}
+                        onClick={() => setSelectedDate(dateStr)}
                         className={\`
                           aspect-square flex items-center justify-center font-sans text-sm transition-all rounded-sm
                           \${isBooked ? 'text-secondary/20 cursor-not-allowed bg-surface/50' : 'text-primary hover:bg-accent hover:text-white bg-surface cursor-pointer'}
@@ -207,18 +248,25 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 <h4 className="font-heading text-xl text-primary mb-4">Available Times</h4>
                 {selectedDate ? (
                   <div className="grid grid-cols-2 gap-3">
-                    {["10:00 AM", "01:00 PM", "04:00 PM"].map(time => (
-                      <button
-                        key={time}
-                        onClick={() => setSelectedTime(time)}
-                        className={\`
-                          py-3 border text-sm font-sans transition-all rounded-sm
-                          \${selectedTime === time ? 'border-accent bg-accent/10 text-accent' : 'border-border bg-primary text-secondary hover:border-accent hover:text-primary'}
-                        \`}
-                      >
-                        {time}
-                      </button>
-                    ))}
+                    {["10:00:00", "13:00:00", "16:00:00"].map(time => {
+                      const isTimeBooked = bookedSlots.some(s => s.booking_date === selectedDate && s.booking_time === time);
+                      const displayTime = time.startsWith("10") ? "10:00 AM" : time.startsWith("13") ? "01:00 PM" : "04:00 PM";
+                      
+                      return (
+                        <button
+                          key={time}
+                          disabled={isTimeBooked}
+                          onClick={() => setSelectedTime(time)}
+                          className={\`
+                            py-3 border text-sm font-sans transition-all rounded-sm
+                            \${isTimeBooked ? 'border-border bg-surface text-secondary/30 cursor-not-allowed' : 
+                              selectedTime === time ? 'border-accent bg-accent/10 text-accent' : 'border-border bg-primary text-secondary hover:border-accent hover:text-primary'}
+                          \`}
+                        >
+                          {displayTime} {isTimeBooked && "(Booked)"}
+                        </button>
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="h-full flex items-center justify-center border border-dashed border-border bg-primary/50 text-secondary font-sans text-sm p-8 text-center rounded-sm">
@@ -281,13 +329,15 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
 
             <div className="flex flex-col gap-4">
               <button 
-                onClick={() => setStep("success")}
-                className="w-full py-4 bg-accent hover:bg-accent-hover text-white font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all shadow-[0_0_20px_rgba(234,88,12,0.3)]"
+                onClick={handleCheckout}
+                disabled={isLoading}
+                className={\`w-full py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all shadow-[0_0_20px_rgba(234,88,12,0.3)] \${isLoading ? 'bg-surface text-secondary cursor-not-allowed' : 'bg-accent hover:bg-accent-hover text-white'}\`}
               >
-                Pay via Xendit (Mock)
+                {isLoading ? "Processing..." : "Pay via Xendit (Mock)"}
               </button>
               <button 
                 onClick={() => setStep("calendar")}
+                disabled={isLoading}
                 className="w-full py-4 text-secondary hover:text-primary font-sans tracking-widest uppercase text-xs font-bold transition-all"
               >
                 Go Back

@@ -111,15 +111,51 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
               </svg>
             </div>
             <h2 className="font-heading text-3xl text-primary mb-4">Important Acknowledgment</h2>
-            <p className="text-secondary font-sans leading-relaxed mb-6 max-w-lg">
-              <strong>Hand tapping</strong> is a raw, ancient, and traditional technique. Because of the nature of the tool, it is <strong>not suitable for overly complex, intricate, or modern minimalist shapes</strong>. 
+            <p className="text-secondary font-sans leading-relaxed mb-8 max-w-2xl">
+              <strong>Hand tapping</strong> is a raw, ancient, and traditional technique. Before you proceed, please understand the limitations of this method compared to modern machine tattoos.
             </p>
+
+            {/* Comparison Box */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mb-10 text-left">
+              {/* CAN DO */}
+              <div className="border border-green-900/30 bg-green-900/5 p-6 rounded-sm">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                  </div>
+                  <h3 className="font-heading text-xl text-green-500">Perfect For</h3>
+                </div>
+                <ul className="space-y-3 text-secondary font-sans text-sm">
+                  <li className="flex gap-2"><span>&bull;</span> Tribal & traditional patterns</li>
+                  <li className="flex gap-2"><span>&bull;</span> Bold, raw, and organic lines</li>
+                  <li className="flex gap-2"><span>&bull;</span> Simple geometric shapes</li>
+                  <li className="flex gap-2"><span>&bull;</span> Ancient symbols and motifs</li>
+                </ul>
+              </div>
+              
+              {/* CANNOT DO */}
+              <div className="border border-red-900/30 bg-red-900/5 p-6 rounded-sm">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" /></svg>
+                  </div>
+                  <h3 className="font-heading text-xl text-red-500">Not Suitable For</h3>
+                </div>
+                <ul className="space-y-3 text-secondary font-sans text-sm">
+                  <li className="flex gap-2"><span>&bull;</span> Hyper-realistic portraits</li>
+                  <li className="flex gap-2"><span>&bull;</span> Modern fine-line or micro-realism</li>
+                  <li className="flex gap-2"><span>&bull;</span> Perfectly straight machine-like lines</li>
+                  <li className="flex gap-2"><span>&bull;</span> Overly intricate or crowded details</li>
+                </ul>
+              </div>
+            </div>
+
             <p className="text-secondary font-sans leading-relaxed mb-8 max-w-lg text-sm italic">
-              *If your chosen flash design is very detailed or above 20cm, we may contact you to require an offline consultation first.
+              *If your chosen flash design is above 20cm or very detailed, we may contact you to require an offline consultation first.
             </p>
             <button 
               onClick={() => setStep("form")}
-              className="px-8 py-4 bg-accent hover:bg-accent-hover text-white font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all"
+              className="px-8 py-4 bg-accent hover:bg-accent-hover text-white font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all shadow-[0_0_20px_rgba(234,88,12,0.2)]"
             >
               I Understand, Continue
             </button>

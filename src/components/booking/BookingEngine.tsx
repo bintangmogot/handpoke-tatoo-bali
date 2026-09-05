@@ -31,9 +31,10 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
     name: "",
     email: "",
     whatsapp: "",
-    placement: "",
+    placementText: "",
+    placementImage: null as File | null,
     size: "medium", // small, medium, large
-    reference: null as File | null,
+    referenceImage: null as File | null,
   });
 
   // Calendar State
@@ -43,6 +44,14 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: "placementImage" | "referenceImage") => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData({ ...formData, [fieldName]: e.target.files[0] });
+    }
+  };
+
+  const isFormValid = formData.name && formData.email && formData.whatsapp && formData.placementText && formData.placementImage && formData.referenceImage;
 
   // Pricing Logic (Mock)
   const calculatePrice = () => {
@@ -171,27 +180,27 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Full Name</label>
+                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Full Name <span className="text-red-500">*</span></label>
                   <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans" placeholder="John Doe" />
                 </div>
                 <div>
-                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">WhatsApp Number</label>
+                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">WhatsApp Number <span className="text-red-500">*</span></label>
                   <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans" placeholder="+1 234 567 890" />
                 </div>
               </div>
               
               <div>
-                <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Email Address</label>
+                <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Email Address <span className="text-red-500">*</span></label>
                 <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans" placeholder="john@example.com" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Body Placement</label>
-                  <input type="text" name="placement" value={formData.placement} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans" placeholder="e.g. Left Forearm" />
+                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Body Placement Area <span className="text-red-500">*</span></label>
+                  <input type="text" name="placementText" value={formData.placementText} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans" placeholder="e.g. Left Forearm" />
                 </div>
                 <div>
-                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Approximate Size</label>
+                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Approximate Size <span className="text-red-500">*</span></label>
                   <select name="size" value={formData.size} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans">
                     <option value="small">Small (5cm - 10cm)</option>
                     <option value="medium">Medium (11cm - 15cm)</option>
@@ -200,22 +209,39 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 </div>
               </div>
 
-              {type === "custom" && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border mt-4">
+                {/* Reference Image */}
                 <div>
-                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Reference Image (Optional)</label>
-                  <div className="w-full border-2 border-dashed border-border p-8 text-center flex flex-col items-center justify-center text-secondary hover:border-accent transition-colors cursor-pointer bg-primary/50">
-                    <svg className="w-8 h-8 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span className="font-sans text-sm">Click to upload or drag & drop</span>
-                  </div>
+                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">
+                    Reference Image <span className="text-red-500">*</span>
+                  </label>
+                  <p className="text-secondary/60 text-xs font-sans mb-3">Upload a screenshot of the flash or your custom idea.</p>
+                  <label className={`w-full border-2 border-dashed p-6 text-center flex flex-col items-center justify-center transition-colors cursor-pointer rounded-sm ${formData.referenceImage ? 'border-accent bg-accent/5 text-accent' : 'border-border text-secondary hover:border-accent bg-primary/50'}`}>
+                    <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileChange(e, "referenceImage")} />
+                    <svg className="w-8 h-8 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    <span className="font-sans text-sm">{formData.referenceImage ? formData.referenceImage.name : "Click to upload"}</span>
+                  </label>
                 </div>
-              )}
+
+                {/* Placement Image */}
+                <div>
+                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">
+                    Body Placement Photo <span className="text-red-500">*</span>
+                  </label>
+                  <p className="text-secondary/60 text-xs font-sans mb-3">Upload a photo of the body part where you want the tattoo.</p>
+                  <label className={`w-full border-2 border-dashed p-6 text-center flex flex-col items-center justify-center transition-colors cursor-pointer rounded-sm ${formData.placementImage ? 'border-accent bg-accent/5 text-accent' : 'border-border text-secondary hover:border-accent bg-primary/50'}`}>
+                    <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileChange(e, "placementImage")} />
+                    <svg className="w-8 h-8 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    <span className="font-sans text-sm">{formData.placementImage ? formData.placementImage.name : "Click to upload"}</span>
+                  </label>
+                </div>
+              </div>
 
               <div className="pt-6 flex justify-end">
                 <button 
                   onClick={() => setStep("calendar")}
-                  className="px-8 py-4 bg-accent hover:bg-accent-hover text-white font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all"
+                  disabled={!isFormValid}
+                  className={`px-8 py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all ${isFormValid ? 'bg-accent hover:bg-accent-hover text-white' : 'bg-surface text-secondary/50 cursor-not-allowed'}`}
                 >
                   Continue to Calendar
                 </button>

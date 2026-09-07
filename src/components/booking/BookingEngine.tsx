@@ -465,6 +465,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
               </button>
             </div>
           </div>
+        )}
 
         {/* STEP 4: CHECKOUT (Mock) */}
         {step === "checkout" && (

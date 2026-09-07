@@ -2,11 +2,15 @@
 
 import { createClient } from "@supabase/supabase-js";
 
-// Initialize Supabase admin client for server actions to bypass RLS if needed
-// Or just use the regular client if we set up RLS properly.
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || "";
+// Server actions use service role key to bypass RLS — never exposed to browser
+const supabaseKey = 
+  process.env.SUPABASE_SERVICE_ROLE_KEY || 
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 
+  process.env.SUPABASE_ANON_KEY || 
+  "";
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function getBookedSlots() {
   const { data, error } = await supabase

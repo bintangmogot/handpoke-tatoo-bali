@@ -18,6 +18,11 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
   const [bookedSlots, setBookedSlots] = useState<any[]>([]);
   const [bookingId, setBookingId] = useState<string>("");
 
+  // Calendar navigation state — initialized to current month
+  const now = new Date();
+  const [calMonth, setCalMonth] = useState(now.getMonth());
+  const [calYear, setCalYear] = useState(now.getFullYear());
+
   useEffect(() => {
     async function fetchSlots() {
       const slots = await getBookedSlots();
@@ -114,59 +119,117 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
         {/* STEP 1: WARNING (Flash Only) */}
         {step === "warning" && type === "flash" && (
           <div className="animate-in fade-in slide-in-from-bottom-4 flex flex-col items-center text-center">
-            <div className="w-16 h-16 bg-red-900/20 text-red-500 rounded-full flex items-center justify-center mb-6 border border-red-500/30">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-            </div>
-            <h2 className="font-heading text-3xl text-primary mb-4">Important Acknowledgment</h2>
-            <p className="text-secondary font-sans leading-relaxed mb-8 max-w-2xl">
-              <strong>Hand tapping</strong> is a raw, ancient, and traditional technique. Before you proceed, please understand the limitations of this method compared to modern machine tattoos.
+
+            {/* Minimal divider line instead of neon icon */}
+            <div className="w-12 h-px bg-accent/60 mb-8" />
+
+            <h2 className="font-heading text-3xl text-primary mb-4">Before You Continue</h2>
+            <p className="text-secondary font-sans leading-relaxed mb-10 max-w-xl">
+              Hand tapping is a raw, ancient technique — rooted in tradition, not precision machinery. 
+              It carries its own character. Please read carefully before proceeding.
             </p>
 
-            {/* Comparison Box */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mb-10 text-left">
-              {/* CAN DO */}
-              <div className="border border-green-900/30 bg-green-900/5 p-6 rounded-sm">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
-                  </div>
-                  <h3 className="font-heading text-xl text-green-500">Perfect For</h3>
+            {/* Comparison — earthy, no neon */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px w-full max-w-4xl mb-10 text-left border border-border/50 bg-border/30">
+              
+              {/* CAN DO — with real photos */}
+              <div className="bg-surface p-7">
+                <p className="font-sans text-xs tracking-[0.2em] uppercase text-accent mb-5">Works well for</p>
+                
+                {/* Photo grid */}
+                <div className="grid grid-cols-3 gap-1.5 mb-6">
+                  {[
+                    "/assets/Gallery/handtapping-tattoo-bali-dotlinetattu-FuI3cCjPQQpIbAk2.webp",
+                    "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-22-BUN8FOAbCUzf2GaG.webp",
+                    "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-23-foY3o9o4aQcNgnE3.webp",
+                    "/assets/Gallery/dotlinetattu_handpoke_bali-2-Rkt9nssE7W3zqbvl.webp",
+                    "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-21-yaHHOuqmCsS0hG1g.webp",
+                    "/assets/Gallery/handpoke_tattoo_bali_dotlinetattu-2-iT9eQaZa9y0LQ6RN.webp",
+                  ].map((src, i) => (
+                    <div key={i} className="aspect-square overflow-hidden">
+                      <img
+                        src={src}
+                        alt="Hand tapping tattoo example"
+                        className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-500"
+                      />
+                    </div>
+                  ))}
                 </div>
-                <ul className="space-y-3 text-secondary font-sans text-sm">
-                  <li className="flex gap-2"><span>&bull;</span> Tribal & traditional patterns</li>
-                  <li className="flex gap-2"><span>&bull;</span> Bold, raw, and organic lines</li>
-                  <li className="flex gap-2"><span>&bull;</span> Simple geometric shapes</li>
-                  <li className="flex gap-2"><span>&bull;</span> Ancient symbols and motifs</li>
+
+                <ul className="space-y-3 text-secondary font-sans text-sm leading-relaxed">
+                  <li className="flex items-start gap-3">
+                    <span className="mt-1.5 w-1 h-1 rounded-full bg-accent/70 shrink-0 block" />
+                    Tribal & traditional patterns
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="mt-1.5 w-1 h-1 rounded-full bg-accent/70 shrink-0 block" />
+                    Bold, raw, organic linework
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="mt-1.5 w-1 h-1 rounded-full bg-accent/70 shrink-0 block" />
+                    Simple geometric shapes
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="mt-1.5 w-1 h-1 rounded-full bg-accent/70 shrink-0 block" />
+                    Ancient symbols and motifs
+                  </li>
                 </ul>
               </div>
               
-              {/* CANNOT DO */}
-              <div className="border border-red-900/30 bg-red-900/5 p-6 rounded-sm">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" /></svg>
-                  </div>
-                  <h3 className="font-heading text-xl text-red-500">Not Suitable For</h3>
+              {/* CANNOT DO — no photos, illustrated with texture */}
+              <div className="bg-[#0d0d0d] p-7 border-l border-border/40">
+                <p className="font-sans text-xs tracking-[0.2em] uppercase text-[#7a6a5a] mb-5">Not suitable for</p>
+                
+                {/* Placeholder "blurred/forbidden" grid */}
+                <div className="grid grid-cols-3 gap-1.5 mb-6">
+                  {[
+                    "Portrait realism",
+                    "Micro fine-line",
+                    "3D shading",
+                    "Watercolor blends",
+                    "Hairline precision",
+                    "Complex geometry",
+                  ].map((label, i) => (
+                    <div key={i} className="aspect-square bg-[#1a1a1a] border border-border/20 flex items-center justify-center overflow-hidden relative">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-secondary/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                        </svg>
+                      </div>
+                      <span className="text-[8px] font-sans text-secondary/25 text-center px-1 leading-tight z-10">{label}</span>
+                    </div>
+                  ))}
                 </div>
-                <ul className="space-y-3 text-secondary font-sans text-sm">
-                  <li className="flex gap-2"><span>&bull;</span> Hyper-realistic portraits</li>
-                  <li className="flex gap-2"><span>&bull;</span> Modern fine-line or micro-realism</li>
-                  <li className="flex gap-2"><span>&bull;</span> Perfectly straight machine-like lines</li>
-                  <li className="flex gap-2"><span>&bull;</span> Overly intricate or crowded details</li>
+
+                <ul className="space-y-3 text-secondary/60 font-sans text-sm leading-relaxed">
+                  <li className="flex items-start gap-3">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#7a6a5a] shrink-0 block" />
+                    Hyper-realistic portraits
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#7a6a5a] shrink-0 block" />
+                    Fine-line or micro-realism
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#7a6a5a] shrink-0 block" />
+                    Perfectly straight machine-like lines
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#7a6a5a] shrink-0 block" />
+                    Overly intricate or crowded details
+                  </li>
                 </ul>
               </div>
             </div>
 
-            <p className="text-secondary font-sans leading-relaxed mb-8 max-w-lg text-sm italic">
-              *If your chosen flash design is above 20cm or very detailed, we may contact you to require an offline consultation first.
+            <p className="text-secondary/40 font-sans text-xs leading-relaxed mb-8 max-w-lg italic">
+              Designs above 20cm or with high complexity may require an offline consultation first.
             </p>
             <button 
               onClick={() => setStep("form")}
-              className="px-8 py-4 bg-accent hover:bg-accent-hover text-white font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all shadow-[0_0_20px_rgba(234,88,12,0.2)]"
+              className="px-10 py-4 bg-accent hover:bg-accent-hover text-white font-sans tracking-widest uppercase text-xs font-bold transition-all"
             >
-              I Understand, Continue
+              I Understand — Continue
             </button>
           </div>
         )}
@@ -250,7 +313,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
           </div>
         )}
 
-        {/* STEP 3: CALENDAR (Mock) */}
+        {/* STEP 3: CALENDAR */}
         {step === "calendar" && (
           <div className="animate-in fade-in slide-in-from-right-4">
             <h2 className="font-heading text-3xl text-primary mb-2">
@@ -263,44 +326,88 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
             </p>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Mock Calendar */}
+              {/* Dynamic Calendar */}
               <div className="bg-primary border border-border p-6 rounded-sm">
+                {/* Month navigation */}
                 <div className="flex justify-between items-center mb-6">
-                  <button className="text-secondary hover:text-accent">&larr;</button>
-                  <span className="font-heading text-xl text-primary">October 2026</span>
-                  <button className="text-secondary hover:text-accent">&rarr;</button>
+                  <button
+                    onClick={() => {
+                      const d = new Date(calYear, calMonth - 1, 1);
+                      setCalMonth(d.getMonth());
+                      setCalYear(d.getFullYear());
+                      setSelectedDate("");
+                      setSelectedTime("");
+                    }}
+                    className="text-secondary hover:text-accent px-2 py-1 text-lg transition-colors"
+                  >
+                    ←
+                  </button>
+                  <span className="font-heading text-xl text-primary">
+                    {new Date(calYear, calMonth).toLocaleString("en-US", { month: "long", year: "numeric" })}
+                  </span>
+                  <button
+                    onClick={() => {
+                      const d = new Date(calYear, calMonth + 1, 1);
+                      setCalMonth(d.getMonth());
+                      setCalYear(d.getFullYear());
+                      setSelectedDate("");
+                      setSelectedTime("");
+                    }}
+                    className="text-secondary hover:text-accent px-2 py-1 text-lg transition-colors"
+                  >
+                    →
+                  </button>
                 </div>
-                <div className="grid grid-cols-7 gap-2 text-center mb-2">
-                  {['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => (
-                    <div key={d} className="text-secondary text-xs font-sans uppercase tracking-widest">{d}</div>
+
+                {/* Day headers */}
+                <div className="grid grid-cols-7 gap-1 text-center mb-2">
+                  {["Su","Mo","Tu","We","Th","Fr","Sa"].map(d => (
+                    <div key={d} className="text-secondary/50 text-xs font-sans uppercase tracking-widest py-1">{d}</div>
                   ))}
                 </div>
-                <div className="grid grid-cols-7 gap-2">
-                  {/* Mock Days */}
-                  {Array.from({length: 31}).map((_, i) => {
+
+                {/* Day grid — with correct start offset */}
+                <div className="grid grid-cols-7 gap-1">
+                  {/* Empty cells for days before 1st */}
+                  {Array.from({ length: new Date(calYear, calMonth, 1).getDay() }).map((_, i) => (
+                    <div key={`empty-${i}`} />
+                  ))}
+
+                  {/* Actual days */}
+                  {Array.from({ length: new Date(calYear, calMonth + 1, 0).getDate() }).map((_, i) => {
                     const day = i + 1;
-                    const dateStr = `2026-10-${day.toString().padStart(2, '0')}`;
-                    
-                    // A day is fully booked if there are 3 bookings on this date 
-                    // (Assuming 3 slots max per day for this example)
+                    const mm = String(calMonth + 1).padStart(2, "0");
+                    const dd = String(day).padStart(2, "0");
+                    const dateStr = `${calYear}-${mm}-${dd}`;
+
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+                    const thisDay = new Date(calYear, calMonth, day);
+                    const isPast = thisDay < today;
+
                     const slotsForDay = bookedSlots.filter(s => s.booking_date === dateStr);
-                    const isBooked = slotsForDay.length >= 3;
-                    
+                    const isFullyBooked = slotsForDay.length >= 3;
+                    const isDisabled = isPast || isFullyBooked;
                     const isSelected = selectedDate === dateStr;
+
                     return (
                       <button
-                        key={day}
-                        disabled={isBooked}
-                        onClick={() => setSelectedDate(dateStr)}
+                        key={dateStr}
+                        disabled={isDisabled}
+                        onClick={() => { setSelectedDate(dateStr); setSelectedTime(""); }}
                         className={`
-                          aspect-square flex items-center justify-center font-sans text-sm transition-all rounded-sm
-                          ${isBooked ? 'text-secondary/20 cursor-not-allowed bg-surface/50' : 'text-primary hover:bg-accent hover:text-white bg-surface cursor-pointer'}
-                          ${isSelected ? 'bg-accent text-white border-none' : 'border border-transparent'}
+                          aspect-square flex items-center justify-center font-sans text-sm transition-all
+                          ${isDisabled
+                            ? "text-secondary/20 cursor-not-allowed"
+                            : isSelected
+                              ? "bg-accent text-white"
+                              : "text-primary hover:bg-accent/20 hover:text-white cursor-pointer"
+                          }
                         `}
                       >
                         {day}
                       </button>
-                    )
+                    );
                   })}
                 </div>
               </div>
@@ -321,8 +428,12 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                           onClick={() => setSelectedTime(time)}
                           className={`
                             py-3 border text-sm font-sans transition-all rounded-sm
-                            ${isTimeBooked ? 'border-border bg-surface text-secondary/30 cursor-not-allowed' : 
-                              selectedTime === time ? 'border-accent bg-accent/10 text-accent' : 'border-border bg-primary text-secondary hover:border-accent hover:text-primary'}
+                            ${isTimeBooked
+                              ? "border-border bg-surface text-secondary/30 cursor-not-allowed"
+                              : selectedTime === time
+                                ? "border-accent bg-accent/10 text-accent"
+                                : "border-border bg-primary text-secondary hover:border-accent hover:text-primary"
+                            }
                           `}
                         >
                           {displayTime} {isTimeBooked && "(Booked)"}
@@ -343,18 +454,17 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 onClick={() => setStep("form")}
                 className="px-6 py-4 text-secondary hover:text-primary font-sans tracking-widest uppercase text-xs font-bold transition-all"
               >
-                &larr; Back
+                ← Back
               </button>
               <button 
                 onClick={() => setStep("checkout")}
                 disabled={!selectedDate || !selectedTime}
-                className={`px-8 py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all ${(!selectedDate || !selectedTime) ? 'bg-surface text-secondary/50 cursor-not-allowed' : 'bg-accent hover:bg-accent-hover text-white'}`}
+                className={`px-8 py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all ${(!selectedDate || !selectedTime) ? "bg-surface text-secondary/50 cursor-not-allowed" : "bg-accent hover:bg-accent-hover text-white"}`}
               >
                 Proceed to Deposit
               </button>
             </div>
           </div>
-        )}
 
         {/* STEP 4: CHECKOUT (Mock) */}
         {step === "checkout" && (

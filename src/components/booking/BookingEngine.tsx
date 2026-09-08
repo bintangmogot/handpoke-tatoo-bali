@@ -7,21 +7,75 @@ import { getBookedSlots, createBooking } from "@/app/actions/bookingActions";
 type FlowType = "flash" | "custom";
 type Step = "warning" | "form" | "calendar" | "checkout" | "success";
 
+const STORAGE_KEY = "dotlinetattu_booking_draft";
+
 interface BookingEngineProps {
   initialType: FlowType;
 }
 
 export default function BookingEngine({ initialType }: BookingEngineProps) {
-  const [type, setType] = useState<FlowType>(initialType);
-  const [step, setStep] = useState<Step>(initialType === "flash" ? "warning" : "form");
+  const now = new Date();
+
+  // Restore draft from localStorage on first render
+  const loadDraft = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return null;
+  };
+
+  const draft = typeof window !== "undefined" ? loadDraft() : null;
+
+  const [type, setType] = useState<FlowType>(draft?.type ?? initialType);
+  const [step, setStep] = useState<Step>(draft?.step ?? (initialType === "flash" ? "warning" : "form"));
   const [isLoading, setIsLoading] = useState(false);
   const [bookedSlots, setBookedSlots] = useState<any[]>([]);
   const [bookingId, setBookingId] = useState<string>("");
 
-  // Calendar navigation state — initialized to current month
-  const now = new Date();
-  const [calMonth, setCalMonth] = useState(now.getMonth());
-  const [calYear, setCalYear] = useState(now.getFullYear());
+  // Calendar navigation state
+  const [calMonth, setCalMonth] = useState<number>(draft?.calMonth ?? now.getMonth());
+  const [calYear, setCalYear] = useState<number>(draft?.calYear ?? now.getFullYear());
+
+  // Form state — files can't be persisted, only text fields
+  const [formData, setFormData] = useState({
+    name: draft?.form?.name ?? "",
+    email: draft?.form?.email ?? "",
+    whatsapp: draft?.form?.whatsapp ?? "",
+    placementText: draft?.form?.placementText ?? "",
+    placementImage: null as File | null,
+    size: draft?.form?.size ?? "medium",
+    referenceImage: null as File | null,
+  });
+
+  // Calendar state
+  const [selectedDate, setSelectedDate] = useState<string>(draft?.selectedDate ?? "");
+  const [selectedTime, setSelectedTime] = useState<string>(draft?.selectedTime ?? "");
+
+  // Persist draft to localStorage on every relevant state change
+  useEffect(() => {
+    // Don't save if booking is done
+    if (step === "success") {
+      localStorage.removeItem(STORAGE_KEY);
+      return;
+    }
+    const draft = {
+      type,
+      step,
+      calMonth,
+      calYear,
+      selectedDate,
+      selectedTime,
+      form: {
+        name: formData.name,
+        email: formData.email,
+        whatsapp: formData.whatsapp,
+        placementText: formData.placementText,
+        size: formData.size,
+      },
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+  }, [type, step, calMonth, calYear, selectedDate, selectedTime, formData]);
 
   useEffect(() => {
     async function fetchSlots() {
@@ -30,21 +84,6 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
     }
     fetchSlots();
   }, []);
-
-  // Form State
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    whatsapp: "",
-    placementText: "",
-    placementImage: null as File | null,
-    size: "medium", // small, medium, large
-    referenceImage: null as File | null,
-  });
-
-  // Calendar State
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -58,15 +97,14 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
 
   const isFormValid = formData.name && formData.email && formData.whatsapp && formData.placementText && formData.placementImage && formData.referenceImage;
 
-  // Pricing Logic (Mock)
+  // Pricing Logic
   const calculatePrice = () => {
     if (type === "flash") {
       if (formData.size === "small") return { total: 1000000, deposit: 500000, depositPercent: "50%" };
       if (formData.size === "medium") return { total: 1750000, deposit: 875000, depositPercent: "50%" };
       if (formData.size === "large") return { total: 2500000, deposit: 1250000, depositPercent: "50%" };
     }
-    // Custom Tattoo -> 10% Consultation Fee (Mock Base 5M)
-    return { total: 0, deposit: 500000, depositPercent: "10%" }; 
+    return { total: 0, deposit: 500000, depositPercent: "10%" };
   };
 
   const priceInfo = calculatePrice();
@@ -86,6 +124,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
       });
       setBookingId(result.id);
       setStep("success");
+      localStorage.removeItem(STORAGE_KEY); // clear draft on success
     } catch (err) {
       alert("Failed to create booking. Please check database permissions (RLS).");
       console.error(err);

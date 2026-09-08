@@ -16,56 +16,66 @@ interface BookingEngineProps {
 export default function BookingEngine({ initialType }: BookingEngineProps) {
   const now = new Date();
 
-  // Restore draft from localStorage on first render
-  const loadDraft = () => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) return JSON.parse(raw);
-    } catch {}
-    return null;
-  };
-
-  const draft = typeof window !== "undefined" ? loadDraft() : null;
-
-  const [type, setType] = useState<FlowType>(draft?.type ?? initialType);
-  const [step, setStep] = useState<Step>(draft?.step ?? (initialType === "flash" ? "warning" : "form"));
+  // All state starts with defaults — localStorage will hydrate them after mount
+  const [hydrated, setHydrated] = useState(false);
+  const [type, setType] = useState<FlowType>(initialType);
+  const [step, setStep] = useState<Step>(initialType === "flash" ? "warning" : "form");
   const [isLoading, setIsLoading] = useState(false);
   const [bookedSlots, setBookedSlots] = useState<any[]>([]);
   const [bookingId, setBookingId] = useState<string>("");
 
-  // Calendar navigation state
-  const [calMonth, setCalMonth] = useState<number>(draft?.calMonth ?? now.getMonth());
-  const [calYear, setCalYear] = useState<number>(draft?.calYear ?? now.getFullYear());
+  const [calMonth, setCalMonth] = useState<number>(now.getMonth());
+  const [calYear, setCalYear] = useState<number>(now.getFullYear());
 
-  // Form state — files can't be persisted, only text fields
   const [formData, setFormData] = useState({
-    name: draft?.form?.name ?? "",
-    email: draft?.form?.email ?? "",
-    whatsapp: draft?.form?.whatsapp ?? "",
-    placementText: draft?.form?.placementText ?? "",
+    name: "",
+    email: "",
+    whatsapp: "",
+    placementText: "",
     placementImage: null as File | null,
-    size: draft?.form?.size ?? "medium",
+    size: "medium",
     referenceImage: null as File | null,
   });
 
-  // Calendar state
-  const [selectedDate, setSelectedDate] = useState<string>(draft?.selectedDate ?? "");
-  const [selectedTime, setSelectedTime] = useState<string>(draft?.selectedTime ?? "");
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedTime, setSelectedTime] = useState<string>("");
 
-  // Persist draft to localStorage on every relevant state change
+  // HYDRATE from localStorage after mount (runs only in browser, after SSR)
   useEffect(() => {
-    // Don't save if booking is done
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const draft = JSON.parse(raw);
+        if (draft.type) setType(draft.type);
+        if (draft.step) setStep(draft.step);
+        if (draft.calMonth != null) setCalMonth(draft.calMonth);
+        if (draft.calYear != null) setCalYear(draft.calYear);
+        if (draft.selectedDate) setSelectedDate(draft.selectedDate);
+        if (draft.selectedTime) setSelectedTime(draft.selectedTime);
+        if (draft.form) {
+          setFormData(prev => ({
+            ...prev,
+            name: draft.form.name ?? "",
+            email: draft.form.email ?? "",
+            whatsapp: draft.form.whatsapp ?? "",
+            placementText: draft.form.placementText ?? "",
+            size: draft.form.size ?? "medium",
+          }));
+        }
+      }
+    } catch {}
+    setHydrated(true);
+  }, []); // runs once on mount
+
+  // PERSIST to localStorage on every state change (after hydration)
+  useEffect(() => {
+    if (!hydrated) return; // don't overwrite with empty values before hydration
     if (step === "success") {
       localStorage.removeItem(STORAGE_KEY);
       return;
     }
     const draft = {
-      type,
-      step,
-      calMonth,
-      calYear,
-      selectedDate,
-      selectedTime,
+      type, step, calMonth, calYear, selectedDate, selectedTime,
       form: {
         name: formData.name,
         email: formData.email,
@@ -75,8 +85,9 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
       },
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-  }, [type, step, calMonth, calYear, selectedDate, selectedTime, formData]);
+  }, [hydrated, type, step, calMonth, calYear, selectedDate, selectedTime, formData]);
 
+  // Fetch booked slots
   useEffect(() => {
     async function fetchSlots() {
       const slots = await getBookedSlots();
@@ -84,6 +95,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
     }
     fetchSlots();
   }, []);
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

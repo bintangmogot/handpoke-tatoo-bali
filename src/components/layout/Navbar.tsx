@@ -51,7 +51,7 @@ export default function Navbar() {
           ))}
           <Link
             href="/booking"
-            className="px-6 py-2.5 bg-accent hover:bg-accent-hover text-white font-medium text-sm rounded-sm uppercase tracking-widest transition-all duration-300 shadow-[0_0_15px_rgba(234,88,12,0.3)] hover:shadow-[0_0_20px_rgba(234,88,12,0.5)]"
+            className="px-6 py-2.5 bg-accent hover:bg-accent-hover text-white font-medium text-sm rounded-sm uppercase tracking-widest transition-all duration-300"
           >
             Book Now
           </Link>

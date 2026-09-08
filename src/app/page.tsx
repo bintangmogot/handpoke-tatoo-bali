@@ -38,7 +38,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-6">
               <Link 
                 href="/booking" 
-                className="inline-flex items-center justify-center px-10 py-4 bg-accent hover:bg-accent-hover text-white transition-all duration-300 font-sans font-semibold tracking-widest uppercase text-xs rounded-sm shadow-[0_0_25px_rgba(184,92,56,0.3)] hover:shadow-[0_0_35px_rgba(184,92,56,0.5)] w-fit"
+                className="inline-flex items-center justify-center px-10 py-4 bg-accent hover:bg-accent-hover text-white transition-all duration-300 font-sans font-semibold tracking-widest uppercase text-xs rounded-sm w-fit"
               >
                 Book a Session
               </Link>

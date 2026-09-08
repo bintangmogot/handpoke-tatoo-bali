@@ -49,7 +49,7 @@ export default function FAQ() {
             <div 
               key={idx} 
               className={`glass-panel border transition-all duration-500 rounded-sm overflow-hidden cursor-pointer ${
-                openIdx === idx ? "border-accent/50 shadow-[0_0_30px_rgba(234,88,12,0.1)]" : "border-border hover:border-accent/30"
+                openIdx === idx ? "border-accent/50" : "border-border hover:border-accent/30"
               }`}
               onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
             >

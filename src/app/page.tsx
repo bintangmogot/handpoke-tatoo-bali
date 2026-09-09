@@ -3,6 +3,7 @@ import Link from "next/link";
 import TestimonialCarousel from "@/components/ui/TestimonialCarousel";
 import ZoomableImage from "@/components/ui/ZoomableImage";
 import Marquee from "@/components/ui/Marquee";
+import Accordion from "@/components/ui/Accordion";
 
 export default function Home() {
   return (
@@ -298,6 +299,38 @@ export default function Home() {
               <h4 className="font-heading text-lg md:text-2xl text-primary mb-1 md:mb-2">Sacred Geometry</h4>
               <p className="text-secondary font-sans font-light text-xs md:text-sm">Machine Fine Line &bull; Flash Art</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. TATTOO STYLES */}
+      <section className="py-24 bg-primary relative">
+        <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-8">
+            <div className="md:w-1/2">
+              <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">Techniques</h3>
+              <h2 className="font-heading text-4xl md:text-5xl text-primary uppercase tracking-wide">
+                Tattoo Styles
+              </h2>
+            </div>
+            <div className="md:w-1/2">
+              <p className="text-secondary font-sans font-light leading-relaxed text-sm md:text-base border-l border-border/50 pl-6">
+                Your tattoos reflect your individuality. At Dotlinetattu, we offer a diverse array of styles, focusing primarily on ancient handpoke and hand tapping methods, complemented by precise modern machine techniques.
+              </p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-12 items-start">
+            <Accordion items={[
+              { id: 'style-1', title: 'Traditional Handpoke', content: 'An ancient stick-and-poke method using a needle attached to a bamboo stick. This technique creates a distinct dotted texture, heals faster, and connects you to the roots of tattoo culture.' },
+              { id: 'style-2', title: 'Machine Fine Line', content: 'For delicate, intricate, and micro-detailed designs. Using modern single-needle machines, we craft elegant script, micro-realism, and botanical illustrations with unmatched precision.' },
+              { id: 'style-3', title: 'Mentawai Tribal', content: 'Authentic patterns from the Mentawai tribe. These ancient motifs represent nature, life balance, and spiritual protection, traditionally done via hand tapping but adaptable to your preferred method.' }
+            ]} />
+            <Accordion items={[
+              { id: 'style-4', title: 'Hand Tapping', content: 'A raw, rhythmic technique using two sticks—one holding the needle and the other tapping it. Best suited for bold tribal and geometric patterns. A deeply spiritual and authentic experience.' },
+              { id: 'style-5', title: 'Mandala & Geometric', content: 'Symmetrical, spiritually grounded designs requiring meticulous precision. Whether done via handpoke or machine, these pieces symbolize the universe, balance, and inner peace.' },
+              { id: 'style-6', title: 'Custom Flash Art', content: 'Pre-designed, exclusive flash pieces ready to be inked. Perfect for spontaneous sessions, these designs are created by our resident artists and are not repeated once claimed.' }
+            ]} />
           </div>
         </div>
       </section>

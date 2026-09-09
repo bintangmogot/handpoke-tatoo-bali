@@ -4,6 +4,8 @@ import TestimonialCarousel from "@/components/ui/TestimonialCarousel";
 import ZoomableImage from "@/components/ui/ZoomableImage";
 import Marquee from "@/components/ui/Marquee";
 import Accordion from "@/components/ui/Accordion";
+import { ChevronDivider, WaveDivider } from "@/components/ui/SectionDividers";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export default function Home() {
   return (
@@ -49,21 +51,27 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Chevron Divider: Hero → Approach */}
+      <ChevronDivider color="var(--bg-dark)" />
+
       {/* 2. THE APPROACH (Inspired by User Screenshot) */}
       <section className="py-24 md:py-32 bg-gradient-earth relative">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
           
-          <div className="mb-20">
-            <h3 className="text-accent font-sans tracking-widest text-[10px] md:text-xs uppercase mb-4 font-bold">
-              THE APPROACH BEHIND DOTLINETATTU
-            </h3>
-            <h2 className="font-heading text-4xl md:text-5xl text-primary font-medium tracking-wide">
-              Where the Rhythm Meets the Ancient Mark
-            </h2>
-          </div>
+          <ScrollReveal>
+            <div className="mb-20">
+              <h3 className="text-accent font-sans tracking-widest text-[10px] md:text-xs uppercase mb-4 font-bold">
+                THE APPROACH BEHIND DOTLINETATTU
+              </h3>
+              <h2 className="font-heading text-4xl md:text-5xl text-primary font-medium tracking-wide">
+                Where the Rhythm Meets the Ancient Mark
+              </h2>
+            </div>
+          </ScrollReveal>
 
           <div className="flex flex-col gap-24">
             {/* Block 1: Handpoke */}
+            <ScrollReveal>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div className="relative aspect-[4/3] w-full overflow-hidden border border-border">
                 <Image 
@@ -80,8 +88,10 @@ export default function Home() {
                 </p>
               </div>
             </div>
+            </ScrollReveal>
 
             {/* Block 2: Music Collab */}
+            <ScrollReveal delay={100}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div className="flex flex-col order-2 md:order-1">
                 <h3 className="font-heading text-3xl md:text-4xl text-primary mb-6">Music Collaboration</h3>
@@ -98,12 +108,16 @@ export default function Home() {
                 />
               </div>
             </div>
+            </ScrollReveal>
           </div>
 
         </div>
       </section>
 
       <Marquee />
+
+      {/* Wave Divider: Marquee → Artist */}
+      <WaveDivider fillColor="var(--bg-card)" flip={true} />
 
       {/* 3. ARTIST SPOTLIGHT */}
       <section className="py-24 bg-gradient-earth-reverse relative border-y border-border">
@@ -123,6 +137,7 @@ export default function Home() {
             </div>
             
             {/* Text Block */}
+            <ScrollReveal delay={200}>
             <div className="lg:col-span-6 lg:col-start-7 flex flex-col pt-8 lg:pt-0">
               <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">The Artist</h3>
               <h2 className="font-heading text-4xl md:text-6xl text-primary mb-8 uppercase tracking-wide">
@@ -155,13 +170,18 @@ export default function Home() {
                 Read Full Story
               </Link>
             </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
+      {/* Chevron Divider: Artist → Ritual */}
+      <ChevronDivider color="var(--bg-card)" />
+
       {/* 4. THE RITUAL (Simplified Flow) */}
       <section className="py-24 md:py-32 bg-gradient-earth relative">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
+          <ScrollReveal>
           <div className="text-center mb-16">
             <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">The Ritual</h3>
             <h2 className="font-heading text-4xl md:text-5xl text-primary uppercase tracking-wide">
@@ -171,6 +191,7 @@ export default function Home() {
               We make the booking process transparent and simple. Choose your path below.
             </p>
           </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             
@@ -259,9 +280,13 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Wave Divider: Ritual → Signature Works */}
+      <WaveDivider fillColor="var(--bg-card)" flip={true} />
+
       {/* 5. SIGNATURE WORKS */}
       <section className="py-24 bg-gradient-earth-reverse relative border-y border-border">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
+          <ScrollReveal>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
             <div>
               <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">Our Craft</h3>
@@ -300,12 +325,17 @@ export default function Home() {
               <p className="text-secondary font-sans font-light text-xs md:text-sm">Machine Fine Line &bull; Flash Art</p>
             </div>
           </div>
+          </ScrollReveal>
         </div>
       </section>
+
+      {/* Chevron Divider: Signature → Styles */}
+      <ChevronDivider color="var(--bg-card)" />
 
       {/* 6. TATTOO STYLES */}
       <section className="py-24 bg-primary relative">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
+          <ScrollReveal>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-8">
             <div className="md:w-1/2">
               <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">Techniques</h3>
@@ -332,12 +362,17 @@ export default function Home() {
               { id: 'style-6', title: 'Custom Flash Art', content: 'Pre-designed, exclusive flash pieces ready to be inked. Perfect for spontaneous sessions, these designs are created by our resident artists and are not repeated once claimed.' }
             ]} />
           </div>
+          </ScrollReveal>
         </div>
       </section>
+
+      {/* Wave Divider: Styles → Reviews */}
+      <WaveDivider fillColor="var(--bg-dark)" flip={true} />
 
       {/* 4. REVIEWS & TESTIMONIALS */}
       <section className="py-24 bg-gradient-earth relative">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
+          <ScrollReveal>
           <div className="text-center mb-16">
             <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">Real Experiences</h3>
             <h2 className="font-heading text-4xl md:text-5xl text-primary uppercase tracking-wide mb-6">
@@ -345,6 +380,7 @@ export default function Home() {
             </h2>
             <div className="w-16 h-[1px] bg-accent mx-auto"></div>
           </div>
+          </ScrollReveal>
 
           <TestimonialCarousel 
             testimonials={[

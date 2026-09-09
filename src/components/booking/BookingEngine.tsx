@@ -362,11 +362,28 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 </div>
               </div>
 
-              <div className="pt-6 flex justify-end">
+              <div className="mt-8 p-6 border-t border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div>
+                  <h4 className="font-sans tracking-[0.2em] uppercase text-xs font-semibold text-accent mb-2">Summary</h4>
+                  {type === "flash" ? (
+                    <p className="text-secondary font-sans text-sm">
+                      Estimated Total: <span className="line-through decoration-primary/50 text-primary/70">IDR {(priceInfo.total / 1000).toLocaleString()}k</span>
+                      <span className="mx-3 text-border hidden md:inline">|</span>
+                      <span className="block md:inline mt-1 md:mt-0 text-primary">Deposit to pay today: <strong>IDR {(priceInfo.deposit / 1000).toLocaleString()}k</strong></span>
+                    </p>
+                  ) : (
+                    <p className="text-secondary font-sans text-sm">
+                      Total Price: TBD after consultation
+                      <span className="mx-3 text-border hidden md:inline">|</span>
+                      <span className="block md:inline mt-1 md:mt-0 text-primary">Deposit to pay today: <strong>IDR 500k</strong></span>
+                    </p>
+                  )}
+                </div>
+
                 <button 
                   onClick={() => setStep("calendar")}
                   disabled={!isFormValid}
-                  className={`px-8 py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all ${isFormValid ? 'bg-accent hover:bg-accent-hover text-white' : 'bg-surface text-secondary/50 cursor-not-allowed'}`}
+                  className={`w-full md:w-auto px-8 py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all shrink-0 ${isFormValid ? 'bg-accent hover:bg-accent-hover text-white' : 'bg-surface border border-border text-secondary/50 cursor-not-allowed'}`}
                 >
                   Continue to Calendar
                 </button>

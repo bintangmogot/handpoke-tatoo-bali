@@ -108,7 +108,17 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
     }
   };
 
-  const isFormValid = formData.name && formData.email && formData.whatsapp && formData.placementText && formData.placementImage && formData.referenceImage;
+  const isEmailFormatValid = formData.email === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+  const whatsappDigits = formData.whatsapp.replace(/\D/g, '');
+  const isWhatsappFormatValid = formData.whatsapp === "" || (whatsappDigits.length >= 8 && whatsappDigits.length <= 15);
+
+  const isFormValid = 
+    formData.name.trim().length >= 2 && 
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && 
+    whatsappDigits.length >= 8 && whatsappDigits.length <= 15 &&
+    formData.placementText.trim().length >= 2 && 
+    formData.placementImage !== null && 
+    formData.referenceImage !== null;
 
   // Pricing Logic
   const calculatePrice = () => {
@@ -303,23 +313,27 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Full Name <span className="text-red-500">*</span></label>
-                  <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans" placeholder="John Doe" />
+                  <input type="text" name="name" value={formData.name} onChange={handleInputChange} className={`w-full bg-primary border px-4 py-3 text-primary focus:border-accent outline-none font-sans ${formData.name !== "" && formData.name.trim().length < 2 ? 'border-red-500/50' : 'border-border'}`} placeholder="John Doe" />
+                  {formData.name !== "" && formData.name.trim().length < 2 && <p className="text-red-400/80 text-xs mt-1">Name is too short.</p>}
                 </div>
                 <div>
                   <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">WhatsApp Number <span className="text-red-500">*</span></label>
-                  <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans" placeholder="+1 234 567 890" />
+                  <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleInputChange} className={`w-full bg-primary border px-4 py-3 text-primary focus:border-accent outline-none font-sans ${!isWhatsappFormatValid ? 'border-red-500/50' : 'border-border'}`} placeholder="+1 234 567 890" />
+                  {!isWhatsappFormatValid && <p className="text-red-400/80 text-xs mt-1">Enter a valid phone number (min. 8 digits).</p>}
                 </div>
               </div>
               
               <div>
                 <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Email Address <span className="text-red-500">*</span></label>
-                <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans" placeholder="john@example.com" />
+                <input type="email" name="email" value={formData.email} onChange={handleInputChange} className={`w-full bg-primary border px-4 py-3 text-primary focus:border-accent outline-none font-sans ${!isEmailFormatValid ? 'border-red-500/50' : 'border-border'}`} placeholder="john@example.com" />
+                {!isEmailFormatValid && <p className="text-red-400/80 text-xs mt-1">Enter a valid email address.</p>}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Body Placement Area <span className="text-red-500">*</span></label>
-                  <input type="text" name="placementText" value={formData.placementText} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans" placeholder="e.g. Left Forearm" />
+                  <input type="text" name="placementText" value={formData.placementText} onChange={handleInputChange} className={`w-full bg-primary border px-4 py-3 text-primary focus:border-accent outline-none font-sans ${formData.placementText !== "" && formData.placementText.trim().length < 2 ? 'border-red-500/50' : 'border-border'}`} placeholder="e.g. Left Forearm" />
+                  {formData.placementText !== "" && formData.placementText.trim().length < 2 && <p className="text-red-400/80 text-xs mt-1">Please specify the placement area.</p>}
                 </div>
                 <div>
                   <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Approximate Size <span className="text-red-500">*</span></label>

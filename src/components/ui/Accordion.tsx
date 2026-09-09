@@ -8,8 +8,8 @@ interface AccordionItem {
   content: string;
 }
 
-export default function Accordion({ items }: { items: AccordionItem[] }) {
-  const [openId, setOpenId] = useState<string | null>(items[0]?.id || null);
+export default function Accordion({ items, defaultOpen = true }: { items: AccordionItem[], defaultOpen?: boolean }) {
+  const [openId, setOpenId] = useState<string | null>(defaultOpen ? (items[0]?.id || null) : null);
 
   return (
     <div className="w-full flex flex-col border-t border-border">

@@ -326,7 +326,7 @@ export default function Home() {
               { id: 'style-2', title: 'Machine Fine Line', content: 'For delicate, intricate, and micro-detailed designs. Using modern single-needle machines, we craft elegant script, micro-realism, and botanical illustrations with unmatched precision.' },
               { id: 'style-3', title: 'Mentawai Tribal', content: 'Authentic patterns from the Mentawai tribe. These ancient motifs represent nature, life balance, and spiritual protection, traditionally done via hand tapping but adaptable to your preferred method.' }
             ]} />
-            <Accordion items={[
+            <Accordion defaultOpen={false} items={[
               { id: 'style-4', title: 'Hand Tapping', content: 'A raw, rhythmic technique using two sticks—one holding the needle and the other tapping it. Best suited for bold tribal and geometric patterns. A deeply spiritual and authentic experience.' },
               { id: 'style-5', title: 'Mandala & Geometric', content: 'Symmetrical, spiritually grounded designs requiring meticulous precision. Whether done via handpoke or machine, these pieces symbolize the universe, balance, and inner peace.' },
               { id: 'style-6', title: 'Custom Flash Art', content: 'Pre-designed, exclusive flash pieces ready to be inked. Perfect for spontaneous sessions, these designs are created by our resident artists and are not repeated once claimed.' }

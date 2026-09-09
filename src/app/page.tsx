@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import TestimonialCard from "@/components/ui/TestimonialCard";
+import TestimonialCarousel from "@/components/ui/TestimonialCarousel";
 import Marquee from "@/components/ui/Marquee";
 
 export default function Home() {
@@ -312,32 +312,90 @@ export default function Home() {
             <div className="w-16 h-[1px] bg-accent mx-auto"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <TestimonialCard 
-              name="Lasse Ritto"
-              country="Google Review"
-              countryCode="US" // Kept for prop type but we can modify the component later to hide it
-              review="Outstanding work and genuine passion for the art. The hygiene standards are impeccable and the artists truly care about delivering exactly what you want."
-              imageUrl="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp"
-              rating={5}
-            />
-            <TestimonialCard 
-              name="Suzanne Klavins"
-              country="Google Review"
-              countryCode="AU"
-              review="A very professional and friendly team. The artwork turned out even better than I expected. The communication and aftercare guidance were detailed, so I felt safe."
-              imageUrl="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg"
-              rating={5}
-            />
-            <TestimonialCard 
-              name="Jessica Knobloch"
-              country="Google Review"
-              countryCode="DE"
-              review="My husband and I got a joint tattoo at the end of our trip, which has now become our tradition. The great reviews convinced us — and they were right."
-              imageUrl="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-20-6B7LEVxri2IpWP3F.webp"
-              rating={5}
-            />
-          </div>
+          <TestimonialCarousel 
+            testimonials={[
+              {
+                name: "Lasse Ritto",
+                country: "Google Review",
+                countryCode: "US",
+                review: "Outstanding work and genuine passion for the art. The hygiene standards are impeccable and the artists truly care about delivering exactly what you want.",
+                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp",
+                rating: 5
+              },
+              {
+                name: "Suzanne Klavins",
+                country: "Google Review",
+                countryCode: "AU",
+                review: "A very professional and friendly team. The artwork turned out even better than I expected. The communication and aftercare guidance were detailed, so I felt safe.",
+                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg",
+                rating: 5
+              },
+              {
+                name: "Jessica Knobloch",
+                country: "Google Review",
+                countryCode: "DE",
+                review: "My husband and I got a joint tattoo at the end of our trip, which has now become our tradition. The great reviews convinced us — and they were right.",
+                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-20-6B7LEVxri2IpWP3F.webp",
+                rating: 5
+              },
+              {
+                name: "Marco Silva",
+                country: "Google Review",
+                countryCode: "BR",
+                review: "Jerry is an amazing artist. The dotwork is so precise and healed perfectly. I barely felt any pain compared to a machine tattoo. Highly recommend!",
+                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-21-yaHHOuqmCsS0hG1g.webp",
+                rating: 5
+              },
+              {
+                name: "Elena Rostova",
+                country: "Google Review",
+                countryCode: "RU",
+                review: "I was super nervous as this was my first tattoo, but the studio vibe is so calming. Jerry explained everything and made sure I was comfortable the whole time.",
+                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-12-erkx86rwibxu98jy-ycU42f64kqU5yt5P.jpg",
+                rating: 5
+              },
+              {
+                name: "Thomas Wright",
+                country: "Google Review",
+                countryCode: "UK",
+                review: "Best handpoke studio in Bali hands down. The attention to detail in the geometric patterns is mind-blowing. Will definitely be back next year.",
+                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-11-boq69p6nyskdz2kd-XUPXBaXpD0GuXd67.jpg",
+                rating: 5
+              },
+              {
+                name: "Claire Dubois",
+                country: "Google Review",
+                countryCode: "FR",
+                review: "Such a beautiful experience! The lines are incredibly fine and delicate. It healed in less than a week with zero complications.",
+                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-22-BUN8FOAbCUzf2GaG.webp",
+                rating: 5
+              },
+              {
+                name: "David Chen",
+                country: "Google Review",
+                countryCode: "SG",
+                review: "Professional setup, great music, and cold AC! But more importantly, the art is world-class. Very easy to book and communicate via WhatsApp.",
+                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-7-t03qnyd1qr9kdoys-z58WskwYIfi8uzmO.jpg",
+                rating: 5
+              },
+              {
+                name: "Sarah Jenkins",
+                country: "Google Review",
+                countryCode: "US",
+                review: "I brought in a custom design and Jerry modified it perfectly to suit the handpoke style. It looks so organic and flows beautifully on my arm.",
+                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-5-es5GVh83VOalxXP9.webp",
+                rating: 5
+              },
+              {
+                name: "Liam O'Connor",
+                country: "Google Review",
+                countryCode: "IE",
+                review: "A must-visit if you want an authentic, unhurried tattoo experience in Bali. The pricing is transparent and the quality is absolutely top-tier.",
+                imageUrl: "/assets/Gallery/handpoke_tattoo_bali_dotlinetattu-2-iT9eQaZa9y0LQ6RN.webp",
+                rating: 5
+              }
+            ]} 
+          />
         </div>
       </section>
 

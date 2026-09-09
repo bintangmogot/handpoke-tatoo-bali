@@ -20,12 +20,17 @@ export default function TestimonialCarousel({ testimonials }: TestimonialCarouse
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const updateScrollState = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
       setCanScrollLeft(scrollLeft > 0);
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10); // 10px buffer
+      
+      const itemWidth = scrollWidth / testimonials.length;
+      const index = Math.round(scrollLeft / itemWidth);
+      setActiveIndex(Math.min(index, testimonials.length - 1));
     }
   };
 
@@ -52,7 +57,7 @@ export default function TestimonialCarousel({ testimonials }: TestimonialCarouse
       <div 
         ref={scrollRef}
         onScroll={updateScrollState}
-        className="flex overflow-x-auto gap-6 pb-10 pt-4 px-4 -mx-4 snap-x snap-mandatory hide-scrollbar items-stretch"
+        className="flex overflow-x-auto gap-6 pb-6 pt-4 px-4 -mx-4 snap-x snap-mandatory hide-scrollbar items-stretch"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {testimonials.map((t, idx) => (
@@ -61,6 +66,23 @@ export default function TestimonialCarousel({ testimonials }: TestimonialCarouse
               <TestimonialCard {...t} />
             </div>
           </div>
+        ))}
+      </div>
+
+      {/* Mobile/Tablet Dots Indicator */}
+      <div className="flex lg:hidden justify-center items-center gap-2 mt-2 mb-6">
+        {testimonials.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => {
+              if (scrollRef.current) {
+                const itemWidth = scrollRef.current.scrollWidth / testimonials.length;
+                scrollRef.current.scrollTo({ left: itemWidth * idx, behavior: 'smooth' });
+              }
+            }}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${activeIndex === idx ? 'bg-accent w-6' : 'bg-border/60 hover:bg-border'}`}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
         ))}
       </div>
 

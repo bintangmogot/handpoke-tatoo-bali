@@ -316,9 +316,15 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 <div>
                   <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Approximate Size <span className="text-red-500">*</span></label>
                   <select name="size" value={formData.size} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans">
-                    <option value="small">Small (5cm - 10cm)</option>
-                    <option value="medium">Medium (11cm - 15cm)</option>
-                    <option value="large">Large (16cm - 25cm+)</option>
+                    <option value="small">
+                      Small (5cm - 10cm){type === "flash" ? ` • ${"IDR 1,000k".split('').map(c => c + '\u0336').join('')}  IDR 500k (DP)` : ""}
+                    </option>
+                    <option value="medium">
+                      Medium (11cm - 15cm){type === "flash" ? ` • ${"IDR 1,750k".split('').map(c => c + '\u0336').join('')}  IDR 875k (DP)` : ""}
+                    </option>
+                    <option value="large">
+                      Large (16cm - 25cm+){type === "flash" ? ` • ${"IDR 2,500k".split('').map(c => c + '\u0336').join('')}  IDR 1,250k (DP)` : ""}
+                    </option>
                   </select>
                 </div>
               </div>

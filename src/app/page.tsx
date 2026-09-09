@@ -30,7 +30,7 @@ export default function Home() {
             <p className="text-accent font-sans tracking-[0.4em] text-xs uppercase mb-6 font-medium">
               Est. 2019 &bull; Bali, Indonesia
             </p>
-            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl text-primary uppercase tracking-wide mb-8 leading-[1.1] glow-text">
+            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl text-primary uppercase tracking-wide mb-8 leading-[1.1]">
               Traditional <span className="text-accent italic lowercase">Handpoke</span> <br/> & Hand Tapping
             </h1>
             <p className="text-secondary font-sans text-lg md:text-xl max-w-2xl mb-10 font-light leading-relaxed">
@@ -49,8 +49,8 @@ export default function Home() {
       </section>
 
       {/* 2. THE APPROACH (Inspired by User Screenshot) */}
-      <section className="py-24 md:py-32 bg-primary">
-        <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+      <section className="py-24 md:py-32 bg-gradient-earth relative">
+        <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
           
           <div className="mb-20">
             <h3 className="text-accent font-sans tracking-widest text-[10px] md:text-xs uppercase mb-4 font-bold">
@@ -105,8 +105,8 @@ export default function Home() {
       <Marquee />
 
       {/* 3. ARTIST SPOTLIGHT */}
-      <section className="py-24 bg-secondary relative border-y border-border">
-        <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+      <section className="py-24 bg-gradient-earth-reverse relative border-y border-border">
+        <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0 items-center">
             
             {/* Image Block */}
@@ -159,8 +159,8 @@ export default function Home() {
       </section>
 
       {/* 4. THE RITUAL (Simplified Flow) */}
-      <section className="py-24 md:py-32 bg-primary border-b border-border">
-        <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+      <section className="py-24 md:py-32 bg-gradient-earth relative">
+        <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
           <div className="text-center mb-16">
             <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">The Ritual</h3>
             <h2 className="font-heading text-4xl md:text-5xl text-primary uppercase tracking-wide">
@@ -259,8 +259,8 @@ export default function Home() {
       </section>
 
       {/* 5. SIGNATURE WORKS */}
-      <section className="py-24 bg-surface border-b border-border">
-        <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+      <section className="py-24 bg-gradient-earth-reverse relative border-y border-border">
+        <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
             <div>
               <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">Our Craft</h3>
@@ -302,9 +302,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6. TESTIMONIALS */}
-      <section className="py-24 bg-primary border-t border-border">
-        <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+      {/* 4. REVIEWS & TESTIMONIALS */}
+      <section className="py-24 bg-gradient-earth relative">
+        <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
           <div className="text-center mb-16">
             <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">Real Experiences</h3>
             <h2 className="font-heading text-4xl md:text-5xl text-primary uppercase tracking-wide mb-6">

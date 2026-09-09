@@ -35,6 +35,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-primary text-primary">
         <EnterOverlay />
+        <div className="noise-overlay"></div>
         <Navbar />
         <main className="flex-1 flex flex-col">{children}</main>
         <Footer />

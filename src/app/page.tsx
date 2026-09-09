@@ -262,7 +262,7 @@ export default function Home() {
       {/* 5. SIGNATURE WORKS */}
       <section className="py-24 bg-gradient-earth-reverse relative border-y border-border">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
             <div>
               <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">Our Craft</h3>
               <h2 className="font-heading text-4xl md:text-5xl text-primary uppercase tracking-wide">

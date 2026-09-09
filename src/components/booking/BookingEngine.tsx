@@ -97,6 +97,15 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
     fetchSlots();
   }, []);
 
+  // Sync default size when type changes
+  useEffect(() => {
+    if (type === "custom" && ["small", "medium", "large"].includes(formData.size)) {
+      setFormData(prev => ({ ...prev, size: "passing" }));
+    } else if (type === "flash" && !["small", "medium", "large"].includes(formData.size)) {
+      setFormData(prev => ({ ...prev, size: "medium" }));
+    }
+  }, [type]);
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -126,8 +135,15 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
       if (formData.size === "small") return { total: 1000000, deposit: 500000, depositPercent: "50%" };
       if (formData.size === "medium") return { total: 1750000, deposit: 875000, depositPercent: "50%" };
       if (formData.size === "large") return { total: 2500000, deposit: 1250000, depositPercent: "50%" };
+    } else {
+      // Custom session pricing
+      if (formData.size === "passing") return { total: 1000000, deposit: 100000, depositPercent: "10%" };
+      if (formData.size === "beginning") return { total: 2500000, deposit: 250000, depositPercent: "10%" };
+      if (formData.size === "medium_session") return { total: 4500000, deposit: 450000, depositPercent: "10%" };
+      if (formData.size === "1day") return { total: 6500000, deposit: 650000, depositPercent: "10%" };
+      if (formData.size === "2days") return { total: 12000000, deposit: 1200000, depositPercent: "10%" };
     }
-    return { total: 0, deposit: 500000, depositPercent: "10%" };
+    return { total: 0, deposit: 0, depositPercent: "0%" };
   };
 
   const priceInfo = calculatePrice();
@@ -336,18 +352,50 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                   {formData.placementText !== "" && formData.placementText.trim().length < 2 && <p className="text-red-400/80 text-xs mt-1">Please specify the placement area.</p>}
                 </div>
                 <div>
-                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Approximate Size <span className="text-red-500">*</span></label>
-                  <select name="size" value={formData.size} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans">
-                    <option value="small">
-                      Small (5cm - 10cm){type === "flash" ? ` • ${"IDR 1,000k".split('').map(c => c + '\u0336').join('')}  IDR 500k (DP)` : ""}
-                    </option>
-                    <option value="medium">
-                      Medium (11cm - 15cm){type === "flash" ? ` • ${"IDR 1,750k".split('').map(c => c + '\u0336').join('')}  IDR 875k (DP)` : ""}
-                    </option>
-                    <option value="large">
-                      Large (16cm - 25cm+){type === "flash" ? ` • ${"IDR 2,500k".split('').map(c => c + '\u0336').join('')}  IDR 1,250k (DP)` : ""}
-                    </option>
-                  </select>
+                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">
+                    {type === "flash" ? "Approximate Size" : "Session Duration"} <span className="text-red-500">*</span>
+                  </label>
+                  
+                  {type === "flash" ? (
+                    <select name="size" value={formData.size} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans">
+                      <option value="small">
+                        Small (5cm - 10cm) • {String("IDR 1,000k").split('').map(c => c + '\u0336').join('')} IDR 500k (DP)
+                      </option>
+                      <option value="medium">
+                        Medium (11cm - 15cm) • {String("IDR 1,750k").split('').map(c => c + '\u0336').join('')} IDR 875k (DP)
+                      </option>
+                      <option value="large">
+                        Large (16cm - 25cm+) • {String("IDR 2,500k").split('').map(c => c + '\u0336').join('')} IDR 1,250k (DP)
+                      </option>
+                    </select>
+                  ) : (
+                    <div className="flex flex-col gap-3">
+                      {[
+                        { id: "passing", title: "Passing Session", desc: "1-2 hours • Small, quick tattoos under 10cm.", price: "IDR 1.000.000 / $65" },
+                        { id: "beginning", title: "Beginning Session", desc: "3 hours • Perfect for medium-sized single pieces.", price: "IDR 2.500.000 / $150" },
+                        { id: "medium_session", title: "Medium Session", desc: "6 hours • Detailed work or multiple small pieces.", price: "IDR 4.500.000 / $300" },
+                        { id: "1day", title: "1 Day Session", desc: "8 hours • Extensive custom work, half sleeves.", price: "IDR 6.500.000 / $450" },
+                        { id: "2days", title: "2 Days Session", desc: "2 × 8 hours • Full sleeves, large scale tribal.", price: "IDR 12.000.000 / $800" },
+                      ].map(session => (
+                        <label 
+                          key={session.id} 
+                          className={`flex items-start gap-4 p-4 border rounded-sm cursor-pointer transition-colors ${formData.size === session.id ? 'border-accent bg-accent/5' : 'border-border bg-primary/30 hover:border-accent/50'}`}
+                          onClick={() => setFormData({ ...formData, size: session.id })}
+                        >
+                          <div className={`mt-1 w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${formData.size === session.id ? 'border-accent' : 'border-secondary/50'}`}>
+                            {formData.size === session.id && <div className="w-2 h-2 bg-accent rounded-full" />}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start gap-4 mb-1">
+                              <span className="font-heading text-primary font-bold">{session.title}</span>
+                              <span className="font-sans text-accent text-xs font-bold whitespace-nowrap">{session.price}</span>
+                            </div>
+                            <span className="text-secondary/70 font-sans text-xs">{session.desc}</span>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -390,20 +438,34 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                     </p>
                   ) : (
                     <p className="text-secondary font-sans text-sm">
-                      Total Price: TBD after consultation
+                      Session Total: <span className="text-primary">IDR {(priceInfo.total / 1000).toLocaleString()}k</span>
                       <span className="mx-3 text-border hidden md:inline">|</span>
-                      <span className="block md:inline mt-1 md:mt-0 text-primary">Deposit to pay today: <strong>IDR 500k</strong></span>
+                      <span className="block md:inline mt-1 md:mt-0 text-primary">Deposit to pay today: <strong>IDR {(priceInfo.deposit / 1000).toLocaleString()}k (10%)</strong></span>
                     </p>
                   )}
                 </div>
 
-                <button 
-                  onClick={() => setStep("calendar")}
-                  disabled={!isFormValid}
-                  className={`w-full md:w-auto px-8 py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all shrink-0 ${isFormValid ? 'bg-accent hover:bg-accent-hover text-white' : 'bg-surface border border-border text-secondary/50 cursor-not-allowed'}`}
-                >
-                  Continue to Calendar
-                </button>
+                <div className="flex flex-col sm:flex-row w-full md:w-auto gap-4 shrink-0">
+                  {type === "custom" && (
+                    <button 
+                      onClick={() => {
+                        const text = `Hi, I'm interested in a custom tattoo.\n\nName: ${formData.name}\nEmail: ${formData.email}\nPlacement: ${formData.placementText}\nSession: ${formData.size}\n\nI have some questions before booking.`;
+                        window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(text)}`, '_blank');
+                      }}
+                      disabled={!isFormValid}
+                      className={`w-full sm:w-auto px-6 py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all border ${isFormValid ? 'border-accent text-accent hover:bg-accent hover:text-white' : 'border-border text-secondary/50 cursor-not-allowed'}`}
+                    >
+                      Ask on WhatsApp
+                    </button>
+                  )}
+                  <button 
+                    onClick={() => setStep("calendar")}
+                    disabled={!isFormValid}
+                    className={`w-full sm:w-auto px-6 py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all ${isFormValid ? 'bg-accent hover:bg-accent-hover text-white' : 'bg-surface border border-border text-secondary/50 cursor-not-allowed'}`}
+                  >
+                    Pay Deposit & Book
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import ZoomableImage from "@/components/ui/ZoomableImage";
 
 // Simulated gallery data using the assets we have
 const galleryData = [
@@ -56,15 +56,15 @@ export default function Gallery() {
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredGallery.map((item) => (
-            <div key={item.id} className="relative aspect-[4/5] rounded-sm overflow-hidden group cursor-pointer border border-border/50">
-              <Image 
+            <div key={item.id} className="relative aspect-[4/5] rounded-sm overflow-hidden group border border-border/50">
+              <ZoomableImage 
                 src={item.src} 
                 alt={`${item.category} Tattoo`} 
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+              <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6 pointer-events-none">
                 <span className="text-accent font-heading tracking-widest uppercase text-sm font-bold">
                   {item.category}
                 </span>

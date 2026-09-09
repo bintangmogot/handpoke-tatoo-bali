@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getBookedSlots, createBooking } from "@/app/actions/bookingActions";
+import ZoomableImage from "@/components/ui/ZoomableImage";
 
 type FlowType = "flash" | "custom";
 type Step = "warning" | "form" | "calendar" | "checkout" | "success";
@@ -197,11 +198,13 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                     "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-21-yaHHOuqmCsS0hG1g.webp",
                     "/assets/Gallery/handpoke_tattoo_bali_dotlinetattu-2-iT9eQaZa9y0LQ6RN.webp",
                   ].map((src, i) => (
-                    <div key={i} className="aspect-square overflow-hidden">
-                      <img
+                    <div key={i} className="aspect-square overflow-hidden relative group">
+                      <ZoomableImage
                         src={src}
                         alt="Hand tapping tattoo example"
-                        className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-500"
+                        fill
+                        sizes="(max-width: 768px) 33vw, 15vw"
+                        className="object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
                       />
                     </div>
                   ))}

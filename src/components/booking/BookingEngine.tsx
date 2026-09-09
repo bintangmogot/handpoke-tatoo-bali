@@ -359,13 +359,13 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                   {type === "flash" ? (
                     <select name="size" value={formData.size} onChange={handleInputChange} className="w-full bg-primary border border-border px-4 py-3 text-primary focus:border-accent outline-none font-sans">
                       <option value="small">
-                        Small (5cm - 10cm) • {String("IDR 1,000k").split('').map(c => c + '\u0336').join('')} IDR 500k (DP)
+                        Small (5cm - 10cm) • {String("IDR 1.000.000").split('').map(c => c + '\u0336').join('')} IDR 500.000 (DP)
                       </option>
                       <option value="medium">
-                        Medium (11cm - 15cm) • {String("IDR 1,750k").split('').map(c => c + '\u0336').join('')} IDR 875k (DP)
+                        Medium (11cm - 15cm) • {String("IDR 1.750.000").split('').map(c => c + '\u0336').join('')} IDR 875.000 (DP)
                       </option>
                       <option value="large">
-                        Large (16cm - 25cm+) • {String("IDR 2,500k").split('').map(c => c + '\u0336').join('')} IDR 1,250k (DP)
+                        Large (16cm - 25cm+) • {String("IDR 2.500.000").split('').map(c => c + '\u0336').join('')} IDR 1.250.000 (DP)
                       </option>
                     </select>
                   ) : (
@@ -432,15 +432,15 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                   <h4 className="font-sans tracking-[0.2em] uppercase text-xs font-semibold text-accent mb-2">Summary</h4>
                   {type === "flash" ? (
                     <p className="text-secondary font-sans text-sm">
-                      Estimated Total: <span className="line-through decoration-primary/50 text-primary/70">IDR {(priceInfo.total / 1000).toLocaleString()}k</span>
+                      Estimated Total: <span className="line-through decoration-primary/50 text-primary/70">IDR {priceInfo.total.toLocaleString("id-ID")}</span>
                       <span className="mx-3 text-border hidden md:inline">|</span>
-                      <span className="block md:inline mt-1 md:mt-0 text-primary">Deposit to pay today: <strong>IDR {(priceInfo.deposit / 1000).toLocaleString()}k</strong></span>
+                      <span className="block md:inline mt-1 md:mt-0 text-primary">Deposit to pay today: <strong>IDR {priceInfo.deposit.toLocaleString("id-ID")}</strong></span>
                     </p>
                   ) : (
                     <p className="text-secondary font-sans text-sm">
-                      Session Total: <span className="text-primary">IDR {(priceInfo.total / 1000).toLocaleString()}k</span>
+                      Session Total: <span className="text-primary">IDR {priceInfo.total.toLocaleString("id-ID")}</span>
                       <span className="mx-3 text-border hidden md:inline">|</span>
-                      <span className="block md:inline mt-1 md:mt-0 text-primary">Deposit to pay today: <strong>IDR {(priceInfo.deposit / 1000).toLocaleString()}k (10%)</strong></span>
+                      <span className="block md:inline mt-1 md:mt-0 text-primary">Deposit to pay today: <strong>IDR {priceInfo.deposit.toLocaleString("id-ID")} (10%)</strong></span>
                     </p>
                   )}
                 </div>

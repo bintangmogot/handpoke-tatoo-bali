@@ -276,27 +276,27 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="flex flex-col group cursor-pointer">
-              <div className="relative aspect-[4/5] border border-border overflow-hidden mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+            <div className="flex flex-col group">
+              <div className="relative aspect-[4/5] border border-border overflow-hidden mb-3 md:mb-6">
                 <ZoomableImage src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg" alt="Flowing Balance" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
               </div>
-              <h4 className="font-heading text-2xl text-primary mb-2">Flowing Balance</h4>
-              <p className="text-secondary font-sans font-light text-sm">Traditional Handpoke &bull; Custom Design</p>
+              <h4 className="font-heading text-lg md:text-2xl text-primary mb-1 md:mb-2">Flowing Balance</h4>
+              <p className="text-secondary font-sans font-light text-xs md:text-sm">Traditional Handpoke &bull; Custom Design</p>
             </div>
-            <div className="flex flex-col group">
-              <div className="relative aspect-[4/5] border border-border overflow-hidden mb-6">
+            <div className="flex flex-col group md:mt-12">
+              <div className="relative aspect-[4/5] border border-border overflow-hidden mb-3 md:mb-6">
                 <ZoomableImage src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-20-6B7LEVxri2IpWP3F.webp" alt="Rooted Resilience" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
               </div>
-              <h4 className="font-heading text-2xl text-primary mb-2">Rooted Resilience</h4>
-              <p className="text-secondary font-sans font-light text-sm">Tribal Mentawai &bull; Chest Piece</p>
+              <h4 className="font-heading text-lg md:text-2xl text-primary mb-1 md:mb-2">Rooted Resilience</h4>
+              <p className="text-secondary font-sans font-light text-xs md:text-sm">Tribal Mentawai &bull; Chest Piece</p>
             </div>
-            <div className="flex flex-col group">
-              <div className="relative aspect-[4/5] border border-border overflow-hidden mb-6">
+            <div className="flex flex-col group col-span-2 md:col-span-1">
+              <div className="relative aspect-[4/5] md:aspect-[4/5] aspect-[2/1] border border-border overflow-hidden mb-3 md:mb-6">
                 <ZoomableImage src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp" alt="Sacred Geometry" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
               </div>
-              <h4 className="font-heading text-2xl text-primary mb-2">Sacred Geometry</h4>
-              <p className="text-secondary font-sans font-light text-sm">Machine Fine Line &bull; Flash Art</p>
+              <h4 className="font-heading text-lg md:text-2xl text-primary mb-1 md:mb-2">Sacred Geometry</h4>
+              <p className="text-secondary font-sans font-light text-xs md:text-sm">Machine Fine Line &bull; Flash Art</p>
             </div>
           </div>
         </div>

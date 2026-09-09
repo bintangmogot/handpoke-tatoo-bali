@@ -199,7 +199,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 <p className="font-sans text-xs tracking-[0.2em] uppercase text-accent mb-5">Works well for</p>
                 
                 {/* Photo grid */}
-                <div className="grid grid-cols-3 gap-1.5 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 mb-6">
                   {[
                     "/assets/Gallery/handtapping-tattoo-bali-dotlinetattu-FuI3cCjPQQpIbAk2.webp",
                     "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-22-BUN8FOAbCUzf2GaG.webp",
@@ -245,7 +245,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 <p className="font-sans text-xs tracking-[0.2em] uppercase text-[#7a6a5a] mb-5">Not suitable for</p>
                 
                 {/* Placeholder "blurred/forbidden" grid using actual images */}
-                <div className="grid grid-cols-3 gap-1.5 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 mb-6">
                   {[
                     { label: "Portrait realism", img: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg" },
                     { label: "Micro fine-line", img: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-11-boq69p6nyskdz2kd-XUPXBaXpD0GuXd67.jpg" },

@@ -11,6 +11,10 @@ const galleryData = [
   { id: 4, src: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-20-6B7LEVxri2IpWP3F.webp", category: "Handpoke" },
   { id: 5, src: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-21-yaHHOuqmCsS0hG1g.webp", category: "Machine" },
   { id: 6, src: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-pjqgb34z4ih1vbty-1-1GiQoHQnBSTZ2GRi.jpg", category: "Flash" },
+  { id: 7, src: "/assets/Gallery/handtapping-tattoo-bali-dotlinetattu-FuI3cCjPQQpIbAk2.webp", category: "Handpoke" },
+  { id: 8, src: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-22-BUN8FOAbCUzf2GaG.webp", category: "Flash" },
+  { id: 9, src: "/assets/Gallery/dotlinetattu_handpoke_bali-2-Rkt9nssE7W3zqbvl.webp", category: "Machine" },
+  { id: 10, src: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-11-boq69p6nyskdz2kd-XUPXBaXpD0GuXd67.jpg", category: "Handpoke" },
 ];
 
 const categories = ["All", "Handpoke", "Machine", "Flash"];
@@ -54,9 +58,9 @@ export default function Gallery() {
         </div>
 
         {/* Grid (Masonry) */}
-        <div className="columns-2 md:columns-3 lg:columns-4 gap-4 md:gap-6 space-y-4 md:space-y-6">
+        <div className="columns-2 md:columns-3 lg:columns-4 gap-4 md:gap-6">
           {filteredGallery.map((item) => (
-            <div key={item.id} className="relative rounded-sm overflow-hidden group border border-border/50 break-inside-avoid">
+            <div key={item.id} className="relative rounded-sm overflow-hidden group border border-border/50 break-inside-avoid inline-block w-full mb-4 md:mb-6">
               <ZoomableImage 
                 src={item.src} 
                 alt={`${item.category} Tattoo`} 

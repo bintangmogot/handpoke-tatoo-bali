@@ -3,21 +3,38 @@
 import { useState } from "react";
 import Image, { ImageProps } from "next/image";
 
-export default function ZoomableImage({ src, alt, ...props }: ImageProps) {
+interface ZoomableImageProps extends Omit<ImageProps, 'src'> {
+  src: string;
+  useNativeImg?: boolean;
+}
+
+export default function ZoomableImage({ src, alt, useNativeImg, ...props }: ZoomableImageProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <Image
-        src={src}
-        alt={alt}
-        {...props}
-        onClick={(e) => {
-          setIsOpen(true);
-          if (props.onClick) props.onClick(e);
-        }}
-        className={`${props.className || ""} cursor-zoom-in`}
-      />
+      {useNativeImg ? (
+        <img
+          src={src}
+          alt={alt}
+          onClick={(e) => {
+            setIsOpen(true);
+            if (props.onClick) props.onClick(e as any);
+          }}
+          className={`${props.className || ""} cursor-zoom-in`}
+        />
+      ) : (
+        <Image
+          src={src}
+          alt={alt}
+          {...props}
+          onClick={(e) => {
+            setIsOpen(true);
+            if (props.onClick) props.onClick(e);
+          }}
+          className={`${props.className || ""} cursor-zoom-in`}
+        />
+      )}
 
       {isOpen && (
         <div 

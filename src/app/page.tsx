@@ -137,40 +137,40 @@ export default function Home() {
             </div>
             
             {/* Text Block */}
-            <ScrollReveal delay={200}>
             <div className="lg:col-span-6 lg:col-start-7 flex flex-col pt-8 lg:pt-0">
-              <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">The Artist</h3>
-              <h2 className="font-heading text-4xl md:text-6xl text-primary mb-8 uppercase tracking-wide">
-                Silver Jerry
-              </h2>
-              <div className="space-y-6 text-secondary font-sans leading-relaxed font-light mb-10 text-base md:text-lg">
-                <p>
-                  My journey began in 2010 out of a deep passion for art and culture. By 2015, I had fully immersed myself in mastering the ancient technique of handpoke tattooing. 
-                </p>
-                <p>
-                  Dotlinetattu was born in 2019 as a physical sanctuary in Bali. It was created with a rebellious spirit against the modern commercialization of tattoo studios. We want to restore the "Real Bali"—a place where art, connection, and spirituality hold more value than quick profits.
-                </p>
-              </div>
-              
-              {/* Signature */}
-              <div className="mb-10">
-                <Image 
-                  src="/assets/signature.png" 
-                  alt="Jerry Signature" 
-                  width={200} 
-                  height={80} 
-                  className="opacity-70 invert"
-                />
-              </div>
+              <ScrollReveal delay={200}>
+                <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">The Artist</h3>
+                <h2 className="font-heading text-4xl md:text-6xl text-primary mb-8 uppercase tracking-wide">
+                  Silver Jerry
+                </h2>
+                <div className="space-y-6 text-secondary font-sans leading-relaxed font-light mb-10 text-base md:text-lg">
+                  <p>
+                    My journey began in 2010 out of a deep passion for art and culture. By 2015, I had fully immersed myself in mastering the ancient technique of handpoke tattooing. 
+                  </p>
+                  <p>
+                    Dotlinetattu was born in 2019 as a physical sanctuary in Bali. It was created with a rebellious spirit against the modern commercialization of tattoo studios. We want to restore the "Real Bali"—a place where art, connection, and spirituality hold more value than quick profits.
+                  </p>
+                </div>
+                
+                {/* Signature */}
+                <div className="mb-10">
+                  <Image 
+                    src="/assets/signature.png" 
+                    alt="Jerry Signature" 
+                    width={200} 
+                    height={80} 
+                    className="opacity-70 invert"
+                  />
+                </div>
 
-              <Link 
-                href="/about" 
-                className="self-start inline-flex items-center gap-3 text-primary hover:text-accent font-sans font-semibold tracking-widest uppercase text-xs transition-colors group pb-1 border-b border-accent"
-              >
-                Read Full Story
-              </Link>
+                <Link 
+                  href="/about" 
+                  className="self-start inline-flex items-center gap-3 text-primary hover:text-accent font-sans font-semibold tracking-widest uppercase text-xs transition-colors group pb-1 border-b border-accent"
+                >
+                  Read Full Story
+                </Link>
+              </ScrollReveal>
             </div>
-            </ScrollReveal>
           </div>
         </div>
       </section>

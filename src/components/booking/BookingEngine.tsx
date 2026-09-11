@@ -258,31 +258,10 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
               {/* CANNOT DO — no photos, illustrated with texture */}
               <div className="bg-[#0d0d0d] p-7 border-l border-border/40">
                 <p className="font-sans text-xs tracking-[0.2em] uppercase text-[#7a6a5a] mb-5">Not suitable for</p>
-                
-                {/* Placeholder "blurred/forbidden" grid using actual images */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 mb-6">
-                  {[
-                    { label: "Portrait realism", img: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg" },
-                    { label: "Micro fine-line", img: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-11-boq69p6nyskdz2kd-XUPXBaXpD0GuXd67.jpg" },
-                    { label: "3D shading", img: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-12-erkx86rwibxu98jy-ycU42f64kqU5yt5P.jpg" },
-                    { label: "Watercolor blends", img: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp" },
-                    { label: "Hairline precision", img: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-20-6B7LEVxri2IpWP3F.webp" },
-                    { label: "Complex geometry", img: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-7-t03qnyd1qr9kdoys-z58WskwYIfi8uzmO.jpg" },
-                  ].map((item, i) => (
-                    <div key={i} className="aspect-square border border-border/20 flex items-center justify-center overflow-hidden relative group">
-                      <img
-                        src={item.img}
-                        alt={item.label}
-                        className="absolute inset-0 w-full h-full object-cover grayscale opacity-25"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                        <svg className="w-5 h-5 text-secondary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                        </svg>
-                      </div>
-                      <span className="text-[9px] font-sans text-secondary/70 text-center px-1 leading-tight z-10 uppercase tracking-widest">{item.label}</span>
-                    </div>
-                  ))}
+                <div className="bg-primary/5 border border-border/30 p-4 mb-6 rounded-sm">
+                  <p className="text-secondary/80 font-sans text-sm leading-relaxed italic">
+                    "Modern design styles cannot be achieved with traditional hand tapping."
+                  </p>
                 </div>
 
                 <ul className="space-y-3 text-secondary/60 font-sans text-sm leading-relaxed">

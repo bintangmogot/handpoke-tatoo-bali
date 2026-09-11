@@ -348,7 +348,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                       </option>
                     </select>
                   ) : (
-                    <div className="flex flex-col gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {[
                         { id: "passing", title: "Passing Session", desc: "1-2 hours • Small, quick tattoos under 10cm.", price: "IDR 1.500.000", tag: "Same-day consultation" },
                         { id: "medium_session", title: "Medium Session", desc: "6 hours • Detailed work or multiple small pieces.", price: "IDR 5.500.000", tag: "Prior consultation required" },
@@ -375,14 +375,6 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                           </div>
                         </label>
                       ))}
-
-                      {/* Consultation notice */}
-                      <div className="bg-accent/10 border border-accent/20 p-4 rounded-sm relative overflow-hidden mt-1">
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent/50"></div>
-                        <p className="text-accent/90 font-sans text-xs leading-relaxed pl-3">
-                          <strong>📋 Note:</strong> Starting from <strong>Medium Session</strong> and above, prior consultation is highly recommended before booking. For <strong>Passing Session</strong>, consultation can be done on the same day (similar to Flash Tattoo).
-                        </p>
-                      </div>
                     </div>
                   )}
                 </div>
@@ -415,6 +407,16 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                   </label>
                 </div>
               </div>
+
+              {/* Consultation notice — below body placement */}
+              {type === "custom" && (
+                <div className="bg-accent/10 border border-accent/20 p-4 rounded-sm relative overflow-hidden mt-4">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent/50"></div>
+                  <p className="text-accent/90 font-sans text-xs leading-relaxed pl-3">
+                    <strong>📋 Note:</strong> Starting from <strong>Medium Session</strong> and above, prior consultation is highly recommended before booking. For <strong>Passing Session</strong>, consultation can be done on the same day (similar to Flash Tattoo).
+                  </p>
+                </div>
+              )}
 
               <div className="mt-8 p-6 border-t border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <div>

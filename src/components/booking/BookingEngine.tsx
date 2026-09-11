@@ -427,7 +427,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                     <button 
                       onClick={() => {
                         const text = `Hi, I'm interested in a custom tattoo.\n\nName: ${formData.name}\nEmail: ${formData.email}\nPlacement: ${formData.placementText}\nSession: ${formData.size}\n\nI have some questions before booking.`;
-                        window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(text)}`, '_blank');
+                        window.open(`https://wa.me/6282339760624?text=${encodeURIComponent(text)}`, '_blank');
                       }}
                       disabled={!isFormValid}
                       className={`w-full sm:w-auto px-6 py-4 font-sans tracking-widest uppercase text-xs font-bold rounded-sm transition-all border ${isFormValid ? 'border-accent text-accent hover:bg-accent hover:text-white' : 'border-border text-secondary/50 cursor-not-allowed'}`}

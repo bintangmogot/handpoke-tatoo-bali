@@ -324,12 +324,25 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 {!isEmailFormatValid && <p className="text-red-400/80 text-xs mt-1">Enter a valid email address.</p>}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Body Placement Area <span className="text-red-500">*</span></label>
-                  <input type="text" name="placementText" value={formData.placementText} onChange={handleInputChange} className={`w-full bg-primary border px-4 py-3 text-primary focus:border-accent outline-none font-sans ${formData.placementText !== "" && formData.placementText.trim().length < 2 ? 'border-red-500/50' : 'border-border'}`} placeholder="e.g. Left Forearm" />
-                  {formData.placementText !== "" && formData.placementText.trim().length < 2 && <p className="text-red-400/80 text-xs mt-1">Please specify the placement area.</p>}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <div className="flex flex-col gap-6">
+                  <div>
+                    <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Body Placement Area <span className="text-red-500">*</span></label>
+                    <input type="text" name="placementText" value={formData.placementText} onChange={handleInputChange} className={`w-full bg-primary border px-4 py-3 text-primary focus:border-accent outline-none font-sans ${formData.placementText !== "" && formData.placementText.trim().length < 2 ? 'border-red-500/50' : 'border-border'}`} placeholder="e.g. Left Forearm" />
+                    {formData.placementText !== "" && formData.placementText.trim().length < 2 && <p className="text-red-400/80 text-xs mt-1">Please specify the placement area.</p>}
+                  </div>
+
+                  {/* Consultation notice — below body placement */}
+                  {type === "custom" && (
+                    <div className="bg-accent/10 border border-accent/20 p-5 rounded-sm relative overflow-hidden">
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent/50"></div>
+                      <p className="text-accent/90 font-sans text-xs leading-relaxed pl-2">
+                        <strong>📋 Note:</strong> Starting from <strong>Medium Session</strong> and above, prior consultation is highly recommended before booking. For <strong>Passing Session</strong>, consultation can be done on the same day (similar to Flash Tattoo).
+                      </p>
+                    </div>
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">
                     {type === "flash" ? "Approximate Size" : "Session Duration"} <span className="text-red-500">*</span>
@@ -357,20 +370,20 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                       ].map(session => (
                         <label 
                           key={session.id} 
-                          className={`flex items-start gap-4 p-4 border rounded-sm cursor-pointer transition-colors ${formData.size === session.id ? 'border-accent bg-accent/5' : 'border-border bg-primary/30 hover:border-accent/50'}`}
+                          className={`flex items-start gap-3 p-3 lg:p-4 border rounded-sm cursor-pointer transition-colors ${formData.size === session.id ? 'border-accent bg-accent/5' : 'border-border bg-primary/30 hover:border-accent/50'}`}
                           onClick={() => setFormData({ ...formData, size: session.id })}
                         >
                           <div className={`mt-1 w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${formData.size === session.id ? 'border-accent' : 'border-secondary/50'}`}>
                             {formData.size === session.id && <div className="w-2 h-2 bg-accent rounded-full" />}
                           </div>
                           <div className="flex-1">
-                            <div className="flex justify-between items-start gap-4 mb-1">
-                              <span className="font-heading text-primary font-bold">{session.title}</span>
-                              <span className="font-sans text-accent text-xs font-bold whitespace-nowrap">{session.price}</span>
+                            <div className="flex flex-col mb-1.5 gap-0.5">
+                              <span className="font-heading text-primary font-bold leading-tight text-sm lg:text-base">{session.title}</span>
+                              <span className="font-sans text-accent text-xs font-bold">{session.price}</span>
                             </div>
-                            <span className="text-secondary/70 font-sans text-xs">{session.desc}</span>
-                            <span className={`block mt-1.5 font-sans text-[10px] tracking-wider uppercase ${session.id === 'passing' ? 'text-green-400/80' : 'text-amber-400/80'}`}>
-                              ● {session.tag}
+                            <span className="text-secondary/70 font-sans text-xs leading-snug block mb-2">{session.desc}</span>
+                            <span className={`inline-block font-sans text-[9px] tracking-wider uppercase px-2 py-1 rounded bg-black/40 ${session.id === 'passing' ? 'text-green-400' : 'text-amber-400'}`}>
+                              {session.tag}
                             </span>
                           </div>
                         </label>
@@ -407,16 +420,6 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                   </label>
                 </div>
               </div>
-
-              {/* Consultation notice — below body placement */}
-              {type === "custom" && (
-                <div className="bg-accent/10 border border-accent/20 p-4 rounded-sm relative overflow-hidden mt-4">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent/50"></div>
-                  <p className="text-accent/90 font-sans text-xs leading-relaxed pl-3">
-                    <strong>📋 Note:</strong> Starting from <strong>Medium Session</strong> and above, prior consultation is highly recommended before booking. For <strong>Passing Session</strong>, consultation can be done on the same day (similar to Flash Tattoo).
-                  </p>
-                </div>
-              )}
 
               <div className="mt-8 p-6 border-t border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <div>

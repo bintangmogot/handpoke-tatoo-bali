@@ -674,7 +674,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 Drop Jerry a message on WhatsApp to confirm your design details.
               </p>
               <a 
-                href={`https://wa.me/6282339760624?text=${encodeURIComponent("Hello Jerry! I just booked a " + type + " tattoo slot on " + selectedDate + " at " + selectedTime + ". My name is " + formData.name + ".")}`}
+                href={`https://wa.me/6282339760624?text=${encodeURIComponent(`Hello Jerry! I just booked a ${type} tattoo slot on ${selectedDate} at ${selectedTime}. My name is ${formData.name}. Booking ID: ${bookingId}`)}`}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-3 w-full py-4 bg-accent hover:bg-accent-hover text-white font-sans tracking-widest uppercase text-xs font-bold transition-all"

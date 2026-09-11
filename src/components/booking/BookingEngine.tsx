@@ -324,23 +324,11 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 {!isEmailFormatValid && <p className="text-red-400/80 text-xs mt-1">Enter a valid email address.</p>}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                <div className="flex flex-col gap-6">
-                  <div>
-                    <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Body Placement Area <span className="text-red-500">*</span></label>
-                    <input type="text" name="placementText" value={formData.placementText} onChange={handleInputChange} className={`w-full bg-primary border px-4 py-3 text-primary focus:border-accent outline-none font-sans ${formData.placementText !== "" && formData.placementText.trim().length < 2 ? 'border-red-500/50' : 'border-border'}`} placeholder="e.g. Left Forearm" />
-                    {formData.placementText !== "" && formData.placementText.trim().length < 2 && <p className="text-red-400/80 text-xs mt-1">Please specify the placement area.</p>}
-                  </div>
-
-                  {/* Consultation notice — below body placement */}
-                  {type === "custom" && (
-                    <div className="bg-accent/10 border border-accent/20 p-5 rounded-sm relative overflow-hidden">
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent/50"></div>
-                      <p className="text-accent/90 font-sans text-xs leading-relaxed pl-2">
-                        <strong>📋 Note:</strong> Starting from <strong>Medium Session</strong> and above, prior consultation is highly recommended before booking. For <strong>Passing Session</strong>, consultation can be done on the same day (similar to Flash Tattoo).
-                      </p>
-                    </div>
-                  )}
+              <div className="flex flex-col gap-8">
+                <div>
+                  <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">Body Placement Area <span className="text-red-500">*</span></label>
+                  <input type="text" name="placementText" value={formData.placementText} onChange={handleInputChange} className={`w-full bg-primary border px-4 py-3 text-primary focus:border-accent outline-none font-sans ${formData.placementText !== "" && formData.placementText.trim().length < 2 ? 'border-red-500/50' : 'border-border'}`} placeholder="e.g. Left Forearm" />
+                  {formData.placementText !== "" && formData.placementText.trim().length < 2 && <p className="text-red-400/80 text-xs mt-1">Please specify the placement area.</p>}
                 </div>
 
                 <div>
@@ -361,33 +349,43 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                       </option>
                     </select>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {[
-                        { id: "passing", title: "Passing Session", desc: "1-2 hours • Small, quick tattoos under 10cm.", price: "IDR 1.500.000", tag: "Same-day consultation" },
-                        { id: "medium_session", title: "Medium Session", desc: "6 hours • Detailed work or multiple small pieces.", price: "IDR 5.500.000", tag: "Prior consultation required" },
-                        { id: "1day", title: "1 Day Session", desc: "8 hours • Extensive custom work, half sleeves.", price: "IDR 8.500.000", tag: "Prior consultation required" },
-                        { id: "2days", title: "2 Days Session", desc: "2 × 8 hours • Full sleeves, large scale tribal.", price: "IDR 17.000.000", tag: "Prior consultation required" },
-                      ].map(session => (
-                        <label 
-                          key={session.id} 
-                          className={`flex items-start gap-3 p-3 lg:p-4 border rounded-sm cursor-pointer transition-colors ${formData.size === session.id ? 'border-accent bg-accent/5' : 'border-border bg-primary/30 hover:border-accent/50'}`}
-                          onClick={() => setFormData({ ...formData, size: session.id })}
-                        >
-                          <div className={`mt-1 w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${formData.size === session.id ? 'border-accent' : 'border-secondary/50'}`}>
-                            {formData.size === session.id && <div className="w-2 h-2 bg-accent rounded-full" />}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex flex-col mb-1.5 gap-0.5">
-                              <span className="font-heading text-primary font-bold leading-tight text-sm lg:text-base">{session.title}</span>
-                              <span className="font-sans text-accent text-xs font-bold">{session.price}</span>
+                    <div className="flex flex-col gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {[
+                          { id: "passing", title: "Passing Session", desc: "1-2 hours • Small, quick tattoos under 10cm.", price: "IDR 1.500.000", tag: "Same-day consultation" },
+                          { id: "medium_session", title: "Medium Session", desc: "6 hours • Detailed work or multiple small pieces.", price: "IDR 5.500.000", tag: "Prior consultation required" },
+                          { id: "1day", title: "1 Day Session", desc: "8 hours • Extensive custom work, half sleeves.", price: "IDR 8.500.000", tag: "Prior consultation required" },
+                          { id: "2days", title: "2 Days Session", desc: "2 × 8 hours • Full sleeves, large scale tribal.", price: "IDR 17.000.000", tag: "Prior consultation required" },
+                        ].map(session => (
+                          <label 
+                            key={session.id} 
+                            className={`flex items-start gap-3 p-3 lg:p-4 border rounded-sm cursor-pointer transition-colors ${formData.size === session.id ? 'border-accent bg-accent/5' : 'border-border bg-primary/30 hover:border-accent/50'}`}
+                            onClick={() => setFormData({ ...formData, size: session.id })}
+                          >
+                            <div className={`mt-1 w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${formData.size === session.id ? 'border-accent' : 'border-secondary/50'}`}>
+                              {formData.size === session.id && <div className="w-2 h-2 bg-accent rounded-full" />}
                             </div>
-                            <span className="text-secondary/70 font-sans text-xs leading-snug block mb-2">{session.desc}</span>
-                            <span className={`inline-block font-sans text-[9px] tracking-wider uppercase px-2 py-1 rounded bg-black/40 ${session.id === 'passing' ? 'text-green-400' : 'text-amber-400'}`}>
-                              {session.tag}
-                            </span>
-                          </div>
-                        </label>
-                      ))}
+                            <div className="flex-1">
+                              <div className="flex flex-col mb-1.5 gap-0.5">
+                                <span className="font-heading text-primary font-bold leading-tight text-sm lg:text-base">{session.title}</span>
+                                <span className="font-sans text-accent text-xs font-bold">{session.price}</span>
+                              </div>
+                              <span className="text-secondary/70 font-sans text-xs leading-snug block mb-2">{session.desc}</span>
+                              <span className={`inline-block font-sans text-[9px] tracking-wider uppercase px-2 py-1 rounded bg-black/40 ${session.id === 'passing' ? 'text-green-400' : 'text-amber-400'}`}>
+                                {session.tag}
+                              </span>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                      
+                      {/* Consultation notice */}
+                      <div className="bg-accent/10 border border-accent/20 p-5 rounded-sm relative overflow-hidden mt-2">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent/50"></div>
+                        <p className="text-accent/90 font-sans text-xs leading-relaxed pl-2">
+                          <strong>📋 Note:</strong> Starting from <strong>Medium Session</strong> and above, prior consultation is highly recommended before booking. For <strong>Passing Session</strong>, consultation can be done on the same day (similar to Flash Tattoo).
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>

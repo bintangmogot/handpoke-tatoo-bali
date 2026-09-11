@@ -258,8 +258,9 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
               {/* CANNOT DO — no photos, illustrated with texture */}
               <div className="bg-[#0d0d0d] p-7 border-l border-border/40">
                 <p className="font-sans text-xs tracking-[0.2em] uppercase text-[#7a6a5a] mb-5">Not suitable for</p>
-                <div className="bg-primary/5 border border-border/30 p-4 mb-6 rounded-sm">
-                  <p className="text-secondary/80 font-sans text-sm leading-relaxed italic">
+                <div className="bg-accent/10 border border-accent/20 p-5 mb-6 rounded-sm relative overflow-hidden">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent/50"></div>
+                  <p className="text-accent/90 font-sans text-sm leading-relaxed italic relative z-10">
                     "Modern design styles cannot be achieved with traditional hand tapping."
                   </p>
                 </div>

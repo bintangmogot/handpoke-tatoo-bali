@@ -12,7 +12,7 @@ export default function Footer() {
               DOTLINETATTU
             </h2>
             <p className="text-secondary text-sm leading-relaxed mb-6">
-              Authentic Handpoke & Tribal Tattoo Experience in Bali. Specializing in traditional Kalimantan, Mentawai, and modern custom designs.
+              Authentic Tattoo Custom Geometric tribal fusion Experience in Bali. Specializing in traditional handpoke and hand tapping.
             </p>
           </div>
 

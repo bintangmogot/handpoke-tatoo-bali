@@ -1,16 +1,14 @@
 export default function Marquee() {
   const words = [
-    "AUTHENTIC HANDPOKE",
+    "HANDPOKE TATTOO",
     "•",
-    "NO MACHINES",
+    "TRADITIONAL HAND TAPPING",
     "•",
-    "TRADITIONAL MENTAWAI",
+    "NO MACHINE",
     "•",
-    "KALIMANTAN ROOTS",
+    "TRIBAL ROOTS INSPIRATION",
     "•",
-    "MEDITATIVE RITUAL",
-    "•",
-    "CUSTOM DESIGNS",
+    "GEOMETRIC TRIBAL FUSION",
     "•"
   ];
 

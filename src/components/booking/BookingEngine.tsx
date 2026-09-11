@@ -137,11 +137,10 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
       if (formData.size === "large") return { total: 2500000, deposit: 1250000, depositPercent: "50%" };
     } else {
       // Custom session pricing
-      if (formData.size === "passing") return { total: 1000000, deposit: 100000, depositPercent: "10%" };
-      if (formData.size === "beginning") return { total: 2500000, deposit: 250000, depositPercent: "10%" };
-      if (formData.size === "medium_session") return { total: 4500000, deposit: 450000, depositPercent: "10%" };
-      if (formData.size === "1day") return { total: 6500000, deposit: 650000, depositPercent: "10%" };
-      if (formData.size === "2days") return { total: 12000000, deposit: 1200000, depositPercent: "10%" };
+      if (formData.size === "passing") return { total: 1500000, deposit: 150000, depositPercent: "10%" };
+      if (formData.size === "medium_session") return { total: 5500000, deposit: 550000, depositPercent: "10%" };
+      if (formData.size === "1day") return { total: 8500000, deposit: 850000, depositPercent: "10%" };
+      if (formData.size === "2days") return { total: 17000000, deposit: 1700000, depositPercent: "10%" };
     }
     return { total: 0, deposit: 0, depositPercent: "0%" };
   };
@@ -371,11 +370,10 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                   ) : (
                     <div className="flex flex-col gap-3">
                       {[
-                        { id: "passing", title: "Passing Session", desc: "1-2 hours • Small, quick tattoos under 10cm.", price: "IDR 1.000.000 / $65" },
-                        { id: "beginning", title: "Beginning Session", desc: "3 hours • Perfect for medium-sized single pieces.", price: "IDR 2.500.000 / $150" },
-                        { id: "medium_session", title: "Medium Session", desc: "6 hours • Detailed work or multiple small pieces.", price: "IDR 4.500.000 / $300" },
-                        { id: "1day", title: "1 Day Session", desc: "8 hours • Extensive custom work, half sleeves.", price: "IDR 6.500.000 / $450" },
-                        { id: "2days", title: "2 Days Session", desc: "2 × 8 hours • Full sleeves, large scale tribal.", price: "IDR 12.000.000 / $800" },
+                        { id: "passing", title: "Passing Session", desc: "1-2 hours • Small, quick tattoos under 10cm.", price: "IDR 1.500.000" },
+                        { id: "medium_session", title: "Medium Session", desc: "6 hours • Detailed work or multiple small pieces.", price: "IDR 5.500.000" },
+                        { id: "1day", title: "1 Day Session", desc: "8 hours • Extensive custom work, half sleeves.", price: "IDR 8.500.000" },
+                        { id: "2days", title: "2 Days Session", desc: "2 × 8 hours • Full sleeves, large scale tribal.", price: "IDR 17.000.000" },
                       ].map(session => (
                         <label 
                           key={session.id} 

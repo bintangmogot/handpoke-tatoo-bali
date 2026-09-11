@@ -7,7 +7,7 @@ export default function FAQ() {
   const faqs = [
     {
       question: "Do you only do Handpoke tattoos?",
-      answer: "While we specialize in traditional Handpoke techniques (originating from Kalimantan and Mentawai traditions), we also offer modern Machine tattoos for specific styles or client preferences."
+      answer: "While we specialize in traditional Handpoke techniques (originating from Mentawai traditions), we also offer modern Machine tattoos for specific styles or client preferences."
     },
     {
       question: "What is the minimum tattoo size?",
@@ -22,8 +22,8 @@ export default function FAQ() {
       answer: "All bookings require a 50% deposit via our website to secure your slot (we accept QRIS, E-Wallets, Local Bank Transfers, and International Credit Cards). The remaining 50% is paid in cash or transfer at the studio."
     },
     {
-      question: "Can I bring a friend to the studio?",
-      answer: "Our studio is a focused, intimate space designed for a meditative tattoo experience. While you may bring one person for support, we ask that you avoid bringing large groups so the artist can concentrate fully on your piece."
+      question: "Can I bring friends to my session?",
+      answer: "Our studio is a focused, intimate space designed for a calm and focused tattoo experience. While you may bring one person for support, we ask that you avoid bringing large groups so the artist can concentrate fully on your piece."
     }
   ];
 

@@ -148,7 +148,7 @@ export default function Home() {
                     My journey began in 2010 out of a deep passion for art and culture. By 2015, I had fully immersed myself in mastering the ancient technique of handpoke tattooing. 
                   </p>
                   <p>
-                    Dotlinetattu was born in 2019 as a physical sanctuary in Bali. It was created with a rebellious spirit against the modern commercialization of tattoo studios. We want to restore the "Real Bali"—a place where art, connection, and spirituality hold more value than quick profits.
+                    Dotlinetattu was born in 2019 as a physical sanctuary in Bali. It was created with a rebellious spirit against the modern commercialization of tattoo studios. We want to restore the "Real Bali"—a place where art, connection, and culture hold more value than quick profits.
                   </p>
                 </div>
                 
@@ -175,15 +175,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Chevron Divider: Artist → Ritual */}
+      {/* Chevron Divider: Artist → Process */}
       <ChevronDivider color="var(--bg-card)" />
 
-      {/* 4. THE RITUAL (Simplified Flow) */}
+      {/* 4. THE PROCESS (Simplified Flow) */}
       <section className="py-24 md:py-32 bg-gradient-earth relative">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
           <ScrollReveal>
           <div className="text-center mb-16">
-            <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">The Ritual</h3>
+            <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">The Process</h3>
             <h2 className="font-heading text-4xl md:text-5xl text-primary uppercase tracking-wide">
               How We Work
             </h2>
@@ -280,7 +280,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Wave Divider: Ritual → Signature Works */}
+      {/* Wave Divider: Process -> Signature Works */}
       <WaveDivider fillColor="var(--bg-card)" flip={true} />
 
       {/* 5. SIGNATURE WORKS */}
@@ -296,41 +296,65 @@ export default function Home() {
             </div>
             <Link 
               href="/gallery" 
-              className="inline-flex items-center gap-3 text-primary hover:text-accent font-sans font-semibold tracking-widest uppercase text-xs transition-colors pb-1 border-b border-border hover:border-accent"
+              className="inline-flex items-center gap-3 text-primary hover:text-accent font-sans font-semibold tracking-widest uppercase text-xs transition-colors group pb-1 border-b border-accent"
             >
               View Full Gallery
             </Link>
           </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-            <div className="flex flex-col group">
-              <div className="relative aspect-[4/5] border border-border overflow-hidden mb-3 md:mb-6">
-                <ZoomableImage src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg" alt="Flowing Balance" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
-              </div>
-              <h4 className="font-heading text-lg md:text-2xl text-primary mb-1 md:mb-2">Flowing Balance</h4>
-              <p className="text-secondary font-sans font-light text-xs md:text-sm">Traditional Handpoke &bull; Custom Design</p>
-            </div>
-            <div className="flex flex-col group md:mt-12">
-              <div className="relative aspect-[4/5] border border-border overflow-hidden mb-3 md:mb-6">
-                <ZoomableImage src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-20-6B7LEVxri2IpWP3F.webp" alt="Rooted Resilience" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
-              </div>
-              <h4 className="font-heading text-lg md:text-2xl text-primary mb-1 md:mb-2">Rooted Resilience</h4>
-              <p className="text-secondary font-sans font-light text-xs md:text-sm">Tribal Mentawai &bull; Chest Piece</p>
-            </div>
-            <div className="flex flex-col group">
-              <div className="relative aspect-[4/5] border border-border overflow-hidden mb-3 md:mb-6">
-                <ZoomableImage src="/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp" alt="Sacred Geometry" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
-              </div>
-              <h4 className="font-heading text-lg md:text-2xl text-primary mb-1 md:mb-2">Sacred Geometry</h4>
-              <p className="text-secondary font-sans font-light text-xs md:text-sm">Machine Fine Line &bull; Flash Art</p>
-            </div>
-          </div>
           </ScrollReveal>
+
+          {/* Simple Gallery Grid (just 3 standout pieces) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <ScrollReveal delay={100}>
+            <div className="group relative aspect-square overflow-hidden bg-surface border border-border">
+              <Image 
+                src="/assets/Gallery/handpoke-tattoo-artist-bali-dotlinetattu-5-BAzWV2pMQk8hGWkY.avif" 
+                alt="Tribal Handpoke Work" 
+                fill
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
+                <p className="text-primary font-heading text-xl">Mentawai Roots</p>
+                <p className="text-secondary font-sans font-light text-xs md:text-sm">Traditional Hand Tapping</p>
+              </div>
+            </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={200}>
+            <div className="group relative aspect-square overflow-hidden bg-surface border border-border">
+              <Image 
+                src="/assets/Gallery/handpoke-tattoo-artist-bali-dotlinetattu-6-BAzWV96sq1gcvgD6.avif" 
+                alt="Geometric Handpoke Work" 
+                fill
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
+                <p className="text-primary font-heading text-xl">Sacred Geometry</p>
+                <p className="text-secondary font-sans font-light text-xs md:text-sm">Dotwork &bull; Handpoke</p>
+              </div>
+            </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={300}>
+            <div className="group relative aspect-square overflow-hidden bg-surface border border-border">
+              <Image 
+                src="/assets/Gallery/handpoke-tattoo-artist-bali-dotlinetattu-2-BAzWVxWsO33InmRz.avif" 
+                alt="Fine Line Work" 
+                fill
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
+                <p className="text-primary font-heading text-xl">Modern Flow</p>
+                <p className="text-secondary font-sans font-light text-xs md:text-sm">Machine Fine Line &bull; Flash Art</p>
+              </div>
+            </div>
+            </ScrollReveal>
+          </div>
         </div>
       </section>
 
-      {/* Chevron Divider: Signature → Styles */}
-      <ChevronDivider color="var(--bg-card)" />
+      {/* Chevron Divider: Signature Works -> Styles */}
+      <ChevronDivider color="var(--bg-primary)" />
 
       {/* 6. TATTOO STYLES */}
       <section className="py-24 bg-primary relative">
@@ -339,7 +363,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-8">
             <div className="md:w-1/2">
               <h3 className="text-accent font-sans tracking-widest text-xs uppercase mb-4 font-semibold">Techniques</h3>
-              <h2 className="font-heading text-4xl md:text-5xl text-primary uppercase tracking-wide">
+              <h2 className="font-heading text-4xl md:text-5xl text-background uppercase tracking-wide">
                 Tattoo Styles
               </h2>
             </div>
@@ -354,11 +378,11 @@ export default function Home() {
             <Accordion items={[
               { id: 'style-1', title: 'Traditional Handpoke', content: 'An ancient stick-and-poke method using a needle attached to a bamboo stick. This technique creates a distinct dotted texture, heals faster, and connects you to the roots of tattoo culture.' },
               { id: 'style-2', title: 'Machine Fine Line', content: 'For delicate, intricate, and micro-detailed designs. Using modern single-needle machines, we craft elegant script, micro-realism, and botanical illustrations with unmatched precision.' },
-              { id: 'style-3', title: 'Mentawai Tribal', content: 'Authentic patterns from the Mentawai tribe. These ancient motifs represent nature, life balance, and spiritual protection, traditionally done via hand tapping but adaptable to your preferred method.' }
+              { id: 'style-3', title: 'Mentawai Tribal', content: 'Authentic patterns from the Mentawai tribe. These ancient motifs represent nature, life balance, and cultural heritage, traditionally done via hand tapping but adaptable to your preferred method.' }
             ]} />
             <Accordion defaultOpen={false} items={[
-              { id: 'style-4', title: 'Hand Tapping', content: 'A raw, rhythmic technique using two sticks—one holding the needle and the other tapping it. Best suited for bold tribal and geometric patterns. A deeply spiritual and authentic experience.' },
-              { id: 'style-5', title: 'Mandala & Geometric', content: 'Symmetrical, spiritually grounded designs requiring meticulous precision. Whether done via handpoke or machine, these pieces symbolize the universe, balance, and inner peace.' },
+              { id: 'style-4', title: 'Hand Tapping', content: 'A raw, rhythmic technique using two sticks—one holding the needle and the other tapping it. Best suited for bold tribal and geometric patterns. A deeply authentic and traditional experience.' },
+              { id: 'style-5', title: 'Mandala & Geometric', content: 'Symmetrical, deeply grounded designs requiring meticulous precision. Whether done via handpoke or machine, these pieces symbolize the universe, balance, and inner peace.' },
               { id: 'style-6', title: 'Custom Flash Art', content: 'Pre-designed, exclusive flash pieces ready to be inked. Perfect for spontaneous sessions, these designs are created by our resident artists and are not repeated once claimed.' }
             ]} />
           </div>

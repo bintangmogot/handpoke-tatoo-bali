@@ -32,22 +32,35 @@ export default function About() {
             <p>
               The journey began in <strong>2010</strong>, driven by an undeniable pull towards the art of permanent expression. By <strong>2015</strong>, Silver Jerry had firmly established his name in the tattoo community, dedicating his life to mastering both modern and ancient techniques.
             </p>
-            <p>
-              In <strong>2019</strong>, <em>Dotlinetattu</em> was born as a physical sanctuary in Bali. It was created with a rebellious spirit against the modern commercialization of tattoo studios. We wanted to restore the "Real Bali"—a place where art, connection, and spirituality hold more value than quick profits.
-            </p>
           </div>
         </div>
 
-        {/* Content Section 2 (Full Width) */}
-        <div className="glass-panel p-10 md:p-16 border border-border rounded-sm mb-24 text-center">
-          <h2 className="text-2xl md:text-4xl font-heading font-bold text-primary uppercase tracking-wide mb-8">
-            Roots & Traditions
-          </h2>
-          <p className="text-secondary font-light leading-relaxed max-w-3xl mx-auto mb-8 text-lg">
-            When you get an authentic tattoo from Kalimantan or Mentawai, it is never just a transaction. It requires discussion, respect, and understanding. 
+        {/* Content Section 2 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-24">
+          <div className="order-2 md:order-1">
+            <h2 className="font-heading text-3xl md:text-5xl text-primary mb-6 uppercase tracking-wide">The Birth of Dotlinetattu</h2>
+            <div className="space-y-6 text-secondary font-sans font-light leading-relaxed">
+              <p>
+                In <strong>2019</strong>, <em>Dotlinetattu</em> was born as a physical sanctuary in Bali. It was created with a rebellious spirit against the modern commercialization of tattoo studios. We wanted to restore the "Real Bali"—a place where art, connection, and culture hold more value than quick profits.
+              </p>
+              <p>
+                Bali is an island of rich culture and deep history, and it deserves tattoo spaces that honor that spirit. Dotlinetattu is for those who seek meaning in their marks.
+              </p>
+            </div>
+          </div>
+          <div className="order-1 md:order-2 relative aspect-[4/3] border border-border">
+            <Image src="/assets/Gallery/handpoke-tattoo-artist-bali-dotlinetattu-8-BAzWV9B2M3iM5eWg.avif" alt="Dotlinetattu Studio Bali" fill className="object-cover" />
+          </div>
+        </div>
+
+        {/* Content Section 3 */}
+        <div className="text-center max-w-4xl mx-auto mb-24">
+          <h2 className="font-heading text-3xl md:text-5xl text-primary mb-8 uppercase tracking-wide">Roots & Traditions</h2>
+          <p className="text-secondary font-sans font-light leading-relaxed text-lg mb-8">
+            When you get an authentic tattoo from Dotlinetattu by silver jerry, it is never just a transaction. It requires discussion, respect, and understanding. 
           </p>
-          <p className="text-secondary font-light leading-relaxed max-w-3xl mx-auto">
-            My heritage traces back to Sumatra (Lampung), but my artistic soul is deeply tied to the ancient tribal handpoke techniques of the Indonesian archipelago. Handpoke is not just a style; it's a rhythmic, meditative ritual that connects the wearer to the earth and their ancestors. 
+          <p className="text-secondary font-sans font-light leading-relaxed text-lg">
+            My heritage traces back to Sumatra (Lampung), but my artistic soul is deeply tied to the ancient tribal handpoke techniques of the Indonesian archipelago. Handpoke is not just a style; it's a rhythmic, traditional technique that connects the wearer to the earth and their ancestors. 
           </p>
         </div>
 

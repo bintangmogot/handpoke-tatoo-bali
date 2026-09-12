@@ -308,7 +308,7 @@ export default function Home() {
             <ScrollReveal delay={100}>
             <div className="group relative aspect-square overflow-hidden bg-surface border border-border">
               <Image 
-                src="/assets/Gallery/handpoke-tattoo-artist-bali-dotlinetattu-5-BAzWV2pMQk8hGWkY.avif" 
+                src="https://res.cloudinary.com/workstation-/image/upload/v1788876470/handtapping-tattoo-bali-dotlinetattu-FuI3cCjPQQpIbAk2.webp" 
                 alt="Tribal Handpoke Work" 
                 fill
                 className="object-cover transition-transform duration-1000 group-hover:scale-105"
@@ -323,7 +323,7 @@ export default function Home() {
             <ScrollReveal delay={200}>
             <div className="group relative aspect-square overflow-hidden bg-surface border border-border">
               <Image 
-                src="/assets/Gallery/handpoke-tattoo-artist-bali-dotlinetattu-6-BAzWV96sq1gcvgD6.avif" 
+                src="https://res.cloudinary.com/workstation-/image/upload/v1788876466/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp" 
                 alt="Geometric Handpoke Work" 
                 fill
                 className="object-cover transition-transform duration-1000 group-hover:scale-105"
@@ -338,7 +338,7 @@ export default function Home() {
             <ScrollReveal delay={300}>
             <div className="group relative aspect-square overflow-hidden bg-surface border border-border">
               <Image 
-                src="/assets/Gallery/handpoke-tattoo-artist-bali-dotlinetattu-2-BAzWVxWsO33InmRz.avif" 
+                src="https://res.cloudinary.com/workstation-/image/upload/v1788876467/handpoke-tattoo-bali-dotlinetattu-22-BUN8FOAbCUzf2GaG.webp" 
                 alt="Fine Line Work" 
                 fill
                 className="object-cover transition-transform duration-1000 group-hover:scale-105"

@@ -51,11 +51,11 @@ export default async function AdminDashboard() {
                       {booking.session_type}
                     </td>
                     <td className="p-4">
-                      <span className={\`px-2 py-1 text-xs font-bold rounded-sm \${
+                      <span className={`px-2 py-1 text-xs font-bold rounded-sm ${
                         booking.status === 'PENDING' ? 'bg-yellow-500/20 text-yellow-500' :
                         booking.status === 'PAID' ? 'bg-green-500/20 text-green-500' :
                         'bg-gray-500/20 text-gray-400'
-                      }\`}>
+                      }`}>
                         {booking.status}
                       </span>
                     </td>

@@ -5,16 +5,16 @@ import ZoomableImage from "@/components/ui/ZoomableImage";
 
 // Simulated gallery data using the assets we have
 const galleryData = [
-  { id: 1, src: "/assets/Gallery/dotlinetattu_handpoke_tattoo_bali-klrlhsspxtuwbozl-2c4Ad1N23eO5zoWg.jpg", category: "Handpoke", span: "tall" },
-  { id: 2, src: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg", category: "Handpoke", span: "normal" },
-  { id: 3, src: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp", category: "Machine", span: "normal" },
-  { id: 4, src: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-20-6B7LEVxri2IpWP3F.webp", category: "Handpoke", span: "tall" },
-  { id: 5, src: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-21-yaHHOuqmCsS0hG1g.webp", category: "Machine", span: "normal" },
-  { id: 6, src: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-pjqgb34z4ih1vbty-1-1GiQoHQnBSTZ2GRi.jpg", category: "Flash", span: "normal" },
-  { id: 7, src: "/assets/Gallery/handtapping-tattoo-bali-dotlinetattu-FuI3cCjPQQpIbAk2.webp", category: "Handpoke", span: "normal" },
-  { id: 8, src: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-22-BUN8FOAbCUzf2GaG.webp", category: "Flash", span: "tall" },
-  { id: 9, src: "/assets/Gallery/dotlinetattu_handpoke_bali-2-Rkt9nssE7W3zqbvl.webp", category: "Machine", span: "normal" },
-  { id: 10, src: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-11-boq69p6nyskdz2kd-XUPXBaXpD0GuXd67.jpg", category: "Handpoke", span: "normal" },
+  { id: 1, src: "https://res.cloudinary.com/workstation-/image/upload/v1788876442/dotlinetattu_handpoke_tattoo_bali-klrlhsspxtuwbozl-2c4Ad1N23eO5zoWg.jpg", category: "Handpoke", span: "tall" },
+  { id: 2, src: "https://res.cloudinary.com/workstation-/image/upload/v1788876464/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg", category: "Handpoke", span: "normal" },
+  { id: 3, src: "https://res.cloudinary.com/workstation-/image/upload/v1788876466/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp", category: "Machine", span: "normal" },
+  { id: 4, src: "https://res.cloudinary.com/workstation-/image/upload/v1788876467/handpoke-tattoo-bali-dotlinetattu-20-6B7LEVxri2IpWP3F.webp", category: "Handpoke", span: "tall" },
+  { id: 5, src: "https://res.cloudinary.com/workstation-/image/upload/v1788876467/handpoke-tattoo-bali-dotlinetattu-21-yaHHOuqmCsS0hG1g.webp", category: "Machine", span: "normal" },
+  { id: 6, src: "https://res.cloudinary.com/workstation-/image/upload/v1788876469/handpoke-tattoo-bali-dotlinetattu-pjqgb34z4ih1vbty-1-1GiQoHQnBSTZ2GRi.jpg", category: "Flash", span: "normal" },
+  { id: 7, src: "https://res.cloudinary.com/workstation-/image/upload/v1788876470/handtapping-tattoo-bali-dotlinetattu-FuI3cCjPQQpIbAk2.webp", category: "Handpoke", span: "normal" },
+  { id: 8, src: "https://res.cloudinary.com/workstation-/image/upload/v1788876467/handpoke-tattoo-bali-dotlinetattu-22-BUN8FOAbCUzf2GaG.webp", category: "Flash", span: "tall" },
+  { id: 9, src: "https://res.cloudinary.com/workstation-/image/upload/v1788876433/dotlinetattu_handpoke_bali-2-Rkt9nssE7W3zqbvl.webp", category: "Machine", span: "normal" },
+  { id: 10, src: "https://res.cloudinary.com/workstation-/image/upload/v1788876465/handpoke-tattoo-bali-dotlinetattu-11-boq69p6nyskdz2kd-XUPXBaXpD0GuXd67.jpg", category: "Handpoke", span: "normal" },
 ];
 
 const categories = ["All", "Handpoke", "Machine", "Flash"];

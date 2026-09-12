@@ -19,7 +19,7 @@ export default function About() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-24">
           <div className="relative aspect-[3/4] rounded-sm overflow-hidden border border-border">
             <Image 
-              src="/assets/Gallery/handpoke-tattoo-artist-bali-dotlinetattu-3-BAzWVxZMHkNtGS4w.avif" 
+              src="https://res.cloudinary.com/workstation-/image/upload/v1788876439/handpoke-tattoo-artist-bali-dotlinetattu-3-BAzWVxZMHkNtGS4w.avif" 
               alt="Jerry Tattooing" 
               fill
               className="object-cover transition-all duration-700"

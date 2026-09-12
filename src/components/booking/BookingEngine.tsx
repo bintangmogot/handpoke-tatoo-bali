@@ -216,12 +216,12 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 {/* Photo grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 mb-6">
                   {[
-                    "/assets/Gallery/handtapping-tattoo-bali-dotlinetattu-FuI3cCjPQQpIbAk2.webp",
-                    "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-22-BUN8FOAbCUzf2GaG.webp",
-                    "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-23-foY3o9o4aQcNgnE3.webp",
-                    "/assets/Gallery/dotlinetattu_handpoke_bali-2-Rkt9nssE7W3zqbvl.webp",
-                    "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-21-yaHHOuqmCsS0hG1g.webp",
-                    "/assets/Gallery/handpoke_tattoo_bali_dotlinetattu-2-iT9eQaZa9y0LQ6RN.webp",
+                    "https://res.cloudinary.com/workstation-/image/upload/v1788876470/handtapping-tattoo-bali-dotlinetattu-FuI3cCjPQQpIbAk2.webp",
+                    "https://res.cloudinary.com/workstation-/image/upload/v1788876467/handpoke-tattoo-bali-dotlinetattu-22-BUN8FOAbCUzf2GaG.webp",
+                    "https://res.cloudinary.com/workstation-/image/upload/v1788876470/handpoke-tattoo-bali-dotlinetattu-23-foY3o9o4aQcNgnE3.webp",
+                    "https://res.cloudinary.com/workstation-/image/upload/v1788876433/dotlinetattu_handpoke_bali-2-Rkt9nssE7W3zqbvl.webp",
+                    "https://res.cloudinary.com/workstation-/image/upload/v1788876467/handpoke-tattoo-bali-dotlinetattu-21-yaHHOuqmCsS0hG1g.webp",
+                    "https://res.cloudinary.com/workstation-/image/upload/v1788876439/handpoke_tattoo_bali_dotlinetattu-2-iT9eQaZa9y0LQ6RN.webp",
                   ].map((src, i) => (
                     <div key={i} className="aspect-square overflow-hidden relative group">
                       <ZoomableImage

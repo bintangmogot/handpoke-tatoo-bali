@@ -21,7 +21,7 @@ export default function Home() {
             playsInline
             className="object-cover w-full h-full opacity-60 mix-blend-luminosity"
           >
-            <source src="/assets/Gallery/Handpoke-tattoo-Bali-Dotlinetattu 2 Dotlinetattu Handpoke bali.MP4" type="video/mp4" />
+            <source src="https://res.cloudinary.com/workstation-/video/upload/v1789129026/Dotlinetattu/Hero-Background-Video.mp4" type="video/mp4" />
           </video>
           {/* Gradients to ensure text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-[#070707]/40 to-transparent"></div>
@@ -75,7 +75,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div className="relative aspect-[4/3] w-full overflow-hidden border border-border">
                 <Image 
-                  src="/assets/Gallery/dotlinetattu_handpoke_tattoo_bali-klrlhsspxtuwbozl-2c4Ad1N23eO5zoWg (1).jpg" 
+                  src="https://res.cloudinary.com/workstation-/image/upload/v1788876438/dotlinetattu_handpoke_tattoo_bali-klrlhsspxtuwbozl-2c4Ad1N23eO5zoWg_1.jpg" 
                   alt="Traditional Handpoke" 
                   fill
                   className="object-cover"
@@ -101,7 +101,7 @@ export default function Home() {
               </div>
               <div className="relative aspect-[4/3] w-full overflow-hidden border border-border order-1 md:order-2">
                 <Image 
-                  src="/assets/Gallery/multi-instrumentalist-musician-ravana-q1OwjWdzUgGueQiT.avif" 
+                  src="https://res.cloudinary.com/workstation-/image/upload/v1788876471/multi-instrumentalist-musician-ravana-q1OwjWdzUgGueQiT.avif" 
                   alt="Music Collaboration" 
                   fill
                   className="object-cover"
@@ -128,7 +128,7 @@ export default function Home() {
             <div className="lg:col-span-5 relative">
               <div className="relative aspect-[3/4] w-full max-w-md mx-auto lg:mx-0 overflow-hidden border border-border">
                 <Image 
-                  src="/assets/Gallery/handpoke-tattoo-artist-bali-dotlinetattu-3-BAzWVxZMHkNtGS4w.avif" 
+                  src="https://res.cloudinary.com/workstation-/image/upload/v1788876439/handpoke-tattoo-artist-bali-dotlinetattu-3-BAzWVxZMHkNtGS4w.avif" 
                   alt="Silver Jerry Handpoke Tattoo Artist" 
                   fill
                   className="object-cover"
@@ -155,7 +155,7 @@ export default function Home() {
                 {/* Signature */}
                 <div className="mb-10">
                   <Image 
-                    src="/assets/signature.png" 
+                    src="https://res.cloudinary.com/workstation-/image/upload/v1788875981/Dotlinetattu/signature.png" 
                     alt="Jerry Signature" 
                     width={200} 
                     height={80} 
@@ -413,7 +413,7 @@ export default function Home() {
                 country: "Google Review",
                 countryCode: "US",
                 review: "Outstanding work and genuine passion for the art. The hygiene standards are impeccable and the artists truly care about delivering exactly what you want.",
-                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp",
+                imageUrl: "https://res.cloudinary.com/workstation-/image/upload/v1788876466/handpoke-tattoo-bali-dotlinetattu-17-JRkSSHut1wMPg4J1.webp",
                 rating: 5
               },
               {
@@ -421,7 +421,7 @@ export default function Home() {
                 country: "Google Review",
                 countryCode: "AU",
                 review: "A very professional and friendly team. The artwork turned out even better than I expected. The communication and aftercare guidance were detailed, so I felt safe.",
-                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg",
+                imageUrl: "https://res.cloudinary.com/workstation-/image/upload/v1788876464/handpoke-tattoo-bali-dotlinetattu-10-r2el8hh0jzntmivg-YGG71UVQu8hnYG1f.jpg",
                 rating: 5
               },
               {
@@ -429,7 +429,7 @@ export default function Home() {
                 country: "Google Review",
                 countryCode: "DE",
                 review: "My husband and I got a joint tattoo at the end of our trip, which has now become our tradition. The great reviews convinced us — and they were right.",
-                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-20-6B7LEVxri2IpWP3F.webp",
+                imageUrl: "https://res.cloudinary.com/workstation-/image/upload/v1788876467/handpoke-tattoo-bali-dotlinetattu-20-6B7LEVxri2IpWP3F.webp",
                 rating: 5
               },
               {
@@ -437,7 +437,7 @@ export default function Home() {
                 country: "Google Review",
                 countryCode: "BR",
                 review: "Jerry is an amazing artist. The dotwork is so precise and healed perfectly. I barely felt any pain compared to a machine tattoo. Highly recommend!",
-                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-21-yaHHOuqmCsS0hG1g.webp",
+                imageUrl: "https://res.cloudinary.com/workstation-/image/upload/v1788876467/handpoke-tattoo-bali-dotlinetattu-21-yaHHOuqmCsS0hG1g.webp",
                 rating: 5
               },
               {
@@ -445,7 +445,7 @@ export default function Home() {
                 country: "Google Review",
                 countryCode: "RU",
                 review: "I was super nervous as this was my first tattoo, but the studio vibe is so calming. Jerry explained everything and made sure I was comfortable the whole time.",
-                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-12-erkx86rwibxu98jy-ycU42f64kqU5yt5P.jpg",
+                imageUrl: "https://res.cloudinary.com/workstation-/image/upload/v1788876466/handpoke-tattoo-bali-dotlinetattu-12-erkx86rwibxu98jy-ycU42f64kqU5yt5P.jpg",
                 rating: 5
               },
               {
@@ -453,7 +453,7 @@ export default function Home() {
                 country: "Google Review",
                 countryCode: "UK",
                 review: "Best handpoke studio in Bali hands down. The attention to detail in the geometric patterns is mind-blowing. Will definitely be back next year.",
-                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-11-boq69p6nyskdz2kd-XUPXBaXpD0GuXd67.jpg",
+                imageUrl: "https://res.cloudinary.com/workstation-/image/upload/v1788876465/handpoke-tattoo-bali-dotlinetattu-11-boq69p6nyskdz2kd-XUPXBaXpD0GuXd67.jpg",
                 rating: 5
               },
               {
@@ -461,7 +461,7 @@ export default function Home() {
                 country: "Google Review",
                 countryCode: "FR",
                 review: "Such a beautiful experience! The lines are incredibly fine and delicate. It healed in less than a week with zero complications.",
-                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-22-BUN8FOAbCUzf2GaG.webp",
+                imageUrl: "https://res.cloudinary.com/workstation-/image/upload/v1788876467/handpoke-tattoo-bali-dotlinetattu-22-BUN8FOAbCUzf2GaG.webp",
                 rating: 5
               },
               {
@@ -469,7 +469,7 @@ export default function Home() {
                 country: "Google Review",
                 countryCode: "SG",
                 review: "Professional setup, great music, and cold AC! But more importantly, the art is world-class. Very easy to book and communicate via WhatsApp.",
-                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-7-t03qnyd1qr9kdoys-z58WskwYIfi8uzmO.jpg",
+                imageUrl: "https://res.cloudinary.com/workstation-/image/upload/v1788876464/handpoke-tattoo-bali-dotlinetattu-7-t03qnyd1qr9kdoys-z58WskwYIfi8uzmO.jpg",
                 rating: 5
               },
               {
@@ -477,7 +477,7 @@ export default function Home() {
                 country: "Google Review",
                 countryCode: "US",
                 review: "I brought in a custom design and Jerry modified it perfectly to suit the handpoke style. It looks so organic and flows beautifully on my arm.",
-                imageUrl: "/assets/Gallery/handpoke-tattoo-bali-dotlinetattu-5-es5GVh83VOalxXP9.webp",
+                imageUrl: "https://res.cloudinary.com/workstation-/image/upload/v1788876465/handpoke-tattoo-bali-dotlinetattu-5-es5GVh83VOalxXP9.webp",
                 rating: 5
               },
               {
@@ -485,7 +485,7 @@ export default function Home() {
                 country: "Google Review",
                 countryCode: "IE",
                 review: "A must-visit if you want an authentic, unhurried tattoo experience in Bali. The pricing is transparent and the quality is absolutely top-tier.",
-                imageUrl: "/assets/Gallery/handpoke_tattoo_bali_dotlinetattu-2-iT9eQaZa9y0LQ6RN.webp",
+                imageUrl: "https://res.cloudinary.com/workstation-/image/upload/v1788876439/handpoke_tattoo_bali_dotlinetattu-2-iT9eQaZa9y0LQ6RN.webp",
                 rating: 5
               }
             ]} 

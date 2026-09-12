@@ -18,7 +18,7 @@ export default function EnterOverlay() {
     document.documentElement.style.overflow = "hidden";
 
     // Initialize audio element once
-    audioRef.current = new Audio("/assets/Music/bg-music.wav"); 
+    audioRef.current = new Audio("https://res.cloudinary.com/workstation-/video/upload/v1788876268/bg-music.wav"); 
     audioRef.current.loop = true;
     audioRef.current.volume = 0.3; // 30% volume
 
@@ -104,7 +104,7 @@ export default function EnterOverlay() {
             <div className="flex flex-col items-center mb-12">
               <div className="relative w-40 h-40 md:w-56 md:h-56 mb-6">
                 <Image 
-                  src="/assets/Logo Dotlinetattu.avif"
+                  src="https://res.cloudinary.com/workstation-/image/upload/v1788875981/Dotlinetattu/Logo_Dotlinetattu.avif"
                   alt="Dotlinetattu Logo"
                   fill
                   className="object-contain"

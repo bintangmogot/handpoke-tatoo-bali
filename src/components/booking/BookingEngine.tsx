@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getBookedSlots, createBooking } from "@/app/actions/bookingActions";
+import { getBookedSlots, getBlockedDates, createBooking } from "@/app/actions/bookingActions";
 import ZoomableImage from "@/components/ui/ZoomableImage";
 
 type FlowType = "flash" | "custom";
@@ -23,6 +23,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
   const [step, setStep] = useState<Step>(initialType === "flash" ? "warning" : "form");
   const [isLoading, setIsLoading] = useState(false);
   const [bookedSlots, setBookedSlots] = useState<any[]>([]);
+  const [blockedDates, setBlockedDates] = useState<any[]>([]);
   const [bookingId, setBookingId] = useState<string>("");
 
   const [calMonth, setCalMonth] = useState<number>(now.getMonth());
@@ -91,8 +92,12 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
   // Fetch booked slots
   useEffect(() => {
     async function fetchSlots() {
-      const slots = await getBookedSlots();
+      const [slots, blocked] = await Promise.all([
+        getBookedSlots(),
+        getBlockedDates()
+      ]);
       setBookedSlots(slots);
+      setBlockedDates(blocked);
     }
     fetchSlots();
   }, []);
@@ -537,7 +542,8 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
 
                     const slotsForDay = bookedSlots.filter(s => s.booking_date === dateStr);
                     const isFullyBooked = slotsForDay.length >= 3;
-                    const isDisabled = isPast || isFullyBooked;
+                    const isBlocked = blockedDates.some(b => b.date === dateStr);
+                    const isDisabled = isPast || isFullyBooked || isBlocked;
                     const isSelected = selectedDate === dateStr;
 
                     return (
@@ -546,7 +552,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                         disabled={isDisabled}
                         onClick={() => { setSelectedDate(dateStr); setSelectedTime(""); }}
                         className={`
-                          aspect-square flex items-center justify-center font-sans text-sm transition-all
+                          aspect-square flex flex-col items-center justify-center font-sans text-sm transition-all relative
                           ${isDisabled
                             ? "text-secondary/20 cursor-not-allowed"
                             : isSelected
@@ -555,7 +561,17 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                           }
                         `}
                       >
-                        {day}
+                        <span>{day}</span>
+                        {isBlocked && (
+                          <span className="text-[8px] uppercase tracking-wider text-red-500/50 mt-0.5 hidden md:block">Blocked</span>
+                        )}
+                        {!isDisabled && !isBlocked && slotsForDay.length > 0 && (
+                          <div className="absolute bottom-1 flex gap-0.5">
+                            {slotsForDay.map((_, idx) => (
+                              <div key={idx} className={`w-1 h-1 rounded-full ${isSelected ? 'bg-white' : 'bg-accent'}`} />
+                            ))}
+                          </div>
+                        )}
                       </button>
                     );
                   })}

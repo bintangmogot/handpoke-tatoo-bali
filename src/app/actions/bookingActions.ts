@@ -1,53 +1,55 @@
-"use server";
+'use server';
 
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || "";
-// Server actions use service role key to bypass RLS — never exposed to browser
-const supabaseKey = 
-  process.env.SUPABASE_SERVICE_ROLE_KEY || 
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 
-  process.env.SUPABASE_ANON_KEY || 
-  "";
-
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export async function getBookedSlots() {
-  const { data, error } = await supabase
-    .from("booked_slots")
-    .select("*");
+  const { data, error } = await supabaseAdmin
+    .from('bookings')
+    .select('booking_date, booking_time, status')
+    .in('status', ['PENDING', 'PAID', 'CONFIRMED']);
     
   if (error) {
-    console.error("Error fetching booked slots:", error);
+    console.error('Error fetching bookings:', error);
+    return [];
+  }
+  return data || [];
+}
+
+export async function getBlockedDates() {
+  const { data, error } = await supabaseAdmin
+    .from('blocked_dates')
+    .select('date');
+    
+  if (error) {
+    console.error('Error fetching blocked dates:', error);
     return [];
   }
   return data || [];
 }
 
 export async function createBooking(bookingData: any) {
-  // Using regular anon client. Requires INSERT RLS policy on 'bookings' table.
-  const { data, error } = await supabase
-    .from("bookings")
+  const { data, error } = await supabaseAdmin
+    .from('bookings')
     .insert([
       {
-        client_name: bookingData.name,
-        client_email: bookingData.email,
-        client_whatsapp: bookingData.whatsapp,
+        name: bookingData.name,
+        email: bookingData.email,
+        whatsapp: bookingData.whatsapp,
         booking_date: bookingData.date,
         booking_time: bookingData.time,
-        tattoo_type: bookingData.type,
-        total_price: bookingData.totalPrice,
-        deposit_amount: bookingData.deposit,
-        payment_status: "pending",
-        // In real life, we generate a Xendit Invoice URL here and save it
-        payment_link: "https://mock-xendit-link.com/" + Date.now()
+        session_type: bookingData.type,
+        placement: bookingData.placement || 'TBD',
+        description: bookingData.description || '',
+        price: bookingData.totalPrice,
+        status: 'PENDING',
+        payment_link: 'https://mock-xendit-link.com/' + Date.now()
       }
     ])
     .select()
     .single();
 
   if (error) {
-    console.error("Error creating booking:", error);
+    console.error('Error creating booking:', error);
     throw new Error(error.message);
   }
 

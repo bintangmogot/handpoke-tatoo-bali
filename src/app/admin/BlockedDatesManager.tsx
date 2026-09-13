@@ -44,7 +44,7 @@ export default function BlockedDatesManager({ blockedDates }: { blockedDates: Bl
     return time.substring(0, 5); // "10:00:00" -> "10:00"
   };
 
-  const hours = Array.from({ length: 24 }).map((_, i) => \\:00\);
+  const hours = Array.from({ length: 24 }).map((_, i) => `${i.toString().padStart(2, '0')}:00`);
 
   return (
     <div className="bg-surface border border-border p-6 rounded-sm">

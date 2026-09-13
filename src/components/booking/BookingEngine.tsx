@@ -549,10 +549,22 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                     const startH = parseInt(openHours.start.split(':')[0]);
                     const endH = parseInt(openHours.end.split(':')[0]);
                     const totalDailySlots = endH - startH + 1;
-                    const isFullyBooked = slotsForDay.length >= totalDailySlots;
                     
-                    const isBlocked = blockedDates.some(b => b.date === dateStr);
-                    const isDisabled = isPast || isFullyBooked || isBlocked;
+                    const blocksForDay = blockedDates.filter(b => b.date === dateStr);
+                    const isFullDayBlocked = blocksForDay.some(b => !b.start_time);
+                    
+                    let blockedHourlySlots = 0;
+                    blocksForDay.forEach(b => {
+                      if (b.start_time && b.end_time) {
+                        const s = parseInt(b.start_time.split(':')[0]);
+                        const e = parseInt(b.end_time.split(':')[0]);
+                        blockedHourlySlots += (e - s + 1);
+                      }
+                    });
+
+                    const isFullyBooked = (slotsForDay.length + blockedHourlySlots) >= totalDailySlots;
+                    
+                    const isDisabled = isPast || isFullDayBlocked || isFullyBooked;
                     const isSelected = selectedDate === dateStr;
 
                     return (
@@ -571,13 +583,16 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                         `}
                       >
                         <span>{day}</span>
-                        {isBlocked && (
+                        {isFullDayBlocked && (
                           <span className="text-[8px] uppercase tracking-wider text-red-500/50 mt-0.5 hidden md:block">Blocked</span>
                         )}
-                        {!isDisabled && !isBlocked && slotsForDay.length > 0 && (
+                        {!isDisabled && !isFullDayBlocked && (slotsForDay.length > 0 || blockedHourlySlots > 0) && (
                           <div className="absolute bottom-1 flex gap-0.5">
                             {slotsForDay.map((_, idx) => (
-                              <div key={idx} className={`w-1 h-1 rounded-full ${isSelected ? 'bg-white' : 'bg-accent'}`} />
+                              <div key={`booked-${idx}`} className={`w-1 h-1 rounded-full ${isSelected ? 'bg-white' : 'bg-accent'}`} />
+                            ))}
+                            {Array.from({length: Math.min(blockedHourlySlots, 3)}).map((_, idx) => (
+                              <div key={`blocked-${idx}`} className="w-1 h-1 rounded-full bg-red-500/50" />
                             ))}
                           </div>
                         )}
@@ -603,6 +618,18 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                       return slots.map(time => {
                         const isTimeBooked = bookedSlots.some(s => s.booking_date === selectedDate && s.booking_time === time);
                         
+                        const isTimeBlocked = blockedDates.some(b => {
+                          if (b.date !== selectedDate) return false;
+                          if (!b.start_time) return true; // Full day block
+                          
+                          const slotHour = parseInt(time.split(':')[0]);
+                          const startH = parseInt(b.start_time.split(':')[0]);
+                          const endH = parseInt(b.end_time.split(':')[0]);
+                          return slotHour >= startH && slotHour <= endH;
+                        });
+
+                        const isTimeDisabled = isTimeBooked || isTimeBlocked;
+                        
                         const hour = parseInt(time.split(':')[0]);
                         const ampm = hour >= 12 ? 'PM' : 'AM';
                         const displayHour = hour % 12 === 0 ? 12 : hour % 12;
@@ -611,11 +638,11 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                         return (
                           <button
                             key={time}
-                            disabled={isTimeBooked}
+                            disabled={isTimeDisabled}
                             onClick={() => setSelectedTime(time)}
                             className={`
                               py-3 border text-sm font-sans transition-all rounded-sm
-                              ${isTimeBooked
+                              ${isTimeDisabled
                                 ? "border-border bg-surface text-secondary/30 cursor-not-allowed"
                                 : selectedTime === time
                                   ? "border-accent bg-accent/10 text-accent"
@@ -623,7 +650,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                               }
                             `}
                           >
-                            {displayTime} {isTimeBooked && "(Booked)"}
+                            {displayTime} {isTimeBooked && "(Booked)"} {isTimeBlocked && !isTimeBooked && "(Blocked)"}
                           </button>
                         );
                       });

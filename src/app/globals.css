@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: dark;
   /* Organic Tattoo Theme - Less 'Tech/AI', More 'Art/Studio' */
   --bg-dark: #110f0e;       /* Deep warm ash black */
   --bg-card: #181514;       /* Slightly lighter warm ash */

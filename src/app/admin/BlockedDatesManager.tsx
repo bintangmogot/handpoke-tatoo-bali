@@ -143,7 +143,7 @@ export default function BlockedDatesManager({ blockedDates }: { blockedDates: Bl
                   <td className="p-3 text-primary text-sm">{item.date}</td>
                   <td className="p-3 text-primary text-sm">
                     {item.start_time && item.end_time 
-                      ? \`\${formatTime(item.start_time)} - \${formatTime(item.end_time)}\` 
+                      ? `${formatTime(item.start_time)} - ${formatTime(item.end_time)}` 
                       : 'Full Day'}
                   </td>
                   <td className="p-3 text-secondary text-sm">{item.reason || '-'}</td>

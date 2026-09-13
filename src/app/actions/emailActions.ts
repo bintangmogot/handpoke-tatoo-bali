@@ -13,6 +13,7 @@ export async function sendPaymentSuccessEmail(booking: any) {
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; background-color: #111111; color: #ffffff; border-radius: 8px;">
       
       <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #333333;">
+        <img src="https://dotlinetattu.vercel.app/assets/Logo%20Dotlinetattu.avif" alt="Dotlinetattu" style="width: 120px; height: auto; margin-bottom: 15px;" onerror="this.style.display='none'" />
         <h1 style="margin: 0; font-size: 24px; font-weight: normal; letter-spacing: 2px; text-transform: uppercase;">Dotlinetattu</h1>
         <p style="margin: 10px 0 0 0; font-size: 14px; color: #888888; letter-spacing: 1px;">Booking Confirmation</p>
       </div>
@@ -71,7 +72,7 @@ export async function sendPaymentSuccessEmail(booking: any) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Dotlinetattu System <onboarding@resend.dev>',
+      from: 'Dotlinetattu Transactions <onboarding@resend.dev>',
       to: adminEmail,
       subject: "🚨 [Dotlinetattu] DP Lunas: " + booking.name + " (" + booking.booking_date + ")",
       html: htmlContent,

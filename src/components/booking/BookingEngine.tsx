@@ -160,21 +160,50 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
   const handleCheckout = async () => {
     setIsLoading(true);
     try {
+      let designUrl = null;
+      let placementUrl = null;
+
+      // Upload Reference Image
+      if (formData.referenceImage) {
+        const uploadData = new FormData();
+        uploadData.append('file', formData.referenceImage);
+        const res = await fetch('/api/upload', { method: 'POST', body: uploadData });
+        if (res.ok) {
+          const json = await res.json();
+          designUrl = json.secure_url;
+        }
+      }
+
+      // Upload Placement Image
+      if (formData.placementImage) {
+        const uploadData = new FormData();
+        uploadData.append('file', formData.placementImage);
+        const res = await fetch('/api/upload', { method: 'POST', body: uploadData });
+        if (res.ok) {
+          const json = await res.json();
+          placementUrl = json.secure_url;
+        }
+      }
+
       const result = await createBooking({
         name: formData.name,
         email: formData.email,
         whatsapp: formData.whatsapp,
+        placement: formData.placementText,
+        description: "",
         date: selectedDate,
         time: selectedTime,
         type: type,
         totalPrice: priceInfo.total,
-        deposit: priceInfo.deposit
+        deposit: priceInfo.deposit,
+        design_url: designUrl,
+        placement_url: placementUrl
       });
       setBookingId(result.id);
       setStep("success");
       localStorage.removeItem(STORAGE_KEY); // clear draft on success
     } catch (err) {
-      alert("Failed to create booking. Please check database permissions (RLS).");
+      alert("Failed to create booking. Please try again.");
       console.error(err);
     } finally {
       setIsLoading(false);

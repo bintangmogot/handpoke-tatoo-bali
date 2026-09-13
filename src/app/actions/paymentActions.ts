@@ -13,7 +13,8 @@ export async function createMidtransTransaction(bookingId: string) {
       .single();
 
     if (error || !booking) {
-      throw new Error('Booking not found');
+      console.error('Failed to fetch booking in payment action:', { bookingId, error });
+      throw new Error(`Booking not found. ID: ${bookingId}. Error: ${error?.message || 'Unknown'}`);
     }
 
     // 2. Initialize Midtrans Snap

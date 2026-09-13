@@ -13,7 +13,6 @@ export async function sendPaymentSuccessEmail(booking: any) {
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; background-color: #111111; color: #ffffff; border-radius: 8px;">
       
       <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #333333;">
-        <img src="https://res.cloudinary.com/workstation-/image/upload/w_150,f_png/v1788875981/Dotlinetattu/Logo_Dotlinetattu.png" alt="Dotlinetattu Logo" style="width: 150px; height: auto; margin-bottom: 15px;" />
         <h1 style="margin: 0; font-size: 24px; font-weight: normal; letter-spacing: 2px; text-transform: uppercase;">Dotlinetattu</h1>
         <p style="margin: 10px 0 0 0; font-size: 14px; color: #888888; letter-spacing: 1px;">Booking Confirmation</p>
       </div>

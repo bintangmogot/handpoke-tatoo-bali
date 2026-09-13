@@ -61,15 +61,21 @@ export async function sendPaymentSuccessEmail(booking: any) {
   `;
 
   try {
-    const data = await resend.emails.send({
-      from: 'Dotlinetattu System <onboarding@resend.dev>',
+    const { data, error } = await resend.emails.send({
+      from: 'onboarding@resend.dev',
       to: adminEmail,
       subject: "🚨 [PAID] Booking Baru: " + booking.name + " (" + booking.booking_date + ")",
       html: htmlContent,
     });
+    
+    if (error) {
+      console.error('Resend API Error:', error);
+      return null;
+    }
+    
     console.log('Email sent successfully:', data);
     return data;
-  } catch (error) {
-    console.error('Failed to send email:', error);
+  } catch (err) {
+    console.error('Failed to send email:', err);
   }
 }

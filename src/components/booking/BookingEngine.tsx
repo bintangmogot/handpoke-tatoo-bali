@@ -169,6 +169,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
       if (formData.size === "large") return { total: 2500000, deposit: 1250000, depositPercent: "50%" };
     } else {
       // Custom session pricing
+      if (formData.size === "test_session") return { total: 10000, deposit: 10000, depositPercent: "100%" };
       if (formData.size === "passing") return { total: 1500000, deposit: 150000, depositPercent: "10%" };
       if (formData.size === "medium_session") return { total: 5500000, deposit: 550000, depositPercent: "10%" };
       if (formData.size === "1day") return { total: 8500000, deposit: 850000, depositPercent: "10%" };
@@ -440,6 +441,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                     <div className="flex flex-col gap-4">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {[
+                          { id: "test_session", title: "Testing Mode", desc: "For developer testing payment gateways.", price: "IDR 10.000", tag: "Test Only" },
                           { id: "passing", title: "Passing Session", desc: "1-2 hours • Small, quick tattoos under 10cm.", price: "IDR 1.500.000", tag: "Same-day consultation" },
                           { id: "medium_session", title: "Medium Session", desc: "6 hours • Detailed work or multiple small pieces.", price: "IDR 5.500.000", tag: "Prior consultation required" },
                           { id: "1day", title: "1 Day Session", desc: "8 hours • Extensive custom work, half sleeves.", price: "IDR 8.500.000", tag: "Prior consultation required" },

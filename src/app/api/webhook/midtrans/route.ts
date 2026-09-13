@@ -35,8 +35,9 @@ export async function POST(request: Request) {
       bookingStatus = 'PENDING';
     }
 
-    // Order ID format is bookingId-timestamp
-    const bookingId = payload.order_id.split('-')[0];
+    // Order ID format is bookingId-timestamp. Since bookingId is a UUID (which contains hyphens),
+    // we cannot use split('-')[0]. A UUID is exactly 36 characters long.
+    const bookingId = payload.order_id.substring(0, 36);
 
     // Fetch current booking to check status and get details for email
     const { data: currentBooking, error: fetchError } = await supabaseAdmin

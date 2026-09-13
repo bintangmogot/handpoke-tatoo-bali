@@ -74,7 +74,7 @@ export async function sendPaymentSuccessEmail(booking: any) {
     const { data, error } = await resend.emails.send({
       from: 'Dotlinetattu Transactions <onboarding@resend.dev>',
       to: adminEmail,
-      subject: "🚨 [Dotlinetattu] DP Lunas: " + booking.name + " (" + booking.booking_date + ")",
+      subject: "[Dotlinetattu] Deposit Paid: " + booking.name + " (" + booking.booking_date + ")",
       html: htmlContent,
     });
     

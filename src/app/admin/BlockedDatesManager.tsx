@@ -82,9 +82,9 @@ export default function BlockedDatesManager({ blockedDates }: { blockedDates: Bl
               <select 
                 name="start_time" 
                 required={!isFullDay}
-                className="w-full bg-background border border-border p-2 text-primary focus:border-accent outline-none text-sm"
+                className="w-full bg-background border border-border p-2 text-primary focus:border-accent outline-none text-sm [color-scheme:dark]"
               >
-                {hours.map(h => <option key={h} value={h}>{h}</option>)}
+                {hours.map(h => <option key={h} value={h} className="bg-background text-primary">{h}</option>)}
               </select>
             </div>
             <div className="flex-1">
@@ -92,9 +92,9 @@ export default function BlockedDatesManager({ blockedDates }: { blockedDates: Bl
               <select 
                 name="end_time" 
                 required={!isFullDay}
-                className="w-full bg-background border border-border p-2 text-primary focus:border-accent outline-none text-sm"
+                className="w-full bg-background border border-border p-2 text-primary focus:border-accent outline-none text-sm [color-scheme:dark]"
               >
-                {hours.map(h => <option key={h} value={h}>{h}</option>)}
+                {hours.map(h => <option key={h} value={h} className="bg-background text-primary">{h}</option>)}
               </select>
             </div>
           </div>

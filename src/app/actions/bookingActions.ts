@@ -18,7 +18,7 @@ export async function getBookedSlots() {
 export async function getBlockedDates() {
   const { data, error } = await supabaseAdmin
     .from('blocked_dates')
-    .select('date, start_time, end_time');
+    .select('date, start_time, end_time, reason');
     
   if (error) {
     console.error('Error fetching blocked dates:', error);

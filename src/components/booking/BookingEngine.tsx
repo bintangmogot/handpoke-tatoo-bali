@@ -618,7 +618,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                       return slots.map(time => {
                         const isTimeBooked = bookedSlots.some(s => s.booking_date === selectedDate && s.booking_time === time);
                         
-                        const isTimeBlocked = blockedDates.some(b => {
+                        const blockRecord = blockedDates.find(b => {
                           if (b.date !== selectedDate) return false;
                           if (!b.start_time) return true; // Full day block
                           
@@ -628,12 +628,18 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                           return slotHour >= startH && slotHour <= endH;
                         });
 
+                        const isTimeBlocked = !!blockRecord;
                         const isTimeDisabled = isTimeBooked || isTimeBlocked;
                         
                         const hour = parseInt(time.split(':')[0]);
                         const ampm = hour >= 12 ? 'PM' : 'AM';
                         const displayHour = hour % 12 === 0 ? 12 : hour % 12;
                         const displayTime = `${displayHour.toString().padStart(2, '0')}:00 ${ampm}`;
+                        
+                        let blockText = "(Blocked)";
+                        if (isTimeBlocked && blockRecord.reason) {
+                          blockText = `(Blocked: ${blockRecord.reason})`;
+                        }
                         
                         return (
                           <button
@@ -650,7 +656,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                               }
                             `}
                           >
-                            {displayTime} {isTimeBooked && "(Booked)"} {isTimeBlocked && !isTimeBooked && "(Blocked)"}
+                            {displayTime} {isTimeBooked && "(Booked)"} {isTimeBlocked && !isTimeBooked && blockText}
                           </button>
                         );
                       });

@@ -27,6 +27,19 @@ export async function getBlockedDates() {
   return data || [];
 }
 
+export async function getOpenHours() {
+  const { data, error } = await supabaseAdmin
+    .from('studio_settings')
+    .select('value')
+    .eq('key', 'open_hours')
+    .single();
+    
+  if (error || !data) {
+    return { start: '10:00', end: '18:00' }; // fallback
+  }
+  return data.value;
+}
+
 export async function createBooking(bookingData: any) {
   const { data, error } = await supabaseAdmin
     .from('bookings')

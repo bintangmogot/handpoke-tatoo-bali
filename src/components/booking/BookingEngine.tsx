@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getBookedSlots, getBlockedDates, createBooking } from "@/app/actions/bookingActions";
+import { getBookedSlots, getBlockedDates, getOpenHours, createBooking } from "@/app/actions/bookingActions";
 import ZoomableImage from "@/components/ui/ZoomableImage";
 
 type FlowType = "flash" | "custom";
@@ -24,10 +24,26 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [bookedSlots, setBookedSlots] = useState<any[]>([]);
   const [blockedDates, setBlockedDates] = useState<any[]>([]);
+  const [openHours, setOpenHours] = useState<{start: string, end: string}>({ start: "10:00", end: "18:00" });
   const [bookingId, setBookingId] = useState<string>("");
 
   const [calMonth, setCalMonth] = useState<number>(now.getMonth());
   const [calYear, setCalYear] = useState<number>(now.getFullYear());
+
+  // Fetch booked slots
+  useEffect(() => {
+    async function fetchSlots() {
+      const [slots, blocked, hours] = await Promise.all([
+        getBookedSlots(),
+        getBlockedDates(),
+        getOpenHours()
+      ]);
+      setBookedSlots(slots);
+      setBlockedDates(blocked);
+      setOpenHours(hours);
+    }
+    fetchSlots();
+  }, []);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -89,18 +105,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
   }, [hydrated, type, step, calMonth, calYear, selectedDate, selectedTime, formData]);
 
-  // Fetch booked slots
-  useEffect(() => {
-    async function fetchSlots() {
-      const [slots, blocked] = await Promise.all([
-        getBookedSlots(),
-        getBlockedDates()
-      ]);
-      setBookedSlots(slots);
-      setBlockedDates(blocked);
-    }
-    fetchSlots();
-  }, []);
+
 
   // Sync default size when type changes
   useEffect(() => {
@@ -541,7 +546,11 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                     const isPast = thisDay < today;
 
                     const slotsForDay = bookedSlots.filter(s => s.booking_date === dateStr);
-                    const isFullyBooked = slotsForDay.length >= 3;
+                    const startH = parseInt(openHours.start.split(':')[0]);
+                    const endH = parseInt(openHours.end.split(':')[0]);
+                    const totalDailySlots = endH - startH + 1;
+                    const isFullyBooked = slotsForDay.length >= totalDailySlots;
+                    
                     const isBlocked = blockedDates.some(b => b.date === dateStr);
                     const isDisabled = isPast || isFullyBooked || isBlocked;
                     const isSelected = selectedDate === dateStr;
@@ -583,29 +592,42 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 <h4 className="font-heading text-xl text-primary mb-4">Available Times</h4>
                 {selectedDate ? (
                   <div className="grid grid-cols-2 gap-3">
-                    {["10:00:00", "13:00:00", "16:00:00"].map(time => {
-                      const isTimeBooked = bookedSlots.some(s => s.booking_date === selectedDate && s.booking_time === time);
-                      const displayTime = time.startsWith("10") ? "10:00 AM" : time.startsWith("13") ? "01:00 PM" : "04:00 PM";
+                    {(() => {
+                      const startHour = parseInt(openHours.start.split(':')[0]);
+                      const endHour = parseInt(openHours.end.split(':')[0]);
+                      const slots = [];
+                      for (let h = startHour; h <= endHour; h++) {
+                        slots.push(`${h.toString().padStart(2, '0')}:00:00`);
+                      }
                       
-                      return (
-                        <button
-                          key={time}
-                          disabled={isTimeBooked}
-                          onClick={() => setSelectedTime(time)}
-                          className={`
-                            py-3 border text-sm font-sans transition-all rounded-sm
-                            ${isTimeBooked
-                              ? "border-border bg-surface text-secondary/30 cursor-not-allowed"
-                              : selectedTime === time
-                                ? "border-accent bg-accent/10 text-accent"
-                                : "border-border bg-primary text-secondary hover:border-accent hover:text-primary"
-                            }
-                          `}
-                        >
-                          {displayTime} {isTimeBooked && "(Booked)"}
-                        </button>
-                      );
-                    })}
+                      return slots.map(time => {
+                        const isTimeBooked = bookedSlots.some(s => s.booking_date === selectedDate && s.booking_time === time);
+                        
+                        const hour = parseInt(time.split(':')[0]);
+                        const ampm = hour >= 12 ? 'PM' : 'AM';
+                        const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+                        const displayTime = `${displayHour.toString().padStart(2, '0')}:00 ${ampm}`;
+                        
+                        return (
+                          <button
+                            key={time}
+                            disabled={isTimeBooked}
+                            onClick={() => setSelectedTime(time)}
+                            className={`
+                              py-3 border text-sm font-sans transition-all rounded-sm
+                              ${isTimeBooked
+                                ? "border-border bg-surface text-secondary/30 cursor-not-allowed"
+                                : selectedTime === time
+                                  ? "border-accent bg-accent/10 text-accent"
+                                  : "border-border bg-primary text-secondary hover:border-accent hover:text-primary"
+                              }
+                            `}
+                          >
+                            {displayTime} {isTimeBooked && "(Booked)"}
+                          </button>
+                        );
+                      });
+                    })()}
                   </div>
                 ) : (
                   <div className="h-full flex items-center justify-center border border-dashed border-border bg-primary/50 text-secondary font-sans text-sm p-8 text-center rounded-sm">
@@ -726,3 +748,4 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
     </div>
   );
 }
+

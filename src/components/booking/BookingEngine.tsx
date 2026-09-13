@@ -3,7 +3,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getBookedSlots, getBlockedDates, getOpenHours, createBooking } from "@/app/actions/bookingActions";
+import { createMidtransTransaction } from "@/app/actions/paymentActions";
 import ZoomableImage from "@/components/ui/ZoomableImage";
+
+// Add snap to window interface
+declare global {
+  interface Window {
+    snap: any;
+  }
+}
 
 type FlowType = "flash" | "custom";
 type Step = "warning" | "form" | "calendar" | "checkout" | "success";
@@ -29,6 +37,20 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
 
   const [calMonth, setCalMonth] = useState<number>(now.getMonth());
   const [calYear, setCalYear] = useState<number>(now.getFullYear());
+
+  // Load Midtrans snap script
+  useEffect(() => {
+    const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
+    const clientKey = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
+    if (clientKey) {
+      let script = document.createElement("script");
+      script.src = snapScript;
+      script.setAttribute("data-client-key", clientKey);
+      script.async = true;
+      document.body.appendChild(script);
+      return () => { document.body.removeChild(script); };
+    }
+  }, []);
 
   // Fetch booked slots
   useEffect(() => {
@@ -199,13 +221,40 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
         design_url: designUrl,
         placement_url: placementUrl
       });
+      
       setBookingId(result.id);
-      setStep("success");
       localStorage.removeItem(STORAGE_KEY); // clear draft on success
+
+      // Call Midtrans
+      const tx = await createMidtransTransaction(result.id);
+      
+      // Stop loading state before opening popup
+      setIsLoading(false);
+
+      if (window.snap) {
+        window.snap.pay(tx.token, {
+          onSuccess: function(result: any){
+            setStep("success");
+          },
+          onPending: function(result: any){
+            setStep("success");
+          },
+          onError: function(result: any){
+            alert("Payment failed! Please try again.");
+            console.error(result);
+          },
+          onClose: function(){
+            alert('You closed the popup without finishing the payment.');
+            setStep("success"); // We still consider booking created, but payment is pending.
+          }
+        });
+      } else {
+        // Fallback if script didn't load
+        window.location.href = tx.redirect_url;
+      }
     } catch (err) {
       alert("Failed to create booking. Please try again.");
       console.error(err);
-    } finally {
       setIsLoading(false);
     }
   };

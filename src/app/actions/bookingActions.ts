@@ -54,8 +54,9 @@ export async function createBooking(bookingData: any) {
         placement: bookingData.placement || 'TBD',
         description: bookingData.description || '',
         price: bookingData.totalPrice,
+        deposit: bookingData.deposit,
         status: 'PENDING',
-        payment_link: 'https://mock-xendit-link.com/' + Date.now(),
+        payment_link: null,
         design_url: bookingData.design_url || null,
         placement_url: bookingData.placement_url || null,
       }

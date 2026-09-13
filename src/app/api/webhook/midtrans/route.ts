@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 import crypto from 'crypto';
+import { sendPaymentSuccessEmail, sendCustomerReceiptEmail } from '@/app/actions/emailActions';
 
 export async function POST(request: Request) {
   try {
@@ -65,8 +66,9 @@ export async function POST(request: Request) {
 
       // Send email if it just became PAID
       if (bookingStatus === 'PAID') {
-        const { sendPaymentSuccessEmail } = await import('@/app/actions/emailActions');
+        const { sendPaymentSuccessEmail, sendCustomerReceiptEmail } = await import('@/app/actions/emailActions');
         await sendPaymentSuccessEmail(currentBooking);
+        await sendCustomerReceiptEmail(currentBooking);
       }
     }
 

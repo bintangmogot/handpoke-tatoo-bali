@@ -44,6 +44,8 @@ export default function BlockedDatesManager({ blockedDates }: { blockedDates: Bl
     return time.substring(0, 5); // "10:00:00" -> "10:00"
   };
 
+  const hours = Array.from({ length: 24 }).map((_, i) => \\:00\);
+
   return (
     <div className="bg-surface border border-border p-6 rounded-sm">
       <h2 className="text-xl font-heading text-primary mb-4">Manage Blocked Dates & Times</h2>
@@ -76,22 +78,24 @@ export default function BlockedDatesManager({ blockedDates }: { blockedDates: Bl
         {!isFullDay && (
           <div className="flex flex-col md:flex-row gap-4 animate-in fade-in slide-in-from-top-2">
             <div className="flex-1">
-              <label className="block text-secondary text-xs mb-1">Start Time (e.g. 06:00)</label>
-              <input 
-                type="time" 
+              <label className="block text-secondary text-xs mb-1">Start Time</label>
+              <select 
                 name="start_time" 
                 required={!isFullDay}
                 className="w-full bg-background border border-border p-2 text-primary focus:border-accent outline-none text-sm"
-              />
+              >
+                {hours.map(h => <option key={h} value={h}>{h}</option>)}
+              </select>
             </div>
             <div className="flex-1">
-              <label className="block text-secondary text-xs mb-1">End Time (e.g. 10:00)</label>
-              <input 
-                type="time" 
+              <label className="block text-secondary text-xs mb-1">End Time</label>
+              <select 
                 name="end_time" 
                 required={!isFullDay}
                 className="w-full bg-background border border-border p-2 text-primary focus:border-accent outline-none text-sm"
-              />
+              >
+                {hours.map(h => <option key={h} value={h}>{h}</option>)}
+              </select>
             </div>
           </div>
         )}
@@ -143,7 +147,7 @@ export default function BlockedDatesManager({ blockedDates }: { blockedDates: Bl
                   <td className="p-3 text-primary text-sm">{item.date}</td>
                   <td className="p-3 text-primary text-sm">
                     {item.start_time && item.end_time 
-                      ? `${formatTime(item.start_time)} - ${formatTime(item.end_time)}` 
+                      ? `${formatTime(item.start_time)} - ${formatTime(item.end_time)}`
                       : 'Full Day'}
                   </td>
                   <td className="p-3 text-secondary text-sm">{item.reason || '-'}</td>

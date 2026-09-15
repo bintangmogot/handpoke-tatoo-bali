@@ -3,14 +3,25 @@
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export async function getBookedSlots() {
+  // Now queries the appointments table for all SCHEDULED appointments
   const { data, error } = await supabaseAdmin
-    .from('bookings')
-    .select('booking_date, booking_time, status')
-    .in('status', ['PENDING', 'PAID', 'CONFIRMED']);
+    .from('appointments')
+    .select('date, time, duration_hours, status')
+    .eq('status', 'SCHEDULED');
     
   if (error) {
-    console.error('Error fetching bookings:', error);
-    return [];
+    console.error('Error fetching appointments:', error);
+    // Fallback: try old bookings table for backwards compatibility
+    const { data: fallback } = await supabaseAdmin
+      .from('bookings')
+      .select('booking_date, booking_time, status')
+      .in('status', ['PENDING', 'PAID', 'CONFIRMED']);
+    return (fallback || []).map(b => ({ 
+      date: b.booking_date, 
+      time: b.booking_time, 
+      duration_hours: 2, 
+      status: b.status 
+    }));
   }
   return data || [];
 }
@@ -41,6 +52,9 @@ export async function getOpenHours() {
 }
 
 export async function createBooking(bookingData: any) {
+  const isCustom = bookingData.type === 'custom';
+  const stage = isCustom ? 'CONSULTATION_BOOKED' : 'SESSION_SCHEDULED';
+
   const { data, error } = await supabaseAdmin
     .from('bookings')
     .insert([
@@ -56,6 +70,7 @@ export async function createBooking(bookingData: any) {
         price: bookingData.totalPrice,
         deposit: bookingData.deposit,
         status: 'PENDING',
+        stage: stage,
         payment_link: null,
         design_url: bookingData.design_url || null,
         placement_url: bookingData.placement_url || null,
@@ -67,6 +82,29 @@ export async function createBooking(bookingData: any) {
   if (error) {
     console.error('Error creating booking:', error);
     throw new Error(error.message);
+  }
+
+  // Auto-create appointment to block the calendar slot
+  const appointmentType = isCustom ? 'consultation' : 'tattoo_session';
+  const defaultDuration = isCustom ? 1 : 2; // consultation = 1hr, flash tattoo = 2hr
+
+  const { error: apptError } = await supabaseAdmin
+    .from('appointments')
+    .insert([
+      {
+        booking_id: data.id,
+        type: appointmentType,
+        date: bookingData.date,
+        time: bookingData.time,
+        duration_hours: defaultDuration,
+        status: 'SCHEDULED',
+        notes: isCustom ? 'Initial consultation' : 'Flash tattoo session',
+      }
+    ]);
+
+  if (apptError) {
+    console.error('Error creating appointment:', apptError);
+    // Don't throw - booking was created successfully, appointment is supplementary
   }
 
   return data;

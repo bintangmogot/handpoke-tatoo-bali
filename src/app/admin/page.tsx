@@ -10,6 +10,11 @@ export default async function AdminDashboard() {
     .select('*')
     .order('created_at', { ascending: false });
 
+  const { data: appointments } = await supabaseAdmin
+    .from('appointments')
+    .select('*')
+    .order('date', { ascending: true });
+
   const { data: blockedDates } = await supabaseAdmin
     .from('blocked_dates')
     .select('*')
@@ -23,7 +28,10 @@ export default async function AdminDashboard() {
     <div className="space-y-12 pb-20">
       <div>
         <h1 className="text-3xl font-heading text-primary mb-8">Studio Bookings</h1>
-        <BookingsTable bookings={bookings || []} />
+        <BookingsTable 
+          bookings={bookings || []} 
+          appointments={appointments || []}
+        />
       </div>
 
       <div>

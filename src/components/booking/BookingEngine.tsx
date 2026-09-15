@@ -625,7 +625,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                     const thisDay = new Date(calYear, calMonth, day);
                     const isPast = thisDay < today;
 
-                    const slotsForDay = bookedSlots.filter(s => s.booking_date === dateStr);
+                    const slotsForDay = bookedSlots.filter(s => s.date === dateStr);
                     const startH = parseInt(openHours.start.split(':')[0]);
                     const endH = parseInt(openHours.end.split(':')[0]);
                     const totalDailySlots = endH - startH + 1;
@@ -696,7 +696,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                       }
                       
                       return slots.map(time => {
-                        const isTimeBooked = bookedSlots.some(s => s.booking_date === selectedDate && s.booking_time === time);
+                        const isTimeBooked = bookedSlots.some(s => s.date === selectedDate && s.time === time);
                         
                         const blockRecord = blockedDates.find(b => {
                           if (b.date !== selectedDate) return false;
@@ -807,7 +807,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 disabled={isLoading}
                 className={`w-full py-4 font-sans tracking-widest uppercase text-xs font-bold transition-all ${isLoading ? 'bg-surface text-secondary cursor-not-allowed' : 'bg-accent hover:bg-accent-hover text-white'}`}
               >
-                {isLoading ? "Processing..." : "Pay via Xendit (Mock)"}
+                {isLoading ? "Processing..." : type === "custom" ? "Book Consultation" : "Pay Deposit & Book"}
               </button>
               <button 
                 onClick={() => setStep("calendar")}
@@ -827,19 +827,27 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
             {/* Minimal accent line instead of neon circle */}
             <div className="w-12 h-px bg-accent mb-8" />
 
-            <h2 className="font-heading text-4xl text-primary mb-4">Booking Confirmed</h2>
+            <h2 className="font-heading text-4xl text-primary mb-4">
+              {type === "custom" ? "Consultation Booked" : "Booking Confirmed"}
+            </h2>
             <p className="text-secondary font-sans leading-relaxed mb-10 max-w-lg">
-              Your slot on <strong className="text-primary">{selectedDate} at {selectedTime}</strong> is secured.
-              We will be in touch shortly.
+              {type === "custom" ? (
+                <>Your consultation on <strong className="text-primary">{selectedDate} at {selectedTime}</strong> is secured. During this meeting, we will discuss your design, estimate the final price, and schedule your tattoo session.</>
+              ) : (
+                <>Your slot on <strong className="text-primary">{selectedDate} at {selectedTime}</strong> is secured. We will be in touch shortly.</>
+              )}
             </p>
             
             <div className="border border-border/50 bg-surface p-8 w-full max-w-md mb-10 text-left">
               <p className="font-sans text-xs tracking-[0.2em] uppercase text-accent mb-3">Next Step</p>
               <p className="text-secondary font-sans text-sm leading-relaxed mb-6">
-                Drop Jerry a message on WhatsApp to confirm your design details.
+                {type === "custom"
+                  ? "Message Jerry on WhatsApp to share your initial design ideas before the consultation."
+                  : "Drop Jerry a message on WhatsApp to confirm your design details."
+                }
               </p>
               <a 
-                href={`https://wa.me/6282339760624?text=${encodeURIComponent(`Hello Jerry! I just booked a ${type} tattoo slot on ${selectedDate} at ${selectedTime}. My name is ${formData.name}. Order ID: ${bookingId}`)}`}
+                href={`https://wa.me/6282339760624?text=${encodeURIComponent(`Hello Jerry! I just booked a ${type === "custom" ? "consultation" : "flash tattoo"} on ${selectedDate} at ${selectedTime}. My name is ${formData.name}. Order ID: ${bookingId}`)}`}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-3 w-full py-4 bg-accent hover:bg-accent-hover text-white font-sans tracking-widest uppercase text-xs font-bold transition-all"

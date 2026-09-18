@@ -529,11 +529,28 @@ export default function BookingsTable({
                                     onChange={e => setAdvTime(e.target.value)}
                                     className="w-full bg-background border border-border p-2 text-primary focus:border-accent outline-none text-sm [color-scheme:dark]"
                                   >
-                                    {Array.from({ length: 10 }, (_, i) => i + 9).map(h => (
-                                      <option key={h} value={`${h.toString().padStart(2, '0')}:00`}>
-                                        {h.toString().padStart(2, '0')}:00
-                                      </option>
-                                    ))}
+                                    {Array.from({ length: 13 }, (_, i) => i + 6).map(h => {
+                                      const timeString = `${h.toString().padStart(2, '0')}:00`;
+                                      
+                                      // Check if this specific time is booked on the selected date
+                                      const isBooked = appointments.some(appt => {
+                                        if (appt.date !== advDate || appt.status === 'CANCELLED') return false;
+                                        const apptStartHour = parseInt(appt.time.split(':')[0]);
+                                        const apptDuration = Math.ceil(appt.duration_hours || 1);
+                                        return h >= apptStartHour && h < apptStartHour + apptDuration;
+                                      });
+
+                                      return (
+                                        <option 
+                                          key={h} 
+                                          value={timeString}
+                                          disabled={isBooked}
+                                          className={isBooked ? "text-secondary/30" : ""}
+                                        >
+                                          {timeString} {isBooked ? '(Booked)' : ''}
+                                        </option>
+                                      );
+                                    })}
                                   </select>
                                 </div>
                               </div>

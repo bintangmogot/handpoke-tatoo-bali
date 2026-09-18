@@ -195,7 +195,7 @@ export async function sendPaymentLinkToCustomer(bookingId: string) {
     const deposit = Math.round(booking.price * 0.5);
     const parameter = {
       transaction_details: {
-        order_id: bookingId + '-dp-' + Date.now(),
+        order_id: bookingId.substring(0, 36) + '-' + Date.now().toString(36),
         gross_amount: deposit,
       },
       customer_details: {

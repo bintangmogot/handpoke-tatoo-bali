@@ -276,6 +276,18 @@ export async function sendPaymentLinkToCustomer(bookingId: string) {
 }
 
 export async function cancelAppointment(appointmentId: string) {
+  // 1. Get the appointment to find its booking
+  const { data: appointment, error: fetchError } = await supabaseAdmin
+    .from('appointments')
+    .select('*, bookings(stage)')
+    .eq('id', appointmentId)
+    .single();
+
+  if (fetchError || !appointment) {
+    return { error: fetchError?.message || 'Appointment not found' };
+  }
+
+  // 2. Cancel the appointment
   const { error } = await supabaseAdmin
     .from('appointments')
     .update({ status: 'CANCELLED' })
@@ -283,6 +295,23 @@ export async function cancelAppointment(appointmentId: string) {
 
   if (error) {
     return { error: error.message };
+  }
+
+  // 3. Revert booking stage to previous stage
+  const STAGE_REVERT: Record<string, string> = {
+    DESIGN_IN_PROGRESS: 'CONSULTATION_BOOKED',
+    SESSION_SCHEDULED: 'DEAL_CONFIRMED',
+    IN_PROGRESS: 'SESSION_SCHEDULED',
+  };
+
+  const currentStage = (appointment as any).bookings?.stage;
+  const previousStage = currentStage ? STAGE_REVERT[currentStage] : null;
+
+  if (previousStage && appointment.booking_id) {
+    await supabaseAdmin
+      .from('bookings')
+      .update({ stage: previousStage })
+      .eq('id', appointment.booking_id);
   }
 
   revalidatePath('/admin');

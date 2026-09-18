@@ -175,11 +175,24 @@ export default function BookingsTable({
     });
   };
 
+  const STAGE_REVERT: Record<string, string> = {
+    DESIGN_IN_PROGRESS: 'CONSULTATION_BOOKED',
+    SESSION_SCHEDULED: 'DEAL_CONFIRMED',
+    IN_PROGRESS: 'SESSION_SCHEDULED',
+  };
+
   const handleCancelAppointment = async (apptId: string) => {
-    if (!confirm('Cancel this appointment? The slot will be freed.')) return;
+    if (!confirm('Cancel this appointment? The slot will be freed and stage will revert.')) return;
     startTransition(async () => {
       await cancelAppointment(apptId);
-      setActionMessage('Appointment cancelled.');
+      setActionMessage('Appointment cancelled. Stage reverted.');
+      // Revert stage locally to match backend
+      if (selected) {
+        const prevStage = STAGE_REVERT[selected.stage];
+        if (prevStage) {
+          setSelected(prev => prev ? { ...prev, stage: prevStage } : null);
+        }
+      }
     });
   };
 

@@ -109,7 +109,11 @@ export async function sendCustomerReceiptEmail(booking: any) {
       <div style="background-color: #1a1a1a; border-radius: 6px; padding: 20px; margin-top: 30px;">
         <table style="width: 100%; border-collapse: collapse;">
           <tr>
-            <td style="padding: 12px 0; border-bottom: 1px solid #333333; color: #888888; font-size: 14px; width: 35%;">Date & Time</td>
+            <td style="padding: 12px 0; border-bottom: 1px solid #333333; color: #888888; font-size: 14px; width: 35%;">Order ID</td>
+            <td style="padding: 12px 0; border-bottom: 1px solid #333333; color: #ffffff; font-size: 15px; font-weight: 500; font-family: monospace;">#DLT-${booking.id.substring(0, 8).toUpperCase()}</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 0; border-bottom: 1px solid #333333; color: #888888; font-size: 14px;">Date & Time</td>
             <td style="padding: 12px 0; border-bottom: 1px solid #333333; color: #ffffff; font-size: 15px; font-weight: 500;">${booking.booking_date} @ ${booking.booking_time}</td>
           </tr>
           <tr>

@@ -626,6 +626,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                     const isPast = thisDay < today;
 
                     const slotsForDay = bookedSlots.filter(s => s.date === dateStr);
+                    const bookedHourCount = slotsForDay.reduce((sum, s) => sum + Math.ceil(s.duration_hours || 1), 0);
                     const startH = parseInt(openHours.start.split(':')[0]);
                     const endH = parseInt(openHours.end.split(':')[0]);
                     const totalDailySlots = endH - startH + 1;
@@ -633,16 +634,13 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                     const blocksForDay = blockedDates.filter(b => b.date === dateStr);
                     const isFullDayBlocked = blocksForDay.some(b => !b.start_time);
                     
-                    let blockedHourlySlots = 0;
-                    blocksForDay.forEach(b => {
-                      if (b.start_time && b.end_time) {
-                        const s = parseInt(b.start_time.split(':')[0]);
-                        const e = parseInt(b.end_time.split(':')[0]);
-                        blockedHourlySlots += (e - s + 1);
-                      }
-                    });
+                    const blockedHourlySlots = blockedDates.filter(b => b.date === dateStr && b.start_time && b.end_time).reduce((sum, b) => {
+                      const s = parseInt(b.start_time.split(':')[0]);
+                      const e = parseInt(b.end_time.split(':')[0]);
+                      return sum + (e - s + 1);
+                    }, 0);
 
-                    const isFullyBooked = (slotsForDay.length + blockedHourlySlots) >= totalDailySlots;
+                    const isFullyBooked = (bookedHourCount + blockedHourlySlots) >= totalDailySlots;
                     
                     const isDisabled = isPast || isFullDayBlocked || isFullyBooked;
                     const isSelected = selectedDate === dateStr;
@@ -696,7 +694,13 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                       }
                       
                       return slots.map(time => {
-                        const isTimeBooked = bookedSlots.some(s => s.date === selectedDate && s.time === time);
+                        const slotHour = parseInt(time.split(':')[0]);
+                        const isTimeBooked = bookedSlots.some(s => {
+                          if (s.date !== selectedDate) return false;
+                          const apptStartHour = parseInt(s.time.split(':')[0]);
+                          const apptDuration = Math.ceil(s.duration_hours || 1);
+                          return slotHour >= apptStartHour && slotHour < apptStartHour + apptDuration;
+                        });
                         
                         const blockRecord = blockedDates.find(b => {
                           if (b.date !== selectedDate) return false;

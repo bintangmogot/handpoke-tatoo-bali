@@ -5,7 +5,7 @@ export const blogPosts = [
     excerpt: "Discover the ancient roots, the Meditative process, and why traditional handpoke tattoos are experiencing a massive resurgence in modern tattoo culture.",
     date: "October 12, 2023",
     category: "Education",
-    image: "/assets/Gallery/dotlinetattu_handpoke_tattoo_bali-klrlhsspxtuwbozl-2c4Ad1N23eO5zoWg (1).jpg",
+    image: "https://res.cloudinary.com/workstation-/image/upload/v1789931063/Dotlinetattu/Gallery/custom-geometric-ornament-monkey-mask.webp",
     content: `
       <h2>The Roots of the Ancient Mark</h2>
       <p>Handpoke tattooing (also known as stick and poke or traditional tattooing) is the oldest method of permanently marking the skin. Long before the invention of electric rotary or coil machines, indigenous tribes across the world—including the Mentawai and Dayak tribes of Indonesia—used sharpened bamboo, thorns, or bone attached to a stick to tap ink into the skin.</p>

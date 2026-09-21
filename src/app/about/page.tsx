@@ -19,7 +19,7 @@ export default function About() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-24">
           <div className="relative aspect-[3/4] rounded-sm overflow-hidden border border-border">
             <Image 
-              src="https://res.cloudinary.com/workstation-/image/upload/v1788876439/handpoke-tattoo-artist-bali-dotlinetattu-3-BAzWVxZMHkNtGS4w.avif" 
+              src="https://res.cloudinary.com/workstation-/image/upload/v1789931067/Dotlinetattu/Gallery/tattoo-artist-bali-2.webp" 
               alt="Jerry Tattooing" 
               fill
               className="object-cover transition-all duration-700"
@@ -49,7 +49,7 @@ export default function About() {
             </div>
           </div>
           <div className="order-1 md:order-2 relative aspect-[4/3] border border-border">
-            <Image src="https://res.cloudinary.com/workstation-/image/upload/v1788876442/dotlinetattu_handpoke_tattoo_bali-klrlhsspxtuwbozl-2c4Ad1N23eO5zoWg.jpg" alt="Dotlinetattu Studio Bali" fill className="object-cover" />
+            <Image src="https://res.cloudinary.com/workstation-/image/upload/v1789931066/Dotlinetattu/Gallery/tattoo-artist.webp" alt="Dotlinetattu Studio Bali" fill className="object-cover" />
           </div>
         </div>
 

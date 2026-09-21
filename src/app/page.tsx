@@ -75,7 +75,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div className="relative aspect-[4/3] w-full overflow-hidden border border-border">
                 <Image 
-                  src="https://res.cloudinary.com/workstation-/image/upload/v1788876438/dotlinetattu_handpoke_tattoo_bali-klrlhsspxtuwbozl-2c4Ad1N23eO5zoWg_1.jpg" 
+                  src="https://res.cloudinary.com/workstation-/image/upload/v1789931066/Dotlinetattu/Gallery/tattoo-artist.webp" 
                   alt="Traditional Handpoke" 
                   fill
                   className="object-cover"
@@ -128,7 +128,7 @@ export default function Home() {
             <div className="lg:col-span-5 relative">
               <div className="relative aspect-[3/4] w-full max-w-md mx-auto lg:mx-0 overflow-hidden border border-border">
                 <Image 
-                  src="https://res.cloudinary.com/workstation-/image/upload/v1788876439/handpoke-tattoo-artist-bali-dotlinetattu-3-BAzWVxZMHkNtGS4w.avif" 
+                  src="https://res.cloudinary.com/workstation-/image/upload/v1789931066/Dotlinetattu/Gallery/tattoo-artist-bali.webp" 
                   alt="Silver Jerry Handpoke Tattoo Artist" 
                   fill
                   className="object-cover"
@@ -152,17 +152,6 @@ export default function Home() {
                   </p>
                 </div>
                 
-                {/* Signature */}
-                <div className="mb-10">
-                  <Image 
-                    src="https://res.cloudinary.com/workstation-/image/upload/v1788875981/Dotlinetattu/signature.png" 
-                    alt="Jerry Signature" 
-                    width={200} 
-                    height={80} 
-                    className="opacity-70 invert"
-                  />
-                </div>
-
                 <Link 
                   href="/about" 
                   className="self-start inline-flex items-center gap-3 text-primary hover:text-accent font-sans font-semibold tracking-widest uppercase text-xs transition-colors group pb-1 border-b border-accent"

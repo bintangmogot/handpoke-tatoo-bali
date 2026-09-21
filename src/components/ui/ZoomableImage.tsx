@@ -19,17 +19,25 @@ export default function ZoomableImage({ src, alt, useNativeImg, zoomTitle, zoomI
   const items = zoomItems?.length ? zoomItems : [{ src, alt: String(alt || ''), title: zoomTitle }];
   const activeItem = items[activeIndex] || items[0];
 
+  const showItemWhenReady = (nextIndex: number) => {
+    const nextItem = items[nextIndex];
+    if (!nextItem) return;
+    const preload = new window.Image();
+    preload.onload = () => setActiveIndex(nextIndex);
+    preload.src = nextItem.src;
+  };
+
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setIsOpen(false);
       if (items.length < 2) return;
-      if (event.key === 'ArrowRight') setActiveIndex((index) => (index + 1) % items.length);
-      if (event.key === 'ArrowLeft') setActiveIndex((index) => (index - 1 + items.length) % items.length);
+      if (event.key === 'ArrowRight') showItemWhenReady((activeIndex + 1) % items.length);
+      if (event.key === 'ArrowLeft') showItemWhenReady((activeIndex - 1 + items.length) % items.length);
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, items.length]);
+  }, [isOpen, items.length, activeIndex]);
 
   const openAt = () => {
     setActiveIndex(zoomIndex);
@@ -79,8 +87,8 @@ export default function ZoomableImage({ src, alt, useNativeImg, zoomTitle, zoomI
             {activeItem.title || activeItem.alt}
           </p>
           {items.length > 1 && <>
-            <button type="button" className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/60 px-4 py-3 text-2xl text-white hover:bg-accent md:left-8" onClick={(event) => { event.stopPropagation(); setActiveIndex((index) => (index - 1 + items.length) % items.length); }} aria-label="Previous picture">‹</button>
-            <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/60 px-4 py-3 text-2xl text-white hover:bg-accent md:right-8" onClick={(event) => { event.stopPropagation(); setActiveIndex((index) => (index + 1) % items.length); }} aria-label="Next picture">›</button>
+            <button type="button" className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/60 px-4 py-3 text-2xl text-white hover:bg-accent md:left-8" onClick={(event) => { event.stopPropagation(); showItemWhenReady((activeIndex - 1 + items.length) % items.length); }} aria-label="Previous picture">‹</button>
+            <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/60 px-4 py-3 text-2xl text-white hover:bg-accent md:right-8" onClick={(event) => { event.stopPropagation(); showItemWhenReady((activeIndex + 1) % items.length); }} aria-label="Next picture">›</button>
           </>}
           <button 
             className="absolute right-4 top-4 rounded-full bg-black/50 p-2 text-secondary hover:bg-accent hover:text-white md:right-8 md:top-8"

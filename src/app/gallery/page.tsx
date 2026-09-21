@@ -83,14 +83,6 @@ export default function Gallery() {
                   </span>
                 </div>
 
-                {/* Zoom icon center */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white/60 bg-white/10 md:h-14 md:w-14">
-                    <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
-                    </svg>
-                  </div>
-                </div>
               </div>
             </div>
           ))}

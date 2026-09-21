@@ -1,6 +1,22 @@
 'use server';
 
 import { supabaseAdmin } from '@/lib/supabase-admin';
+import { DEFAULT_WEEKLY_HOURS, normalizeWeeklyHours } from '@/lib/studio-hours';
+
+type BookingInput = {
+  name: string;
+  email: string;
+  whatsapp: string;
+  placement: string;
+  description?: string;
+  date: string;
+  time: string;
+  type: 'flash' | 'custom';
+  totalPrice: number;
+  deposit: number;
+  design_url?: string | null;
+  placement_url?: string | null;
+};
 
 export async function getBookedSlots() {
   // Now queries the appointments table for all SCHEDULED appointments
@@ -46,12 +62,12 @@ export async function getOpenHours() {
     .single();
     
   if (error || !data) {
-    return { start: '10:00', end: '18:00' }; // fallback
+    return DEFAULT_WEEKLY_HOURS;
   }
-  return data.value;
+  return normalizeWeeklyHours(data.value);
 }
 
-export async function createBooking(bookingData: any) {
+export async function createBooking(bookingData: BookingInput) {
   const isCustom = bookingData.type === 'custom';
   const stage = isCustom ? 'CONSULTATION_BOOKED' : 'SESSION_SCHEDULED';
 

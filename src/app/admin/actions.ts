@@ -2,6 +2,13 @@
 
 import { supabaseAdmin } from '@/lib/supabase-admin';
 import { revalidatePath } from 'next/cache';
+import midtransClient from 'midtrans-client';
+import { Resend } from 'resend';
+import { WEEK_DAYS, timeToMinutes, type WeeklyHours } from '@/lib/studio-hours';
+
+function errorMessage(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback;
+}
 
 // ────────────────────────────────────────────────
 // Blocked Dates Management (existing)
@@ -44,133 +51,144 @@ export async function unblockDateAction(id: string) {
   return { success: true };
 }
 
-// ────────────────────────────────────────────────
-// Stage Management (new)
-// ────────────────────────────────────────────────
-
-const STAGE_ORDER = [
-  'CONSULTATION_BOOKED',
-  'DESIGN_IN_PROGRESS',
-  'DEAL_CONFIRMED',
-  'SESSION_SCHEDULED',
-  'IN_PROGRESS',
-  'COMPLETED',
-  'CANCELLED',
-] as const;
-
-export type Stage = typeof STAGE_ORDER[number];
-
-const STAGE_LABELS: Record<string, string> = {
-  CONSULTATION_BOOKED: 'Consultation Booked',
-  DESIGN_IN_PROGRESS: 'Design in Progress',
-  DEAL_CONFIRMED: 'Deal Confirmed',
-  SESSION_SCHEDULED: 'Session Scheduled',
-  IN_PROGRESS: 'In Progress',
-  COMPLETED: 'Completed',
-  CANCELLED: 'Cancelled',
-};
-
-export async function getStageLabels() {
-  return STAGE_LABELS;
-}
-
-export async function advanceStage(
-  bookingId: string,
-  newStage: string,
-  appointmentData?: {
-    date: string;
-    time: string;
-    duration_hours: number;
-    type: 'consultation' | 'design_review' | 'tattoo_session';
-    notes?: string;
-  },
-  priceUpdate?: {
-    price: number;
-  }
-) {
-  // 1. Update the booking stage
-  const updateData: any = { stage: newStage };
-  
-  // If price is being set (Deal Confirmed stage)
-  if (priceUpdate) {
-    updateData.price = priceUpdate.price;
-    updateData.deposit = Math.round(priceUpdate.price * 0.5); // 50% DP for tattoo session
-  }
-
-  const { error: bookingError } = await supabaseAdmin
-    .from('bookings')
-    .update(updateData)
-    .eq('id', bookingId);
-
-  if (bookingError) {
-    return { error: bookingError.message };
-  }
-
-  // 2. Create new appointment if date/time provided
-  if (appointmentData) {
-    const { error: apptError } = await supabaseAdmin
-      .from('appointments')
-      .insert([{
-        booking_id: bookingId,
-        type: appointmentData.type,
-        date: appointmentData.date,
-        time: appointmentData.time,
-        duration_hours: appointmentData.duration_hours,
-        status: 'SCHEDULED',
-        notes: appointmentData.notes || `Stage: ${STAGE_LABELS[newStage] || newStage}`,
-      }]);
-
-    if (apptError) {
-      console.error('Error creating appointment:', apptError);
-      return { error: 'Stage updated but failed to create appointment: ' + apptError.message };
+export async function updateWeeklyHoursAction(hours: WeeklyHours) {
+  for (const { key, label } of WEEK_DAYS) {
+    const day = hours[key];
+    if (!day || typeof day.open !== 'boolean') return { error: `${label} has invalid hours.` };
+    if (day.open && (!/^\d{2}:\d{2}$/.test(day.start) || !/^\d{2}:\d{2}$/.test(day.end))) {
+      return { error: `Choose valid opening and closing times for ${label}.` };
+    }
+    if (day.open && timeToMinutes(day.start) >= timeToMinutes(day.end)) {
+      return { error: `${label}'s closing time must be after its opening time.` };
     }
   }
 
+  const { error } = await supabaseAdmin
+    .from('studio_settings')
+    .upsert({ key: 'open_hours', value: hours }, { onConflict: 'key' });
+
+  if (error) return { error: error.message };
+  revalidatePath('/admin');
+  revalidatePath('/booking');
+  return { success: true };
+}
+
+type AppointmentInput = {
+  type: 'consultation' | 'design_review' | 'tattoo_session';
+  date: string;
+  time: string;
+  duration_hours: number;
+  notes?: string;
+};
+
+async function appointmentConflict(input: AppointmentInput, excludeId?: string) {
+  let query = supabaseAdmin
+    .from('appointments')
+    .select('id, time, duration_hours')
+    .eq('date', input.date)
+    .eq('status', 'SCHEDULED');
+
+  if (excludeId) query = query.neq('id', excludeId);
+
+  const [{ data: appointments, error }, { data: blocks }] = await Promise.all([
+    query,
+    supabaseAdmin
+      .from('blocked_dates')
+      .select('start_time, end_time')
+      .eq('date', input.date),
+  ]);
+
+  if (error) return 'Could not check calendar availability.';
+
+  const start = timeToMinutes(input.time);
+  const end = start + (Number(input.duration_hours) * 60);
+  const overlaps = (itemStart: number, itemEnd: number) => start < itemEnd && end > itemStart;
+
+  if ((appointments || []).some((appointment) => {
+    const appointmentStart = timeToMinutes(appointment.time);
+    return overlaps(appointmentStart, appointmentStart + (Number(appointment.duration_hours || 1) * 60));
+  })) {
+    return 'That time overlaps another appointment.';
+  }
+
+  if ((blocks || []).some((block) => {
+    if (!block.start_time || !block.end_time) return true;
+    return overlaps(timeToMinutes(block.start_time), timeToMinutes(block.end_time));
+  })) {
+    return 'That time is blocked in studio availability.';
+  }
+
+  return null;
+}
+
+function validateAppointment(input: AppointmentInput) {
+  if (!input.date || !input.time) return 'Date and time are required.';
+  if (!Number.isFinite(Number(input.duration_hours)) || Number(input.duration_hours) <= 0) {
+    return 'Choose a valid appointment duration.';
+  }
+  return null;
+}
+
+export async function addAppointment(bookingId: string, input: AppointmentInput) {
+  const validationError = validateAppointment(input);
+  if (validationError) return { error: validationError };
+
+  const conflict = await appointmentConflict(input);
+  if (conflict) return { error: conflict };
+
+  const { error } = await supabaseAdmin.from('appointments').insert([{
+    booking_id: bookingId,
+    type: input.type,
+    date: input.date,
+    time: input.time,
+    duration_hours: Number(input.duration_hours),
+    status: 'SCHEDULED',
+    notes: input.notes?.trim() || null,
+  }]);
+
+  if (error) return { error: error.message };
   revalidatePath('/admin');
   return { success: true };
 }
 
-export async function updateBookingPrice(bookingId: string, price: number) {
-  const deposit = Math.round(price * 0.5); // 50% deposit
+export async function rescheduleAppointment(appointmentId: string, input: AppointmentInput) {
+  const validationError = validateAppointment(input);
+  if (validationError) return { error: validationError };
+
+  const conflict = await appointmentConflict(input, appointmentId);
+  if (conflict) return { error: conflict };
 
   const { error } = await supabaseAdmin
-    .from('bookings')
-    .update({ price, deposit })
-    .eq('id', bookingId);
+    .from('appointments')
+    .update({
+      type: input.type,
+      date: input.date,
+      time: input.time,
+      duration_hours: Number(input.duration_hours),
+      notes: input.notes?.trim() || null,
+    })
+    .eq('id', appointmentId);
 
-  if (error) {
-    return { error: error.message };
-  }
-
+  if (error) return { error: error.message };
   revalidatePath('/admin');
   return { success: true };
 }
 
-export async function getBookingWithAppointments(bookingId: string) {
-  const { data: booking, error: bookingError } = await supabaseAdmin
-    .from('bookings')
-    .select('*')
-    .eq('id', bookingId)
-    .single();
-
-  if (bookingError || !booking) {
-    return { error: bookingError?.message || 'Booking not found' };
-  }
-
-  const { data: appointments, error: apptError } = await supabaseAdmin
-    .from('appointments')
-    .select('*')
-    .eq('booking_id', bookingId)
-    .order('date', { ascending: true });
-
-  return {
-    booking,
-    appointments: appointments || [],
-  };
+function escapeHtml(value: string) {
+  return value.replace(/[&<>'"]/g, (character) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
+  })[character] || character);
 }
 
-export async function sendPaymentLinkToCustomer(bookingId: string) {
-  // Fetch booking details
+export async function createPaymentRequest(
+  bookingId: string,
+  input: { description: string; amount: number; sendEmail?: boolean }
+) {
+  const amount = Math.round(Number(input.amount));
+  const description = input.description?.trim();
+  if (!description) return { error: 'Payment description is required.' };
+  if (!Number.isFinite(amount) || amount < 1000) return { error: 'Enter an amount of at least IDR 1,000.' };
+
   const { data: booking, error } = await supabaseAdmin
     .from('bookings')
     .select('*')
@@ -181,22 +199,17 @@ export async function sendPaymentLinkToCustomer(bookingId: string) {
     return { error: 'Booking not found' };
   }
 
-  if (!booking.price || booking.price <= 0) {
-    return { error: 'Please set the price before sending payment link' };
-  }
-
   try {
-    const midtransClient = require('midtrans-client');
     const snap = new midtransClient.Snap({
-      isProduction: false,
+      isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
       serverKey: process.env.MIDTRANS_SERVER_KEY,
     });
 
-    const deposit = Math.round(booking.price * 0.5);
+    const orderId = `${bookingId}-${Date.now().toString(36)}`;
     const parameter = {
       transaction_details: {
-        order_id: bookingId.substring(0, 36) + '-' + Date.now().toString(36),
-        gross_amount: deposit,
+        order_id: orderId,
+        gross_amount: amount,
       },
       customer_details: {
         first_name: booking.name,
@@ -204,55 +217,63 @@ export async function sendPaymentLinkToCustomer(bookingId: string) {
         phone: booking.whatsapp,
       },
       item_details: [{
-        id: 'TATOO-DP-50',
-        price: deposit,
+        id: 'DLT-PAYMENT',
+        price: amount,
         quantity: 1,
-        name: 'Tattoo Session Deposit (50%): ' + booking.session_type,
+        name: description.substring(0, 50),
       }],
     };
 
     const transaction = await snap.createTransaction(parameter);
 
-    // Update booking with payment link
-    await supabaseAdmin
-      .from('bookings')
-      .update({ 
-        deposit: deposit,
-        payment_link: transaction.redirect_url 
-      })
-      .eq('id', bookingId);
+    const { data: payment, error: paymentError } = await supabaseAdmin
+      .from('payments')
+      .insert([{
+        booking_id: bookingId,
+        description,
+        amount,
+        status: 'PENDING',
+        source: 'ADMIN_REQUEST',
+        midtrans_order_id: orderId,
+        payment_link: transaction.redirect_url,
+      }])
+      .select()
+      .single();
 
-    // Send payment link via email if Resend is configured
-    if (process.env.RESEND_API_KEY && booking.email) {
-      const { Resend } = require('resend');
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dotlinetattu <onboarding@resend.dev>';
+    if (paymentError) {
+      return { error: `Payment link was created, but could not be saved: ${paymentError.message}` };
+    }
 
-      await resend.emails.send({
-        from: fromEmail,
-        to: booking.email,
-        subject: 'Dotlinetattu - Deposit Payment for Your Tattoo Session',
-        html: `
+    let emailSent = false;
+    let emailError: string | undefined;
+    if (input.sendEmail && !process.env.RESEND_API_KEY) emailError = 'Email could not be sent because RESEND_API_KEY is not configured.';
+    if (input.sendEmail && !booking.email) emailError = 'Email could not be sent because this client has no email address.';
+    if (input.sendEmail && process.env.RESEND_API_KEY && booking.email) {
+      try {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dotlinetattu <onboarding@resend.dev>';
+
+        const emailResult = await resend.emails.send({
+          from: fromEmail,
+          to: booking.email,
+          subject: `Dotlinetattu - ${description}`,
+          html: `
           <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; background-color: #111111; color: #ffffff; border-radius: 8px;">
             <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #333333;">
               <h1 style="margin: 0; font-size: 24px; font-weight: normal; letter-spacing: 2px; text-transform: uppercase;">Dotlinetattu</h1>
               <p style="margin: 10px 0 0 0; font-size: 14px; color: #888888; letter-spacing: 1px;">Payment Request</p>
             </div>
-            <p style="font-size: 16px; line-height: 1.5; color: #cccccc;">Hello ${booking.name},</p>
-            <p style="font-size: 16px; line-height: 1.5; color: #cccccc;">Your tattoo design has been finalized. Please complete the deposit payment below to confirm your session.</p>
+            <p style="font-size: 16px; line-height: 1.5; color: #cccccc;">Hello ${escapeHtml(booking.name)},</p>
+            <p style="font-size: 16px; line-height: 1.5; color: #cccccc;">Jerry has sent you a payment request for <strong style="color:#ffffff">${escapeHtml(description)}</strong>.</p>
             <div style="background-color: #1a1a1a; border-radius: 6px; padding: 20px; margin-top: 30px;">
               <table style="width: 100%; border-collapse: collapse;">
                 <tr>
                   <td style="padding: 12px 0; border-bottom: 1px solid #333333; color: #888888; font-size: 14px; width: 35%;">Order ID</td>
-                  <td style="padding: 12px 0; border-bottom: 1px solid #333333; color: #ffffff; font-size: 15px; font-weight: 500; font-family: monospace;">#DLT-${booking.id.substring(0, 8).toUpperCase()}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #333333; color: #ffffff; font-size: 15px; font-weight: 500; font-family: monospace;">#DLT-${payment.id.substring(0, 8).toUpperCase()}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px 0; border-bottom: 1px solid #333333; color: #888888; font-size: 14px;">Total Price</td>
-                  <td style="padding: 12px 0; border-bottom: 1px solid #333333; color: #ffffff; font-size: 15px;">IDR ${booking.price.toLocaleString('id-ID')}</td>
-                </tr>
-                <tr>
-                  <td style="padding: 12px 0; color: #888888; font-size: 14px;">Deposit (50%)</td>
-                  <td style="padding: 12px 0; color: #4CAF50; font-size: 15px; font-weight: bold;">IDR ${deposit.toLocaleString('id-ID')}</td>
+                  <td style="padding: 12px 0; color: #888888; font-size: 14px;">Amount</td>
+                  <td style="padding: 12px 0; color: #d67b55; font-size: 15px; font-weight: bold;">IDR ${amount.toLocaleString('id-ID')}</td>
                 </tr>
               </table>
             </div>
@@ -267,31 +288,93 @@ export async function sendPaymentLinkToCustomer(bookingId: string) {
               </p>
             </div>
           </div>
-        `,
-      });
+          `,
+        });
+        emailSent = !emailResult.error;
+        if (emailResult.error) emailError = emailResult.error.message || 'Resend rejected the email.';
+      } catch (emailException) {
+        console.error('Payment link email failed:', emailException);
+        emailError = emailException instanceof Error ? emailException.message : 'Email delivery failed.';
+      }
     }
 
     revalidatePath('/admin');
-    return { success: true, redirect_url: transaction.redirect_url };
-  } catch (err: any) {
+    return { success: true, payment, redirect_url: transaction.redirect_url, emailSent, emailError };
+  } catch (err: unknown) {
     console.error('Failed to create payment link:', err);
-    return { error: err.message || 'Failed to create payment link' };
+    return { error: errorMessage(err, 'Failed to create payment link') };
+  }
+}
+
+export async function refreshPaymentStatus(paymentId: string) {
+  const { data: payment, error } = await supabaseAdmin
+    .from('payments')
+    .select('*')
+    .eq('id', paymentId)
+    .single();
+  if (error || !payment) return { error: 'Payment record not found.' };
+  if (!payment.midtrans_order_id) return { error: 'This payment has no Midtrans order ID.' };
+
+  try {
+    const core = new midtransClient.CoreApi({
+      isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
+      serverKey: process.env.MIDTRANS_SERVER_KEY,
+    });
+    const status = await core.transaction.status(payment.midtrans_order_id);
+    const transactionStatus = String(status.transaction_status || 'pending');
+    const fraudStatus = String(status.fraud_status || '');
+    const nextStatus = transactionStatus === 'settlement' || (transactionStatus === 'capture' && fraudStatus !== 'challenge')
+      ? 'PAID'
+      : transactionStatus === 'expire'
+        ? 'EXPIRED'
+        : transactionStatus === 'cancel'
+          ? 'CANCELLED'
+          : transactionStatus === 'deny'
+            ? 'FAILED'
+            : 'PENDING';
+    const { error: updateError } = await supabaseAdmin
+      .from('payments')
+      .update({ status: nextStatus, paid_at: nextStatus === 'PAID' ? new Date().toISOString() : null, updated_at: new Date().toISOString() })
+      .eq('id', paymentId);
+    if (updateError) return { error: updateError.message };
+    revalidatePath('/admin');
+    return { success: true, status: nextStatus };
+  } catch (exception) {
+    console.error('Failed to refresh Midtrans payment status:', exception);
+    const message = exception instanceof Error ? exception.message : '';
+    if (message.includes('404') || message.toLowerCase().includes("transaction doesn't exist")) {
+      return { error: 'Midtrans could not find this transaction. It may be an old test link or belong to a different sandbox/production account. Create a new payment link.' };
+    }
+    return { error: 'Could not check Midtrans status. Please verify the payment environment and try again.' };
+  }
+}
+
+export async function resendPaymentEmail(paymentId: string) {
+  if (!process.env.RESEND_API_KEY) return { error: 'RESEND_API_KEY is not configured.' };
+  const { data: payment, error: paymentError } = await supabaseAdmin.from('payments').select('*').eq('id', paymentId).single();
+  if (paymentError || !payment) return { error: 'Payment record not found.' };
+  const { data: booking, error: bookingError } = await supabaseAdmin.from('bookings').select('*').eq('id', payment.booking_id).single();
+  if (bookingError || !booking?.email) return { error: 'This client has no email address.' };
+
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dotlinetattu <onboarding@resend.dev>';
+    const result = await resend.emails.send({
+      from: fromEmail,
+      to: booking.email,
+      subject: `Dotlinetattu - ${payment.description}`,
+      html: `<p>Hello ${escapeHtml(booking.name)},</p><p>Here is your payment link for <strong>${escapeHtml(payment.description)}</strong>.</p><p><a href="${payment.payment_link}">Open secure payment checkout</a></p><p>Amount: IDR ${Number(payment.amount).toLocaleString('id-ID')}</p>`,
+      text: `Hello ${booking.name}. Payment: ${payment.description}. Amount: IDR ${Number(payment.amount).toLocaleString('id-ID')}. Open the secure checkout: ${payment.payment_link}`,
+    });
+    if (result.error) return { error: result.error.message || 'Resend rejected the email.' };
+    return { success: true };
+  } catch (exception) {
+    console.error('Payment email resend failed:', exception);
+    return { error: exception instanceof Error ? exception.message : 'Email delivery failed.' };
   }
 }
 
 export async function cancelAppointment(appointmentId: string) {
-  // 1. Get the appointment to find its booking
-  const { data: appointment, error: fetchError } = await supabaseAdmin
-    .from('appointments')
-    .select('*, bookings(stage)')
-    .eq('id', appointmentId)
-    .single();
-
-  if (fetchError || !appointment) {
-    return { error: fetchError?.message || 'Appointment not found' };
-  }
-
-  // 2. Cancel the appointment
   const { error } = await supabaseAdmin
     .from('appointments')
     .update({ status: 'CANCELLED' })
@@ -299,23 +382,6 @@ export async function cancelAppointment(appointmentId: string) {
 
   if (error) {
     return { error: error.message };
-  }
-
-  // 3. Revert booking stage to previous stage
-  const STAGE_REVERT: Record<string, string> = {
-    DESIGN_IN_PROGRESS: 'CONSULTATION_BOOKED',
-    SESSION_SCHEDULED: 'DEAL_CONFIRMED',
-    IN_PROGRESS: 'SESSION_SCHEDULED',
-  };
-
-  const currentStage = (appointment as any).bookings?.stage;
-  const previousStage = currentStage ? STAGE_REVERT[currentStage] : null;
-
-  if (previousStage && appointment.booking_id) {
-    await supabaseAdmin
-      .from('bookings')
-      .update({ stage: previousStage })
-      .eq('id', appointment.booking_id);
   }
 
   revalidatePath('/admin');
@@ -332,6 +398,29 @@ export async function completeAppointment(appointmentId: string) {
     return { error: error.message };
   }
 
+  revalidatePath('/admin');
+  return { success: true };
+}
+
+export async function setClientStatus(
+  bookingId: string,
+  status: 'ACTIVE' | 'COMPLETED' | 'CANCELLED'
+) {
+  const legacyStage = status === 'COMPLETED'
+    ? 'COMPLETED'
+    : status === 'CANCELLED'
+      ? 'CANCELLED'
+      : undefined;
+
+  const update: Record<string, string> = { admin_status: status };
+  if (legacyStage) update.stage = legacyStage;
+
+  const { error } = await supabaseAdmin
+    .from('bookings')
+    .update(update)
+    .eq('id', bookingId);
+
+  if (error) return { error: error.message };
   revalidatePath('/admin');
   return { success: true };
 }

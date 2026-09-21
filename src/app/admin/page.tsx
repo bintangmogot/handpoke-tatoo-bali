@@ -1,6 +1,7 @@
 import { supabaseAdmin } from '@/lib/supabase-admin';
 import BlockedDatesManager from './BlockedDatesManager';
 import BookingsTable from './BookingsTable';
+import { normalizeWeeklyHours } from '@/lib/studio-hours';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,28 +16,47 @@ export default async function AdminDashboard() {
     .select('*')
     .order('date', { ascending: true });
 
+  const { data: payments, error: paymentsError } = await supabaseAdmin
+    .from('payments')
+    .select('*')
+    .order('created_at', { ascending: false });
+
   const { data: blockedDates } = await supabaseAdmin
     .from('blocked_dates')
     .select('*')
     .order('date', { ascending: true });
+
+  const { data: openHoursSetting } = await supabaseAdmin
+    .from('studio_settings')
+    .select('value')
+    .eq('key', 'open_hours')
+    .maybeSingle();
 
   if (error) {
     return <div className="text-red-500">Error loading bookings: {error.message}</div>;
   }
 
   return (
-    <div className="space-y-12 pb-20">
-      <div>
-        <h1 className="text-3xl font-heading text-primary mb-8">Studio Bookings</h1>
-        <BookingsTable 
-          bookings={bookings || []} 
-          appointments={appointments || []}
-        />
-      </div>
+    <div className="space-y-8 pb-20">
+      <BookingsTable
+        bookings={bookings || []}
+        appointments={appointments || []}
+        payments={payments || []}
+        paymentsReady={!paymentsError}
+      />
 
-      <div>
-        <BlockedDatesManager blockedDates={blockedDates || []} />
-      </div>
+      <details className="group rounded-sm border border-border bg-surface/70">
+        <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-sm font-medium text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+          <span>Studio availability &amp; blocked dates</span>
+          <span className="text-secondary transition-transform duration-200 group-open:rotate-45" aria-hidden="true">+</span>
+        </summary>
+        <div className="border-t border-border p-4 md:p-6">
+          <BlockedDatesManager
+            blockedDates={blockedDates || []}
+            initialWeeklyHours={normalizeWeeklyHours(openHoursSetting?.value)}
+          />
+        </div>
+      </details>
     </div>
   );
 }

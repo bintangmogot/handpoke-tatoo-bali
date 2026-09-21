@@ -1,15 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image, { ImageProps } from "next/image";
+
+type ZoomItem = { src: string; alt: string; title?: string };
 
 interface ZoomableImageProps extends Omit<ImageProps, 'src'> {
   src: string;
   useNativeImg?: boolean;
+  zoomTitle?: string;
+  zoomItems?: ZoomItem[];
+  zoomIndex?: number;
 }
 
-export default function ZoomableImage({ src, alt, useNativeImg, ...props }: ZoomableImageProps) {
+export default function ZoomableImage({ src, alt, useNativeImg, zoomTitle, zoomItems, zoomIndex = 0, ...props }: ZoomableImageProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(zoomIndex);
+  const items = zoomItems?.length ? zoomItems : [{ src, alt: String(alt || ''), title: zoomTitle }];
+  const activeItem = items[activeIndex] || items[0];
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false);
+      if (items.length < 2) return;
+      if (event.key === 'ArrowRight') setActiveIndex((index) => (index + 1) % items.length);
+      if (event.key === 'ArrowLeft') setActiveIndex((index) => (index - 1 + items.length) % items.length);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, items.length]);
+
+  const openAt = () => {
+    setActiveIndex(zoomIndex);
+    setIsOpen(true);
+  };
 
   return (
     <>
@@ -18,7 +43,7 @@ export default function ZoomableImage({ src, alt, useNativeImg, ...props }: Zoom
           src={src}
           alt={alt}
           onClick={(e) => {
-            setIsOpen(true);
+            openAt();
             if (props.onClick) props.onClick(e as any);
           }}
           className={`${props.className || ""} cursor-zoom-in`}
@@ -29,7 +54,7 @@ export default function ZoomableImage({ src, alt, useNativeImg, ...props }: Zoom
           alt={alt}
           {...props}
           onClick={(e) => {
-            setIsOpen(true);
+            openAt();
             if (props.onClick) props.onClick(e);
           }}
           className={`${props.className || ""} cursor-zoom-in`}
@@ -38,20 +63,27 @@ export default function ZoomableImage({ src, alt, useNativeImg, ...props }: Zoom
 
       {isOpen && (
         <div 
-          className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex items-center justify-center p-4 md:p-12 animate-in fade-in zoom-in-95 duration-200 cursor-zoom-out"
+          className="fixed inset-0 z-[100] flex cursor-zoom-out items-center justify-center bg-black/95 p-4 backdrop-blur-md md:p-12"
           onClick={() => setIsOpen(false)}
         >
           <div className="relative w-full h-full max-w-6xl max-h-[85vh]">
             <Image
-              src={src}
-              alt={alt}
+              src={activeItem.src}
+              alt={activeItem.alt}
               fill
               className="object-contain"
               sizes="100vw"
             />
           </div>
+          <p className="absolute bottom-5 left-1/2 max-w-[calc(100%-5rem)] -translate-x-1/2 text-center font-heading text-lg text-white md:bottom-8 md:text-2xl">
+            {activeItem.title || activeItem.alt}
+          </p>
+          {items.length > 1 && <>
+            <button type="button" className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/60 px-4 py-3 text-2xl text-white hover:bg-accent md:left-8" onClick={(event) => { event.stopPropagation(); setActiveIndex((index) => (index - 1 + items.length) % items.length); }} aria-label="Previous picture">‹</button>
+            <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/60 px-4 py-3 text-2xl text-white hover:bg-accent md:right-8" onClick={(event) => { event.stopPropagation(); setActiveIndex((index) => (index + 1) % items.length); }} aria-label="Next picture">›</button>
+          </>}
           <button 
-            className="absolute top-4 right-4 md:top-8 md:right-8 text-secondary hover:text-white bg-black/50 hover:bg-accent rounded-full p-2 transition-all"
+            className="absolute right-4 top-4 rounded-full bg-black/50 p-2 text-secondary hover:bg-accent hover:text-white md:right-8 md:top-8"
             onClick={(e) => {
               e.stopPropagation();
               setIsOpen(false);

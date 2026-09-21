@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { getBookedSlots, getBlockedDates, getOpenHours, createBooking } from "@/app/actions/bookingActions";
 import { createMidtransTransaction } from "@/app/actions/paymentActions";
 import ZoomableImage from "@/components/ui/ZoomableImage";
+import { bookingSlotsForDay, DEFAULT_WEEKLY_HOURS, timeToMinutes, WEEK_DAYS, type WeeklyHours } from "@/lib/studio-hours";
 
 // Add snap to window interface
 declare global {
@@ -17,6 +18,60 @@ type FlowType = "flash" | "custom";
 type Step = "warning" | "form" | "calendar" | "checkout" | "success";
 
 const STORAGE_KEY = "dotlinetattu_booking_draft";
+
+const COUNTRY_CALLING_CODES = [
+  { code: "+62", country: "Indonesia", flag: "🇮🇩" },
+  { code: "+61", country: "Australia", flag: "🇦🇺" },
+  { code: "+65", country: "Singapore", flag: "🇸🇬" },
+  { code: "+60", country: "Malaysia", flag: "🇲🇾" },
+  { code: "+1", country: "United States & Canada", flag: "🇺🇸" },
+  { code: "+44", country: "United Kingdom", flag: "🇬🇧" },
+  { code: "+91", country: "India", flag: "🇮🇳" },
+  { code: "+81", country: "Japan", flag: "🇯🇵" },
+  { code: "+82", country: "South Korea", flag: "🇰🇷" },
+  { code: "+86", country: "China", flag: "🇨🇳" },
+  { code: "+64", country: "New Zealand", flag: "🇳🇿" },
+  { code: "+66", country: "Thailand", flag: "🇹🇭" },
+  { code: "+63", country: "Philippines", flag: "🇵🇭" },
+  { code: "+84", country: "Vietnam", flag: "🇻🇳" },
+  { code: "+852", country: "Hong Kong", flag: "🇭🇰" },
+  { code: "+886", country: "Taiwan", flag: "🇹🇼" },
+  { code: "+971", country: "United Arab Emirates", flag: "🇦🇪" },
+  { code: "+966", country: "Saudi Arabia", flag: "🇸🇦" },
+  { code: "+27", country: "South Africa", flag: "🇿🇦" },
+  { code: "+31", country: "Netherlands", flag: "🇳🇱" },
+  { code: "+32", country: "Belgium", flag: "🇧🇪" },
+  { code: "+33", country: "France", flag: "🇫🇷" },
+  { code: "+34", country: "Spain", flag: "🇪🇸" },
+  { code: "+39", country: "Italy", flag: "🇮🇹" },
+  { code: "+41", country: "Switzerland", flag: "🇨🇭" },
+  { code: "+43", country: "Austria", flag: "🇦🇹" },
+  { code: "+45", country: "Denmark", flag: "🇩🇰" },
+  { code: "+46", country: "Sweden", flag: "🇸🇪" },
+  { code: "+47", country: "Norway", flag: "🇳🇴" },
+  { code: "+48", country: "Poland", flag: "🇵🇱" },
+  { code: "+49", country: "Germany", flag: "🇩🇪" },
+  { code: "+52", country: "Mexico", flag: "🇲🇽" },
+  { code: "+54", country: "Argentina", flag: "🇦🇷" },
+  { code: "+55", country: "Brazil", flag: "🇧🇷" },
+  { code: "+56", country: "Chile", flag: "🇨🇱" },
+  { code: "+57", country: "Colombia", flag: "🇨🇴" },
+  { code: "+351", country: "Portugal", flag: "🇵🇹" },
+  { code: "+353", country: "Ireland", flag: "🇮🇪" },
+  { code: "+358", country: "Finland", flag: "🇫🇮" },
+  { code: "+380", country: "Ukraine", flag: "🇺🇦" },
+  { code: "+972", country: "Israel", flag: "🇮🇱" },
+] as const;
+
+function splitPhoneNumber(value: string) {
+  const matchedCode = [...COUNTRY_CALLING_CODES]
+    .sort((a, b) => b.code.length - a.code.length)
+    .find(({ code }) => value.startsWith(code));
+
+  return matchedCode
+    ? { countryCode: matchedCode.code, localNumber: value.slice(matchedCode.code.length).trim() }
+    : { countryCode: "+62", localNumber: value };
+}
 
 interface BookingEngineProps {
   initialType: FlowType;
@@ -32,8 +87,12 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [bookedSlots, setBookedSlots] = useState<any[]>([]);
   const [blockedDates, setBlockedDates] = useState<any[]>([]);
-  const [openHours, setOpenHours] = useState<{start: string, end: string}>({ start: "10:00", end: "18:00" });
+  const [openHours, setOpenHours] = useState<WeeklyHours>(DEFAULT_WEEKLY_HOURS);
   const [bookingId, setBookingId] = useState<string>("");
+  const [countryCode, setCountryCode] = useState("+62");
+  const [countryQuery, setCountryQuery] = useState("");
+  const checkoutInProgress = useRef(false);
+  const snapPopupOpen = useRef(false);
 
   const [calMonth, setCalMonth] = useState<number>(now.getMonth());
   const [calYear, setCalYear] = useState<number>(now.getFullYear());
@@ -42,13 +101,13 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
   useEffect(() => {
     const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
     const clientKey = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
-    if (clientKey) {
-      let script = document.createElement("script");
+    if (clientKey && !document.querySelector('script[data-dotlinetattu-midtrans="true"]')) {
+      const script = document.createElement("script");
       script.src = snapScript;
       script.setAttribute("data-client-key", clientKey);
+      script.setAttribute("data-dotlinetattu-midtrans", "true");
       script.async = true;
       document.body.appendChild(script);
-      return () => { document.body.removeChild(script); };
     }
   }, []);
 
@@ -93,11 +152,13 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
         if (draft.selectedDate) setSelectedDate(draft.selectedDate);
         if (draft.selectedTime) setSelectedTime(draft.selectedTime);
         if (draft.form) {
+          const savedPhone = splitPhoneNumber(draft.form.whatsapp ?? "");
+          setCountryCode(savedPhone.countryCode);
           setFormData(prev => ({
             ...prev,
             name: draft.form.name ?? "",
             email: draft.form.email ?? "",
-            whatsapp: draft.form.whatsapp ?? "",
+            whatsapp: savedPhone.localNumber,
             placementText: draft.form.placementText ?? "",
             size: draft.form.size ?? "medium",
           }));
@@ -119,13 +180,13 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
       form: {
         name: formData.name,
         email: formData.email,
-        whatsapp: formData.whatsapp,
+        whatsapp: `${countryCode}${formData.whatsapp.replace(/\D/g, '').replace(/^0/, '')}`,
         placementText: formData.placementText,
         size: formData.size,
       },
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-  }, [hydrated, type, step, calMonth, calYear, selectedDate, selectedTime, formData]);
+  }, [hydrated, type, step, calMonth, calYear, selectedDate, selectedTime, formData, countryCode]);
 
 
 
@@ -150,7 +211,8 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
   };
 
   const isEmailFormatValid = formData.email === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
-  const whatsappDigits = formData.whatsapp.replace(/\D/g, '');
+  const localWhatsappDigits = formData.whatsapp.replace(/\D/g, '').replace(/^0/, '');
+  const whatsappDigits = `${countryCode}${localWhatsappDigits}`.replace(/\D/g, '');
   const isWhatsappFormatValid = formData.whatsapp === "" || (whatsappDigits.length >= 8 && whatsappDigits.length <= 15);
 
   const isFormValid = 
@@ -179,8 +241,27 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
   };
 
   const priceInfo = calculatePrice();
+  const formattedBookingDate = selectedDate
+    ? new Date(`${selectedDate}T00:00:00`).toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    : selectedDate;
+  const formattedBookingTime = selectedTime
+    ? (() => {
+        const [hourText, minuteText] = selectedTime.split(":");
+        const hour = Number(hourText);
+        if (Number.isNaN(hour)) return selectedTime;
+        const displayHour = hour % 12 || 12;
+        return `${displayHour}:${minuteText} ${hour >= 12 ? "PM" : "AM"}`;
+      })()
+    : selectedTime;
 
   const handleCheckout = async () => {
+    if (checkoutInProgress.current || snapPopupOpen.current) return;
+    checkoutInProgress.current = true;
     setIsLoading(true);
     try {
       let designUrl = null;
@@ -211,7 +292,7 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
       const result = await createBooking({
         name: formData.name,
         email: formData.email,
-        whatsapp: formData.whatsapp,
+        whatsapp: `${countryCode}${localWhatsappDigits}`,
         placement: formData.placementText,
         description: "",
         date: selectedDate,
@@ -232,28 +313,40 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
       // Stop loading state before opening popup
       setIsLoading(false);
 
-      if (window.snap) {
+      if (window.snap && !snapPopupOpen.current) {
+        snapPopupOpen.current = true;
         window.snap.pay(tx.token, {
           onSuccess: function(result: any){
+            snapPopupOpen.current = false;
+            checkoutInProgress.current = false;
             setStep("success");
           },
           onPending: function(result: any){
+            snapPopupOpen.current = false;
+            checkoutInProgress.current = false;
             setStep("success");
           },
           onError: function(result: any){
+            snapPopupOpen.current = false;
+            checkoutInProgress.current = false;
             alert("Payment failed! Please try again.");
             console.error(result);
           },
           onClose: function(){
+            snapPopupOpen.current = false;
+            checkoutInProgress.current = false;
             alert('You closed the popup without finishing the payment.');
             setStep("success"); // We still consider booking created, but payment is pending.
           }
         });
       } else {
         // Fallback if script didn't load
+        checkoutInProgress.current = false;
         window.location.href = tx.redirect_url;
       }
     } catch (err) {
+      checkoutInProgress.current = false;
+      snapPopupOpen.current = false;
       alert("Failed to create booking. Please try again.");
       console.error(err);
       setIsLoading(false);
@@ -402,8 +495,44 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 </div>
                 <div>
                   <label className="block text-secondary font-sans text-xs tracking-widest uppercase mb-2">WhatsApp Number <span className="text-red-500">*</span></label>
-                  <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleInputChange} className={`w-full bg-primary border px-4 py-3 text-primary focus:border-accent outline-none font-sans ${!isWhatsappFormatValid ? 'border-red-500/50' : 'border-border'}`} placeholder="+1 234 567 890" />
-                  {!isWhatsappFormatValid && <p className="text-red-400/80 text-xs mt-1">Enter a valid phone number (min. 8 digits).</p>}
+                  <div className={`grid grid-cols-[5rem_minmax(0,1fr)] overflow-hidden border bg-primary transition-colors focus-within:border-accent sm:grid-cols-[6rem_minmax(0,1fr)] ${!isWhatsappFormatValid ? 'border-red-500/50' : 'border-border'}`}>
+                    <label className="sr-only" htmlFor="country-code">Country / region calling code</label>
+                    <input
+                      id="country-code"
+                      value={countryQuery || countryCode}
+                      onFocus={() => setCountryQuery("")}
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        const match = COUNTRY_CALLING_CODES.find(({ code }) => code === value);
+                        setCountryQuery(match ? "" : value);
+                        if (match) setCountryCode(match.code);
+                      }}
+                      list="country-code-options"
+                      inputMode="search"
+                      autoComplete="tel-country-code"
+                      className="min-h-14 w-full border-r border-border bg-surface px-3 text-sm text-primary outline-none focus:bg-surface/80 sm:px-4"
+                      aria-label="Search country or region calling code"
+                      placeholder="Search country or +62"
+                    />
+                    <datalist id="country-code-options">
+                      {COUNTRY_CALLING_CODES.map(({ code, country, flag }) => (
+                        <option key={`${country}-${code}`} value={code} label={`${flag} ${country}`} />
+                      ))}
+                    </datalist>
+                    <label className="sr-only" htmlFor="whatsapp-number">WhatsApp number without country code</label>
+                    <input
+                      id="whatsapp-number"
+                      type="tel"
+                      name="whatsapp"
+                      value={formData.whatsapp}
+                      onChange={handleInputChange}
+                      inputMode="tel"
+                      autoComplete="tel-national"
+                      className="min-h-14 w-full bg-primary px-4 text-primary outline-none placeholder:text-secondary/50"
+                      placeholder="812 3456 7890"
+                    />
+                  </div>
+                  {!isWhatsappFormatValid && <p className="text-red-400/80 text-xs mt-1">Enter a valid phone number (8–15 digits including the country code).</p>}
                 </div>
               </div>
               
@@ -624,25 +753,33 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                     today.setHours(0,0,0,0);
                     const thisDay = new Date(calYear, calMonth, day);
                     const isPast = thisDay < today;
+                    const dayKey = WEEK_DAYS[thisDay.getDay()].key;
+                    const dayHours = openHours[dayKey];
+                    const availableSlots = bookingSlotsForDay(dayHours);
 
                     const slotsForDay = bookedSlots.filter(s => s.date === dateStr);
-                    const bookedHourCount = slotsForDay.reduce((sum, s) => sum + Math.ceil(s.duration_hours || 1), 0);
-                    const startH = parseInt(openHours.start.split(':')[0]);
-                    const endH = parseInt(openHours.end.split(':')[0]);
-                    const totalDailySlots = endH - startH + 1;
+                    const totalDailySlots = availableSlots.length;
                     
                     const blocksForDay = blockedDates.filter(b => b.date === dateStr);
                     const isFullDayBlocked = blocksForDay.some(b => !b.start_time);
-                    
-                    const blockedHourlySlots = blockedDates.filter(b => b.date === dateStr && b.start_time && b.end_time).reduce((sum, b) => {
-                      const s = parseInt(b.start_time.split(':')[0]);
-                      const e = parseInt(b.end_time.split(':')[0]);
-                      return sum + (e - s + 1);
-                    }, 0);
+                    const partialBlocks = blocksForDay.filter(b => b.start_time && b.end_time);
+                    const unavailableSlots = availableSlots.filter((slot) => {
+                      const slotStart = timeToMinutes(slot);
+                      const slotEnd = slotStart + 60;
+                      const overlapsAppointment = slotsForDay.some((appointment) => {
+                        const appointmentStart = timeToMinutes(appointment.time);
+                        const appointmentEnd = appointmentStart + (Number(appointment.duration_hours || 1) * 60);
+                        return slotStart < appointmentEnd && slotEnd > appointmentStart;
+                      });
+                      const overlapsBlock = partialBlocks.some((block) => (
+                        slotStart < timeToMinutes(block.end_time) && slotEnd > timeToMinutes(block.start_time)
+                      ));
+                      return overlapsAppointment || overlapsBlock;
+                    }).length;
 
-                    const isFullyBooked = (bookedHourCount + blockedHourlySlots) >= totalDailySlots;
+                    const isFullyBooked = dayHours.open && totalDailySlots > 0 && unavailableSlots >= totalDailySlots;
                     
-                    const isDisabled = isPast || isFullDayBlocked || isFullyBooked;
+                    const isDisabled = isPast || !dayHours.open || isFullDayBlocked || isFullyBooked;
                     const isSelected = selectedDate === dateStr;
 
                     return (
@@ -664,12 +801,15 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                         {isFullDayBlocked && (
                           <span className="text-[8px] uppercase tracking-wider text-red-500/50 mt-0.5 hidden md:block">Blocked</span>
                         )}
-                        {!isDisabled && !isFullDayBlocked && (slotsForDay.length > 0 || blockedHourlySlots > 0) && (
+                        {!dayHours.open && !isFullDayBlocked && (
+                          <span className="mt-0.5 hidden text-[8px] uppercase tracking-wider text-secondary/50 md:block">Closed</span>
+                        )}
+                        {!isDisabled && !isFullDayBlocked && (slotsForDay.length > 0 || partialBlocks.length > 0) && (
                           <div className="absolute bottom-1 flex gap-0.5">
                             {slotsForDay.map((_, idx) => (
                               <div key={`booked-${idx}`} className={`w-1 h-1 rounded-full ${isSelected ? 'bg-white' : 'bg-accent'}`} />
                             ))}
-                            {Array.from({length: Math.min(blockedHourlySlots, 3)}).map((_, idx) => (
+                            {Array.from({length: Math.min(partialBlocks.length, 3)}).map((_, idx) => (
                               <div key={`blocked-${idx}`} className="w-1 h-1 rounded-full bg-red-500/50" />
                             ))}
                           </div>
@@ -686,39 +826,37 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
                 {selectedDate ? (
                   <div className="grid grid-cols-2 gap-3">
                     {(() => {
-                      const startHour = parseInt(openHours.start.split(':')[0]);
-                      const endHour = parseInt(openHours.end.split(':')[0]);
-                      const slots = [];
-                      for (let h = startHour; h <= endHour; h++) {
-                        slots.push(`${h.toString().padStart(2, '0')}:00:00`);
-                      }
+                      const selectedDay = new Date(`${selectedDate}T00:00:00`);
+                      const dayKey = WEEK_DAYS[selectedDay.getDay()].key;
+                      const slots = bookingSlotsForDay(openHours[dayKey]);
                       
                       return slots.map(time => {
-                        const slotHour = parseInt(time.split(':')[0]);
+                        const slotStart = timeToMinutes(time);
+                        const slotEnd = slotStart + 60;
                         const isTimeBooked = bookedSlots.some(s => {
                           if (s.date !== selectedDate) return false;
-                          const apptStartHour = parseInt(s.time.split(':')[0]);
-                          const apptDuration = Math.ceil(s.duration_hours || 1);
-                          return slotHour >= apptStartHour && slotHour < apptStartHour + apptDuration;
+                          const appointmentStart = timeToMinutes(s.time);
+                          const appointmentEnd = appointmentStart + (Number(s.duration_hours || 1) * 60);
+                          return slotStart < appointmentEnd && slotEnd > appointmentStart;
                         });
                         
                         const blockRecord = blockedDates.find(b => {
                           if (b.date !== selectedDate) return false;
                           if (!b.start_time) return true; // Full day block
                           
-                          const slotHour = parseInt(time.split(':')[0]);
-                          const startH = parseInt(b.start_time.split(':')[0]);
-                          const endH = parseInt(b.end_time.split(':')[0]);
-                          return slotHour >= startH && slotHour <= endH;
+                          const blockStart = timeToMinutes(b.start_time);
+                          const blockEnd = timeToMinutes(b.end_time);
+                          return slotStart < blockEnd && slotEnd > blockStart;
                         });
 
                         const isTimeBlocked = !!blockRecord;
                         const isTimeDisabled = isTimeBooked || isTimeBlocked;
                         
-                        const hour = parseInt(time.split(':')[0]);
+                        const [hourText, minuteText] = time.split(':');
+                        const hour = parseInt(hourText);
                         const ampm = hour >= 12 ? 'PM' : 'AM';
                         const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-                        const displayTime = `${displayHour.toString().padStart(2, '0')}:00 ${ampm}`;
+                        const displayTime = `${displayHour.toString().padStart(2, '0')}:${minuteText} ${ampm}`;
                         
                         let blockText = "(Blocked)";
                         if (isTimeBlocked && blockRecord.reason) {
@@ -780,18 +918,20 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
               <p className="text-secondary font-sans text-sm">Review your booking details before paying.</p>
             </div>
 
-            <div className="bg-primary border border-border p-8 rounded-sm mb-8 space-y-4">
-              <div className="flex justify-between border-b border-border pb-4">
-                <span className="text-secondary font-sans">Type</span>
-                <span className="text-primary font-heading uppercase">{type} Tattoo</span>
+            <div className="bg-primary border border-border p-5 sm:p-8 rounded-sm mb-8 space-y-5">
+              <div className="flex items-baseline justify-between gap-6 border-b border-border pb-4">
+                <span className="text-secondary font-sans text-xs uppercase tracking-[0.18em]">Type</span>
+                <span className="text-primary font-heading uppercase text-right">{type} Tattoo</span>
               </div>
-              <div className="flex justify-between border-b border-border pb-4">
-                <span className="text-secondary font-sans">Date & Time</span>
-                <span className="text-primary font-heading">{selectedDate} @ {selectedTime}</span>
+              <div className="border-b border-border pb-5">
+                <span className="block text-secondary font-sans text-xs uppercase tracking-[0.18em]">Date &amp; time</span>
+                <span className="mt-2 block border-l-2 border-accent pl-4 text-primary font-heading text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
+                  {formattedBookingDate}<span className="mx-2 text-accent">@</span>{formattedBookingTime}
+                </span>
               </div>
-              <div className="flex justify-between pt-2">
-                <span className="text-secondary font-sans font-bold">Deposit Due ({priceInfo.depositPercent})</span>
-                <span className="text-accent font-heading font-bold text-xl">IDR {priceInfo.deposit.toLocaleString()}</span>
+              <div className="flex items-baseline justify-between gap-6 pt-1">
+                <span className="text-secondary font-sans text-xs font-bold uppercase tracking-[0.12em]">Deposit due ({priceInfo.depositPercent})</span>
+                <span className="text-accent font-heading font-bold text-xl text-right sm:text-2xl">IDR {priceInfo.deposit.toLocaleString()}</span>
               </div>
               {type === "flash" && (
                 <p className="text-secondary/60 text-xs text-right italic">
@@ -836,9 +976,9 @@ export default function BookingEngine({ initialType }: BookingEngineProps) {
             </h2>
             <p className="text-secondary font-sans leading-relaxed mb-10 max-w-lg">
               {type === "custom" ? (
-                <>Your consultation on <strong className="text-primary">{selectedDate} at {selectedTime}</strong> is secured. During this meeting, we will discuss your design, estimate the final price, and schedule your tattoo session.</>
+                <>Your consultation on <strong className="text-primary">{formattedBookingDate} at {formattedBookingTime}</strong> is secured. During this meeting, we will discuss your design, estimate the final price, and schedule your tattoo session.</>
               ) : (
-                <>Your slot on <strong className="text-primary">{selectedDate} at {selectedTime}</strong> is secured. We will be in touch shortly.</>
+                <>Your slot on <strong className="text-primary">{formattedBookingDate} at {formattedBookingTime}</strong> is secured. We will be in touch shortly.</>
               )}
             </p>
             

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 import crypto from 'crypto';
-import { sendPaymentSuccessEmail, sendCustomerReceiptEmail } from '@/app/actions/emailActions';
 
 export async function POST(request: Request) {
   try {
@@ -20,25 +20,47 @@ export async function POST(request: Request) {
     const transactionStatus = payload.transaction_status;
     const fraudStatus = payload.fraud_status;
 
-    let bookingStatus = 'PENDING';
+    let paymentStatus = 'PENDING';
 
     if (transactionStatus === 'capture') {
       if (fraudStatus === 'challenge') {
-        bookingStatus = 'PENDING'; // need manual review
+        paymentStatus = 'PENDING'; // needs manual review
       } else if (fraudStatus === 'accept') {
-        bookingStatus = 'PAID';
+        paymentStatus = 'PAID';
       }
     } else if (transactionStatus === 'settlement') {
-      bookingStatus = 'PAID';
-    } else if (transactionStatus === 'cancel' || transactionStatus === 'deny' || transactionStatus === 'expire') {
-      bookingStatus = 'CANCELLED';
+      paymentStatus = 'PAID';
+    } else if (transactionStatus === 'expire') {
+      paymentStatus = 'EXPIRED';
+    } else if (transactionStatus === 'cancel') {
+      paymentStatus = 'CANCELLED';
+    } else if (transactionStatus === 'deny') {
+      paymentStatus = 'FAILED';
     } else if (transactionStatus === 'pending') {
-      bookingStatus = 'PENDING';
+      paymentStatus = 'PENDING';
     }
 
-    // Order ID format is bookingId-timestamp. Since bookingId is a UUID (which contains hyphens),
-    // we cannot use split('-')[0]. A UUID is exactly 36 characters long.
+    let { data: payment } = await supabaseAdmin
+      .from('payments')
+      .select('*')
+      .eq('midtrans_order_id', payload.order_id)
+      .maybeSingle();
+
     const bookingId = payload.order_id.substring(0, 36);
+
+    // Older payment rows may have a slightly different order-id suffix. Once
+    // the booking UUID is known, safely fall back to its initial payment row.
+    if (!payment) {
+      const { data: fallbackPayment } = await supabaseAdmin
+        .from('payments')
+        .select('*')
+        .eq('booking_id', bookingId)
+        .eq('source', 'INITIAL_BOOKING')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      payment = fallbackPayment;
+    }
 
     // Fetch current booking to check status and get details for email
     const { data: currentBooking, error: fetchError } = await supabaseAdmin
@@ -52,8 +74,34 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 
-    // Update the database if status changed
-    if (currentBooking.status !== bookingStatus) {
+    if (payment) {
+      const paymentUpdate: Record<string, string | null> = {
+        status: paymentStatus,
+        updated_at: new Date().toISOString(),
+        paid_at: paymentStatus === 'PAID' ? new Date().toISOString() : null,
+      };
+
+      const { error: paymentUpdateError } = await supabaseAdmin
+        .from('payments')
+        .update(paymentUpdate)
+        .eq('id', payment.id);
+
+      if (paymentUpdateError) {
+        console.error('Failed to update payment:', paymentUpdateError);
+        return NextResponse.json({ error: 'Failed to update payment' }, { status: 500 });
+      }
+    }
+
+    // The booking-level status is retained for the public booking confirmation flow.
+    // Later admin payment requests have their own independent status.
+    const isInitialPayment = !payment || payment.source === 'INITIAL_BOOKING' || payment.source === 'LEGACY';
+    const bookingStatus = paymentStatus === 'PAID'
+      ? 'PAID'
+      : ['FAILED', 'EXPIRED', 'CANCELLED'].includes(paymentStatus)
+        ? 'CANCELLED'
+        : 'PENDING';
+
+    if (isInitialPayment && currentBooking.status !== bookingStatus) {
       const { error: updateError } = await supabaseAdmin
         .from('bookings')
         .update({ status: bookingStatus })
@@ -72,9 +120,10 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json({ success: true, status: bookingStatus });
-  } catch (error: any) {
+    revalidatePath('/admin');
+    return NextResponse.json({ success: true, status: paymentStatus });
+  } catch (error: unknown) {
     console.error('Webhook error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Webhook processing failed' }, { status: 500 });
   }
 }

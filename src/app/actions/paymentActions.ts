@@ -1,7 +1,7 @@
 'use server';
 
 import { supabaseAdmin } from '@/lib/supabase-admin';
-const midtransClient = require('midtrans-client');
+import midtransClient from 'midtrans-client';
 
 export async function createMidtransTransaction(bookingId: string) {
   try {
@@ -18,16 +18,21 @@ export async function createMidtransTransaction(bookingId: string) {
     }
 
     // 2. Initialize Midtrans Snap
-    let snap = new midtransClient.Snap({
-      isProduction: false,
+    const snap = new midtransClient.Snap({
+      isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
       serverKey: process.env.MIDTRANS_SERVER_KEY
     });
 
     // 3. Set transaction parameters
-    let parameter = {
+    const amount = Math.round(booking.deposit || booking.price);
+    const orderId = `${bookingId}-${Date.now().toString(36)}`;
+    const description = booking.session_type === 'custom'
+      ? 'Initial consultation deposit'
+      : 'Initial tattoo deposit';
+    const parameter = {
       transaction_details: {
-        order_id: bookingId + '-' + Date.now(), // Append timestamp to avoid duplicate order_id issues during testing
-        gross_amount: Math.round(booking.deposit || booking.price), // In Midtrans, gross_amount must be integer
+        order_id: orderId,
+        gross_amount: amount,
       },
       customer_details: {
         first_name: booking.name,
@@ -36,18 +41,32 @@ export async function createMidtransTransaction(bookingId: string) {
       },
       item_details: [{
         id: 'TATOO-DP',
-        price: Math.round(booking.deposit || booking.price),
+        price: amount,
         quantity: 1,
-        name: 'Tattoo Session Deposit: ' + booking.session_type
+        name: description,
       }]
     };
 
     // 4. Create transaction token
     const transaction = await snap.createTransaction(parameter);
+
+    const { error: paymentError } = await supabaseAdmin.from('payments').insert([{
+      booking_id: bookingId,
+      description,
+      amount,
+      status: 'PENDING',
+      source: 'INITIAL_BOOKING',
+      midtrans_order_id: orderId,
+      payment_link: transaction.redirect_url,
+    }]);
+
+    if (paymentError) {
+      console.error('Could not save initial payment record:', paymentError);
+    }
     
     return { token: transaction.token, redirect_url: transaction.redirect_url };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Midtrans Error:', error);
-    throw new Error(error.message || 'Failed to create payment transaction');
+    throw new Error(error instanceof Error ? error.message : 'Failed to create payment transaction');
   }
 }

@@ -8,8 +8,8 @@ description: Background information about the user, their job, and personal pref
 - **Full Name:** Bintang Surya Aprilian Mogot
 - **Professional Name:** Bintang Aprilian
 - **Nickname:** Bintang
-- **Email:** bintangaprilian100@gmail.com, harunbintangmogot07@gmail.com
-- **Phone:** +62 895 3538 11311
+- **Email:** [redacted]
+- **Phone:** [redacted]
 - **GitHub:** [@bintangmogot](https://github.com/bintangmogot)
 - **LinkedIn:** [contact-bintangsurya](https://www.linkedin.com/in/contact-bintangsurya/)
 - **Instagram:** [@bintang_s.a.m](https://www.instagram.com/bintang_s.a.m/)

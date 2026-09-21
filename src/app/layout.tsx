@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import WhatsAppButton from "@/components/layout/WhatsAppButton";
-import EnterOverlay from "@/components/layout/EnterOverlay";
+import AppChrome from "@/components/layout/AppChrome";
 
 const sans = Inter({
   variable: "--font-sans",
@@ -34,12 +31,8 @@ export default function RootLayout({
       className={`${sans.variable} ${serif.variable} h-full antialiased dark scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-primary text-primary">
-        <EnterOverlay />
         <div className="noise-overlay"></div>
-        <Navbar />
-        <main className="flex-1 flex flex-col">{children}</main>
-        <Footer />
-        <WhatsAppButton />
+        <AppChrome>{children}</AppChrome>
       </body>
     </html>
   );

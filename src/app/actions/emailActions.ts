@@ -70,12 +70,15 @@ export async function sendPaymentSuccessEmail(booking: any) {
     </div>
   `;
 
+  const textContent = `Deposit paid for ${booking.name}. Date: ${booking.booking_date} at ${booking.booking_time}. WhatsApp: ${booking.whatsapp}. Total: IDR ${Number(booking.price || 0).toLocaleString('id-ID')}. Deposit: IDR ${Number(booking.deposit || 0).toLocaleString('id-ID')}.`;
+
   try {
     const { data, error } = await resend.emails.send({
       from: fromEmail,
       to: adminEmail,
       subject: "[Dotlinetattu] Deposit Paid: " + booking.name + " (" + booking.booking_date + ")",
       html: htmlContent,
+      text: textContent,
     });
     
     if (error) {
@@ -153,12 +156,15 @@ export async function sendCustomerReceiptEmail(booking: any) {
     </div>
   `;
 
+  const textContent = `Your Dotlinetattu deposit was received. Booking date: ${booking.booking_date} at ${booking.booking_time}. Session: ${booking.session_type}. Placement: ${booking.placement}. Deposit paid: IDR ${Number(booking.deposit || 0).toLocaleString('id-ID')}.`;
+
   try {
     const { data, error } = await resend.emails.send({
       from: fromEmail,
       to: booking.email,
       subject: "Dotlinetattu - Booking Confirmed",
       html: htmlContent,
+      text: textContent,
     });
     
     if (error) {
@@ -172,4 +178,3 @@ export async function sendCustomerReceiptEmail(booking: any) {
     console.error('Failed to send customer email:', err);
   }
 }
-

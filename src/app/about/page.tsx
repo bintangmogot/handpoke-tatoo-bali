@@ -49,7 +49,7 @@ export default function About() {
             </div>
           </div>
           <div className="order-1 md:order-2 relative aspect-[4/3] border border-border">
-            <Image src="https://res.cloudinary.com/workstation-/image/upload/v1789931066/Dotlinetattu/Gallery/tattoo-artist.webp" alt="Dotlinetattu Studio Bali" fill className="object-cover" />
+            <Image src="https://res.cloudinary.com/workstation-/image/upload/v1789931057/Dotlinetattu/Gallery/custom-geometric-ornament-lotus-flower-resilience-transformation-2.webp" alt="Dotlinetattu Studio Bali" fill className="object-cover" />
           </div>
         </div>
 

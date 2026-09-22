@@ -151,6 +151,16 @@ export default function Home() {
                     Dotlinetattu was born in 2019 as a physical sanctuary in Bali. It was created with a rebellious spirit against the modern commercialization of tattoo studios. We want to restore the "Real Bali"—a place where art, connection, and culture hold more value than quick profits.
                   </p>
                 </div>
+
+                <div className="mb-10 w-fit">
+                  <Image
+                    src="/assets/client-signature.png"
+                    alt="Silver Jerry signature"
+                    width={180}
+                    height={100}
+                    className="block h-20 w-auto object-contain md:h-24"
+                  />
+                </div>
                 
                 <Link 
                   href="/about" 

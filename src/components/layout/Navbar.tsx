@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navbarRef = useRef<HTMLElement>(null);
+  const menuSheetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,6 +16,20 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const handleOutsidePointer = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!navbarRef.current?.contains(target) && !menuSheetRef.current?.contains(target)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handleOutsidePointer);
+    return () => document.removeEventListener("pointerdown", handleOutsidePointer);
+  }, [isMobileMenuOpen]);
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -25,12 +41,14 @@ export default function Navbar() {
   ];
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        isScrolled ? "glass-panel shadow-md py-4" : "bg-transparent py-6"
-      }`}
-    >
-      <div className="container mx-auto px-4 md:px-8 flex items-center justify-between">
+    <>
+      <header
+        ref={navbarRef}
+        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${
+          isScrolled ? "glass-panel shadow-md py-4" : "bg-transparent py-6"
+        }`}
+      >
+        <div className="container mx-auto px-4 md:px-8 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
           <span className="font-heading font-bold text-2xl tracking-wider text-primary group-hover:text-accent transition-colors">
@@ -62,6 +80,7 @@ export default function Navbar() {
           className="md:hidden text-primary p-2 focus:outline-none"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle menu"
+          aria-expanded={isMobileMenuOpen}
         >
           <svg
             className="w-6 h-6"
@@ -77,21 +96,35 @@ export default function Navbar() {
             )}
           </svg>
         </button>
-      </div>
+        </div>
 
-      {/* Mobile Nav Overlay */}
+      </header>
+
+      {/* Mobile navigation sheet */}
       {isMobileMenuOpen && (
-        <div className={`md:hidden bg-surface border-t border-border transition-all duration-300 overflow-hidden ${isMobileMenuOpen ? 'max-h-64' : 'max-h-0'}`}>
-          <div className="flex flex-col px-4 py-4 space-y-4">
-            <Link href="/about" className="text-secondary hover:text-accent transition-colors font-sans text-xs tracking-widest uppercase py-2">About</Link>
-            <Link href="/services" className="text-secondary hover:text-accent transition-colors font-sans text-xs tracking-widest uppercase py-2">Services</Link>
-            <Link href="/gallery" className="text-secondary hover:text-accent transition-colors font-sans text-xs tracking-widest uppercase py-2">Gallery</Link>
-            <Link href="/blog" className="text-secondary hover:text-accent transition-colors font-sans text-xs tracking-widest uppercase py-2">Journal</Link>
-            <Link href="/faq" className="text-secondary hover:text-accent transition-colors font-sans text-xs tracking-widest uppercase py-2">FAQ</Link>
-            <Link href="/booking" className="text-accent font-bold font-sans text-xs tracking-widest uppercase py-2">Book Now</Link>
-          </div>
+        <div ref={menuSheetRef} className="fixed inset-x-0 bottom-0 z-[70] border-t border-border bg-surface px-4 pb-8 pt-3 shadow-[0_-16px_40px_rgba(0,0,0,0.28)] md:hidden">
+          <div className="mx-auto mb-5 h-1 w-10 rounded-full bg-secondary/40" aria-hidden="true" />
+          <nav className="mx-auto flex max-w-md flex-col divide-y divide-border">
+              {navLinks.slice(1).map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="py-4 font-sans text-xs uppercase tracking-widest text-primary transition-colors hover:text-accent"
+                >
+                  {link.name}
+                </Link>
+              ))}
+              <Link
+                href="/booking"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="mt-5 inline-flex min-h-12 items-center justify-center rounded-sm bg-accent px-6 py-3 text-center font-sans text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-accent-hover"
+              >
+                Book Now
+              </Link>
+          </nav>
         </div>
       )}
-    </header>
+    </>
   );
 }
